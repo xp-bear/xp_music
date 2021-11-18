@@ -1,0 +1,46 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box; /*盒子布局padding+width+border的值*/
+}
+
+button {
+	cursor: pointer;
+	outline: none;
+	border: 0;
+}
+
+input {
+	border: 0;
+	outline: none;
+}
+
+img {
+	border: 0;
+	vertical-align: middle;
+}
+
+li {
+	list-style: none;
+}
+
+i,
+em {
+	font-style: normal;
+}
+
+/*清除浮动*/
+.clearfix:after {
+	visibility: hidden;
+	clear: both;
+	display: block;
+	content: ".";
+	height: 0;
+}
+
+.clearfix {
+	*zoom: 1;
+}
+a{
+	text-decoration: none;
+}

@@ -1,17 +1,73 @@
 <!DOCTYPE html>
 <html lang="">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1.0" /> -->
+    <link rel="stylesheet" href="./initialization.css" />
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
+    <title>熊仔音乐--免费下载VIP歌曲</title>
+    <!-- <script type="text/javascript" src="<%= BASE_URL %>live2dw/lib/L2Dwidget.min.js"></script> -->
+    <script type="text/javascript" src="/live2dw/lib/L2Dwidget.min.js"></script>
+    <script src="/js/canvas-particle.js"></script>
+    <!-- 背景滚动条 -->
+    <style>
+      .test-5::-webkit-scrollbar {
+        /*滚动条整体样式*/
+        width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+        height: 1px;
+      }
+      .test-5::-webkit-scrollbar-thumb {
+        /*滚动条里面小方块*/
+        border-radius: 10px;
+        background-color: skyblue;
+        background-image: -webkit-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.2) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0.2) 75%,
+          transparent 75%,
+          transparent
+        );
+      }
+      .test-5::-webkit-scrollbar-track {
+        /*滚动条里面轨道*/
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        background: #ededed;
+        border-radius: 10px;
+      }
+    </style>
   </head>
-  <body>
+  <body class="test-5">
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
+    <div id="app" class="scrollbar"></div>
+    <div id="mydiv"></div>
+    <!-- 背景配置 -->
+    <script>
+      window.onload = function () {
+        //配置
+        var config = {
+          vx: 4, //小球x轴速度,正为右，负为左
+          vy: 4, //小球y轴速度
+          height: 2, //小球高宽，其实为正方形，所以不宜太大
+          width: 2,
+          count: 200, //点个数
+          // color: "121, 162, 185", //点颜色
+          // stroke: "130,255,255", //线条颜色
+          color: "30, 30, 30", //点颜色
+          stroke: "79, 79, 79", //线条颜色
+          dist: 6000, //点吸附距离
+          e_dist: 20000, //鼠标吸附加速距离
+          max_conn: 10, //点到点最大连接数
+        };
+
+        //调用
+        CanvasParticle(config);
+      };
+    </script>
   </body>
 </html>

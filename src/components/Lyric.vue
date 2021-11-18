@@ -1,0 +1,83 @@
+<template>
+  <div class="lyric test-5">
+    <div class="scrollbar" v-html="musicwords"></div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
+export default {
+  data() {
+    return {
+      timer: null,
+    };
+  },
+  props: ["lyrics", "mid"],
+
+  computed: {
+    ...mapState(["cur", "total"]),
+
+    musicwords() {
+      if (!this.lyrics) {
+        return "";
+      }
+      let lrcArr = this.lyrics.split("["); //去除[
+      let html = ""; //定义一个空变量保存文本
+      for (let i = 0; i < lrcArr.length; i++) {
+        let arr = lrcArr[i].split("]");
+
+        let allTime = arr[0].split("."); //分钟+秒 2.03 格式
+        let time = allTime[0].split(":"); //抽取分钟
+        let timer = time[0] * 60 + time[1] * 1; //换算成总秒数
+        let text = arr[1]; //歌词部分
+
+        if (text) {
+          html += "<p id=" + timer + " style='padding:5px 0;' >" + text + "</p>";
+        }
+      }
+      return html;
+    },
+  },
+  mounted() {
+    this.timer = setInterval(() => {
+      // console.log("***", this.cur);
+      let p = document.querySelectorAll(".lyric p");
+      let parent = document.querySelector(".lyric"); //父元素滚动
+
+      for (let i = 0; i < p.length; i++) {
+        p[i].style.color = "black";
+        p[i].style.fontSize = "16px";
+        if (this.cur >= p[i].id) {
+          if (i > 1) {
+            p[0].style.color = "black";
+            p[0].style.fontSize = "16px";
+            p[i - 1].style.color = "black";
+            p[i - 1].style.fontSize = "16px";
+            // parent.scrollTop += 20;
+          }
+          p[i].style.color = "red";
+          p[i].style.fontSize = "20px";
+          p[i].style.transition = "all 0.5s";
+        }
+      }
+    }, 100);
+  },
+  destroyed() {
+    console.log("歌词组件被销毁了");
+    clearInterval(this.timer);
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.lyric {
+  width: 50%;
+  height: 520px;
+  position: relative;
+  top: 0;
+  left: 0%;
+  // background-color: pink;
+  text-align: center;
+  overflow-y: scroll;
+}
+</style>
