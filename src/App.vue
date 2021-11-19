@@ -11,8 +11,8 @@
     <el-dialog title="重要公告" :visible.sync="dialogVisible" width="800px">
       <div class="main">
         <div>
-          "已经修复接口,可以正常的下载与播放,本音乐小站完全开源,持续更新!"<br />
-          "下次更新歌曲评论,热门歌单,歌手专辑等!"<br />
+          "本音乐小站完全开源,持续更新!"<br />
+          "项目地址:https://github.com/xp-coding/xp_music"<br />
           "如果您有任何问题,请联系该邮箱: <span style="color: red">1693889638@qq.com</span>"
           <footer>
             ——

@@ -1,18 +1,22 @@
-# app
+# 项目介绍
 
-## Project setup
+### 项目截图
+
+![1637307100726](assets/1637307100726.png)
+
+## 安装依赖包
 
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 启动项目
 
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 打包项目
 
 ```
 npm run build
