@@ -39,7 +39,7 @@
           </el-table-column>
         </el-table>
         <!-- 加载更多 -->
-        <!-- <el-button type="primary" @click="toLoading" class="loading"> 加载更多 </el-button> -->
+        <el-button type="primary" @click="toLoading" class="loading"> 加载更多 </el-button>
       </el-card>
     </transition>
     <!-- 播放歌曲与歌词对话框 -->
@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import { Loading } from "element-ui";
 import PlayMusic from "@/components/PlayMusic.vue";
 import Lyric from "@/components/Lyric.vue";
 
@@ -104,22 +103,19 @@ export default {
         fluid: true,
         sources: [
           {
-            //类型
-            type: "video/mp4",
-            //url地址
-            src: "",
+            type: "video/mp4", //类型
+            src: "", //url地址
           },
         ],
         //你的封面地址
         poster: "",
         //允许覆盖Video.js无法播放媒体源时显示的默认信息。
-        notSupportedMessage: "此视频暂无法播放，请稍后再试",
+        notSupportedMessage: "该视频暂无资源!",
         controlBar: {
-          timeDivider: true,
-          durationDisplay: true,
-          remainingTimeDisplay: false,
-          //全屏按钮
-          fullscreenToggle: true,
+          timeDivider: true, // 当前时间和持续时间的分隔符
+          durationDisplay: true, // 显示持续时间
+          remainingTimeDisplay: false, // 是否显示剩余时间功能
+          fullscreenToggle: true, //全屏按钮
         },
       }, //视频播放配置
     };
@@ -141,9 +137,9 @@ export default {
   methods: {
     // 关闭对话框之前
     onBeforeClose(done) {
-      console.log("我关闭之前的回调函数");
+      // console.log("我关闭之前的回调函数");
       this.musicUrl = "";
-      
+
       let video = document.querySelector(".vjs-tech");
       if (video) {
         video.pause();
@@ -164,7 +160,6 @@ export default {
       this.title = name;
       this.mid = id;
       this.lyrics = lycdata.data.lrc.lyric;
-      // console.log(this.lyrics);
     },
     // 下载歌曲
     async vdown(id, name) {
@@ -207,15 +202,8 @@ export default {
     },
     // 加载更多
     toLoading() {
-      let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
-      // 发起请求
-      // https://api.imjad.cn/cloudmusic/?type=search&s=的&offset=10&limit=20
-      // let res = await this.$http.get(`https://api.imjad.cn/cloudmusic/?type=search&search_type=1&s=${this.input}`);
-      // this.moreSongs = res.data.result.songs;
-      setTimeout(() => {
-        this.$mb.alert("加载更多正在开发中...", "注意", { confirmButtonText: "确定" });
-        loadingInstance.close();
-      }, 2000);
+      // 触发父组件的事件
+      this.$emit("toLoading");
     },
     // 播放MV
     async toMV(id, name) {
@@ -235,7 +223,8 @@ export default {
       // console.log(this.mvUrl);
       if (this.mvUrl == null) {
         this.toMVFlag = false;
-        this.$mb.alert("当前歌曲没有mv", "注意", { confirmButtonText: "确定" });
+        // this.$mb.alert("当前歌曲没有mv", "注意", { confirmButtonText: "确定" });
+        this.$message({ message: "当前歌曲没有mv!", type: "warning", duration: 1000 });
         return;
       }
       this.playerOptions.sources[0].src = mdata.data.data.url;

@@ -26,7 +26,7 @@
     <!-- 热门歌单 -->
     <keep-alive>
       <div class="hot">
-        <div class="h-item" v-for="item in playlists" :key="item.id" @click="toPlaylistPage(item.id)">
+        <div class="h-item" v-for="item in limitPlaylists" :key="item.id" @click="toPlaylistPage(item.id)">
           <img :src="item.coverImgUrl" alt="" />
           <div class="h-title">
             <i class="el-icon-headset"></i><span>{{ item.playCount | numFilter }}</span>
@@ -42,6 +42,24 @@
         </div>
       </div>
     </keep-alive>
+    <!-- 分页 -->
+    <el-pagination
+      :current-page="this.currentPage"
+      :background="true"
+      layout="prev, slot, next,total"
+      :page-size="12"
+      :total="this.playlists.length"
+      @next-click="nextP"
+      @prev-click="prevP"
+      :hide-on-single-page="true"
+      ref="pagination"
+    >
+      <span @click="psize(1)" :class="this.currentPage == 1 ? 'active' : ''">1</span>
+      <span @click="psize(2)" :class="this.currentPage == 2 ? 'active' : ''">2</span>
+      <span @click="psize(3)" :class="this.currentPage == 3 ? 'active' : ''">3</span>
+      <span @click="psize(4)" :class="this.currentPage == 4 ? 'active' : ''">4</span>
+      <span @click="psize(5)" :class="this.currentPage == 5 ? 'active' : ''">5</span>
+    </el-pagination>
   </div>
 </template>
 
@@ -53,6 +71,8 @@ export default {
       banners: [], //轮播图
       ipt: "", //搜索关键字
       playlists: [], //热门歌单
+      limitPlaylists: [], //限制歌单分页
+      currentPage: 1, //页码
     };
   },
   methods: {
@@ -72,7 +92,26 @@ export default {
     },
     // 跳转歌单页面
     toPlaylistPage(pid) {
-      this.$router.push({ name: "Playlist", params: { pid: pid } });
+      this.$router.push({ path: "/playlist", query: { pid: pid } });
+    },
+
+    // 分页按钮切换
+    psize(val) {
+      this.currentPage = val;
+      this.limitPlaylists = this.playlists.slice(12 * (val - 1), 12 * val);
+      // console.log(this.currentPage);
+    },
+    // 下一页
+    nextP() {
+      this.currentPage += 1;
+      this.limitPlaylists = this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
+      // console.log("下一页", this.currentPage);
+    },
+    // 上一页
+    prevP() {
+      this.currentPage -= 1;
+      this.limitPlaylists = this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
+      // console.log("上一页", this.currentPage);
     },
   },
   mounted() {
@@ -84,10 +123,12 @@ export default {
     // 请求轮播图数据
     this.$http.get(`http://123.207.32.32:9001/banner`).then((bdata) => {
       this.banners = bdata.data.banners;
+      console.log(this.banners);
     });
     // 请求热门歌单数据
     this.$http.get(`http://123.207.32.32:9001/top/playlist/highquality`).then((hdata) => {
       this.playlists = hdata.data.playlists;
+      this.limitPlaylists = this.playlists.slice(0, 12);
     });
   },
   filters: {
@@ -103,6 +144,14 @@ export default {
 <style lang="less" scoped>
 .Index {
   margin: 0 auto;
+  .active {
+    background: #409eff;
+  }
+  // 分页
+  .el-pagination {
+    text-align: center;
+    cursor: pointer;
+  }
   // 顶栏
   .top {
     display: flex;
@@ -167,7 +216,6 @@ export default {
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    // justify-content: space-between;
     .h-item {
       position: relative;
       width: 160px;

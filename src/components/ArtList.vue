@@ -231,10 +231,11 @@ export default {
       let mdata = await this.$http.get(`http://123.207.32.32:9001/mv/url?id=${this.mvId}`);
       // console.log(mdata.data);
       this.mvUrl = mdata.data.data.url; //高画质
-    //   console.log(this.mvUrl);
+      //   console.log(this.mvUrl);
       if (this.mvUrl == null) {
         this.toMVFlag = false;
-        this.$mb.alert("当前歌曲没有mv", "注意", { confirmButtonText: "确定" });
+        // this.$mb.alert("当前歌曲没有mv", "注意", { confirmButtonText: "确定" });
+        this.$message({ message: "当前歌曲没有mv!", type: "warning", duration: 1000 });
         return;
       }
       this.playerOptions.sources[0].src = mdata.data.data.url;

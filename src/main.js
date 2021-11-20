@@ -47,9 +47,10 @@ Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 // css样式还是需要全部引入
 import "element-ui/lib/theme-chalk/index.css";
-import { Button, Input, Card, Table, TableColumn, Dialog, MessageBox, Carousel, CarouselItem, Tooltip, Backtop, Slider, Tabs, TabPane } from "element-ui";
+import { Pagination, Button, Input, Card, Table, TableColumn, Dialog, MessageBox, Carousel, CarouselItem, Tooltip, Backtop, Slider, Tabs, TabPane, Message } from "element-ui";
 
 Vue.prototype.$mb = MessageBox;
+Vue.prototype.$message = Message;
 
 Vue.use(Button);
 Vue.use(Input);
@@ -64,6 +65,7 @@ Vue.use(Tabs);
 Vue.use(TabPane);
 Vue.use(Carousel);
 Vue.use(CarouselItem);
+Vue.use(Pagination);
 
 new Vue({
   router,

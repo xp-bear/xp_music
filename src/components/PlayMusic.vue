@@ -27,6 +27,8 @@
   </div>
 </template>
 <script>
+import { Message } from "element-ui";
+
 export default {
   data() {
     return {
@@ -62,7 +64,11 @@ export default {
 
       // 判断该歌曲有没有资源
       if (this.musicUrl == null) {
-        this.$mb.alert("当前歌曲暂无资源!", "注意", { confirmButtonText: "确定" });
+        // this.$mb.alert("当前歌曲暂无资源!", "注意", { confirmButtonText: "确定" });
+        this.$message({
+          message: "当前歌曲暂无资源!",
+          type: "warning",
+        });
         this.musicUrl = "pause";
       }
     }, 500);

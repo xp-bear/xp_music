@@ -85,7 +85,11 @@ export default {
   -webkit-line-clamp: 2;
   overflow: hidden;
 }
-
+.eclipsis-1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 // 初始字体
 #app {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;

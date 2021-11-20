@@ -7,7 +7,7 @@
     </div>
 
     <!-- 卡片列表 -->
-    <List :show="show" :songs="songs" />
+    <List :show="show" :songs="songs" @toLoading="toLoading" />
   </div>
 </template>
 
@@ -40,6 +40,24 @@ export default {
     }
   },
   methods: {
+    // 加载更多
+    toLoading() {
+      let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
+      this.$http.get(`http://123.207.32.32:9001/search?keywords=${this.input}&limit=30&offset=30`).then((res) => {
+        // 给新情求的数据添加一个picurl
+        res.data.result.songs.forEach((item) => {
+          this.$http.get(`http://123.207.32.32:9001/song/detail?ids=${item.id}`).then((imgData) => {
+            item.artists[0].picUrl = imgData.data.songs[0].al.picUrl;
+          });
+        });
+
+        this.songs = [...this.songs, ...res.data.result.songs];
+        // console.log("新请求的数据", res.data.result.songs);
+        
+      });
+      loadingInstance.close();
+    },
+
     async searchInput() {
       if (this.input.length > 0) {
         this.show = true;
@@ -78,6 +96,7 @@ export default {
       this.$store.commit("getValue", this.input);
     },
   },
+
   watch: {
     input(newVal, oldVal) {
       if (newVal.length == 0) {
