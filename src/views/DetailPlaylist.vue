@@ -93,7 +93,7 @@ export default {
       this.tags = res.data.playlist.tags;
       this.creator = res.data.playlist.creator.nickname;
       this.description = res.data.playlist.description;
-      console.log(res.data.playlist.tracks);
+      // console.log(res.data.playlist.tracks);
     });
   },
   components: {

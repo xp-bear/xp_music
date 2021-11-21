@@ -63,7 +63,7 @@ export default {
     }, 100);
   },
   destroyed() {
-    console.log("歌词组件被销毁了");
+    // console.log("歌词组件被销毁了");
     clearInterval(this.timer);
   },
 };

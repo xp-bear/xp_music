@@ -14,7 +14,7 @@ import "video.js/dist/video-js.css";
 Vue.use(VideoPlayer);
 
 //根url路径
-axios.defaults.baseURL = "http://123.207.32.32:9001";
+axios.defaults.baseURL = "http://81.68.150.58:5000";
 //配置超时时间
 // axios.defaults.timeout = 5000;
 
@@ -47,7 +47,7 @@ Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 // css样式还是需要全部引入
 import "element-ui/lib/theme-chalk/index.css";
-import { Pagination, Button, Input, Card, Table, TableColumn, Dialog, MessageBox, Carousel, CarouselItem, Tooltip, Backtop, Slider, Tabs, TabPane, Message } from "element-ui";
+import { FormItem, Form, Pagination, Button, Input, Card, Table, TableColumn, Dialog, MessageBox, Carousel, CarouselItem, Tooltip, Backtop, Slider, Tabs, TabPane, Message } from "element-ui";
 
 Vue.prototype.$mb = MessageBox;
 Vue.prototype.$message = Message;
@@ -66,6 +66,8 @@ Vue.use(TabPane);
 Vue.use(Carousel);
 Vue.use(CarouselItem);
 Vue.use(Pagination);
+Vue.use(Form);
+Vue.use(FormItem);
 
 new Vue({
   router,

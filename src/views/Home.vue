@@ -84,7 +84,8 @@ export default {
     },
     // 点击登录按钮
     loginIN() {
-      this.$mb.alert("登录功能正在开发中", "注意", { confirmButtonText: "确定" });
+      // this.$mb.alert("登录功能正在开发中", "注意", { confirmButtonText: "确定" });
+      this.$router.push({ path: "/login" });
     },
     // 注册功能按钮
     register() {
@@ -123,7 +124,7 @@ export default {
     // 请求轮播图数据
     this.$http.get(`http://123.207.32.32:9001/banner`).then((bdata) => {
       this.banners = bdata.data.banners;
-      console.log(this.banners);
+      // console.log(this.banners);
     });
     // 请求热门歌单数据
     this.$http.get(`http://123.207.32.32:9001/top/playlist/highquality`).then((hdata) => {

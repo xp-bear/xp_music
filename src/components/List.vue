@@ -85,6 +85,7 @@ export default {
       lyrics: "", //歌词
       mvId: 1, //mv 的id
       mvUrl: "", //mv 的url地址
+      simgUrl: "", //传递的图片url
       playerOptions: {
         //播放速度
         playbackRates: [0.5, 1.0, 1.5, 2.0],
@@ -138,6 +139,7 @@ export default {
     // 关闭对话框之前
     onBeforeClose(done) {
       // console.log("我关闭之前的回调函数");
+
       this.musicUrl = "";
 
       let video = document.querySelector(".vjs-tech");
@@ -160,6 +162,8 @@ export default {
       this.title = name;
       this.mid = id;
       this.lyrics = lycdata.data.lrc.lyric;
+      // 单个图片的url链接
+      this.simgUrl = src;
     },
     // 下载歌曲
     async vdown(id, name) {

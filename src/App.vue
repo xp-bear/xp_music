@@ -58,11 +58,12 @@ export default {
       window.L2Dwidget.init({
         pluginRootPath: "live2dw/",
         pluginJsPath: "lib/",
-        pluginModelPath: "live2d-widget-model-z16/assets/",
+
+        pluginModelPath: "live2d-widget-model-hibiki/assets/",
         tagMode: false,
         debug: false,
-        model: { jsonPath: "../live2dw/live2d-widget-model-shizuku/assets/shizuku.model.json" },
-        display: { position: "right", width: 200, height: 300 },
+        model: { jsonPath: "../live2dw/live2d-widget-model-hibiki/assets/hibiki.model.json" },
+        display: { position: "right", width: 200, height: 450 },
         mobile: { show: true },
         log: false,
       });
@@ -77,25 +78,8 @@ export default {
 };
 </script>
 
-<style lang="less">
-// 文本省略样式
-.eclipsis {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-}
-.eclipsis-1 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-// 初始字体
-#app {
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-}
-
-// 公告样式
+<style lang="less" scoped>
+/* 公告样式 */
 .main {
   width: 90%;
   margin: auto;
@@ -122,7 +106,6 @@ export default {
   margin: -30px;
 }
 .main > div {
-  // font-style: italic;
   color: #000;
   padding: 30px;
   hyphens: auto;
