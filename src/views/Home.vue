@@ -10,9 +10,14 @@
         <input type="text" placeholder="搜索你想听的歌" v-model="ipt" @keyup.enter="toSearchPage" />
         <div class="searh_btn" @click="toSearchPage"><i class="el-icon-search"></i></div>
       </div>
-      <div class="user">
+
+      <div class="user" v-if="isUser == false">
         <el-button type="primary" size="small" @click="loginIN">登录</el-button>
         <el-button type="info" size="small" @click="register">注册</el-button>
+      </div>
+      <div class="user" v-else>
+        <img src="../assets/avatar.png" alt="" />&nbsp; <span> 想走过亚洲的熊</span>&nbsp;
+        <el-button type="danger" size="small" @click="exit">退出</el-button>
       </div>
     </div>
     <!-- 轮播图 -->
@@ -73,6 +78,7 @@ export default {
       playlists: [], //热门歌单
       limitPlaylists: [], //限制歌单分页
       currentPage: 1, //页码
+      isUser: false, //用户登录状态
     };
   },
   methods: {
@@ -95,7 +101,6 @@ export default {
     toPlaylistPage(pid) {
       this.$router.push({ path: "/playlist", query: { pid: pid } });
     },
-
     // 分页按钮切换
     psize(val) {
       this.currentPage = val;
@@ -114,8 +119,27 @@ export default {
       this.limitPlaylists = this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
       // console.log("上一页", this.currentPage);
     },
+    // 退出登录
+    exit() {
+      localStorage.removeItem("user");
+      this.$message({ message: "退出登录成功!", type: "success", showClose: true, duration: 1000 });
+      this.isToken();
+    },
+    // 判断token
+    isToken() {
+      // 根据token判断是否登录
+      let token = JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")).tokens : "";
+      if (token) {
+        this.isUser = true;
+      } else {
+        this.isUser = false;
+      }
+    },
   },
   mounted() {
+    // token 判断
+    this.isToken();
+
     // 返回请求的关键字
     if (this.$route.query.val) {
       this.ipt = this.$route.query.val;
@@ -132,6 +156,7 @@ export default {
       this.limitPlaylists = this.playlists.slice(0, 12);
     });
   },
+  updated() {},
   filters: {
     numFilter(val) {
       if (val > 10000) {
@@ -193,7 +218,26 @@ export default {
       }
     }
     .user {
+      display: flex;
+      align-items: center;
       margin-left: auto;
+
+      img {
+        // width: 50px;
+        height: 40px;
+        border-radius: 50%;
+        transform: rotate(0deg);
+        transition: all 0.5s;
+        &:hover {
+          transform: rotate(360deg);
+          transition: all 0.5s;
+        }
+      }
+      span {
+        font-size: 18px !important;
+        font-weight: 700;
+        cursor: pointer;
+      }
     }
   }
   // 轮播

@@ -59,11 +59,11 @@ export default {
         pluginRootPath: "live2dw/",
         pluginJsPath: "lib/",
 
-        pluginModelPath: "live2d-widget-model-hibiki/assets/",
+        pluginModelPath: "live2d-widget-model-shizuku/assets/",
         tagMode: false,
         debug: false,
-        model: { jsonPath: "../live2dw/live2d-widget-model-hibiki/assets/hibiki.model.json" },
-        display: { position: "right", width: 200, height: 450 },
+        model: { jsonPath: "../live2dw/live2d-widget-model-shizuku/assets/shizuku.model.json" },
+        display: { position: "right", width: 200, height: 300 },
         mobile: { show: true },
         log: false,
       });

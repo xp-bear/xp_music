@@ -77,7 +77,7 @@ export default {
             .then((res) => {
               //   本地存储
               localStorage.setItem("user", JSON.stringify(res.data.back));
-              this.$message({ message: res.data.msg, showClose: true, type: "success" });
+              this.$message({ message: res.data.msg, showClose: true, type: "success", duration: 1000 });
               if (res.data.code == 200) {
                 this.$router.push({ path: "/" });
               }
@@ -87,22 +87,6 @@ export default {
           return false;
         }
       });
-    },
-    // 验证码
-    toSendMessage() {
-      let conunt = 60; //倒计时的时间
-
-      let timer = setInterval(() => {
-        conunt--;
-        console.log(conunt);
-        this.isDisabled = true;
-        this.istext = "倒计时 " + conunt + " 秒";
-        if (conunt <= 0) {
-          clearInterval(timer);
-          this.isDisabled = false;
-          this.istext = "发送验证码";
-        }
-      }, 1000);
     },
   },
 };
@@ -119,7 +103,11 @@ export default {
     height: 100%;
     top: 0;
     filter: blur(5px);
+    background-image: url("../assets/bg2.png");
+    background-repeat: no-repeat;
+    background-position: 0% 0%;
     background-size: cover;
+    animation: bgmove 2s infinite linear;
   }
   .el-card {
     background-color: transparent;
@@ -133,7 +121,20 @@ export default {
         width: 84%;
         display: flex;
       }
+      /deep/.el-form-item__label {
+        font-weight: 700;
+      }
     }
+  }
+}
+
+// 背景动画
+@-webkit-keyframes bgmove {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
   }
 }
 

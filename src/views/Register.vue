@@ -189,6 +189,10 @@ export default {
     height: 100%;
     top: 0;
     filter: blur(5px);
+    background-image: url("../assets/bg2.png");
+    background-repeat: no-repeat;
+    background-position: 0% 0%;
+    animation: bgmove 2s infinite linear;
     background-size: cover;
   }
   .el-card {
@@ -202,6 +206,9 @@ export default {
       /deep/.emailcheckd .el-form-item__content {
         width: 84%;
         display: flex;
+      }
+      /deep/.el-form-item__label {
+        font-weight: 700;
       }
     }
   }
