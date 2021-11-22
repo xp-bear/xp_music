@@ -5,7 +5,7 @@
     <el-card id="animation">
       <h2 class="Gradual" style="text-align: center">登录--熊仔音乐</h2>
       <el-form :status-icon="true" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item :show-message="false" label="您的邮箱" prop="email">
+        <el-form-item :show-message="false" label="您的QQ邮箱" prop="email">
           <el-input v-model="ruleForm.email"></el-input>
         </el-form-item>
 
@@ -75,15 +75,17 @@ export default {
               pwd: this.ruleForm.pass,
             })
             .then((res) => {
-              //   本地存储
-              localStorage.setItem("user", JSON.stringify(res.data.back));
-              this.$message({ message: res.data.msg, showClose: true, type: "success", duration: 1000 });
               if (res.data.code == 200) {
+                this.$message({ message: res.data.msg, showClose: true, type: "success", duration: 1000 });
+                //   本地存储
+                localStorage.setItem("user", JSON.stringify(res.data.back));
                 this.$router.push({ path: "/" });
+              } else {
+                this.$message({ message: res.data.msg, showClose: true, type: "error", duration: 1000 });
               }
             });
         } else {
-          console.log("error submit!!");
+          // console.log("error submit!!");
           return false;
         }
       });
@@ -97,21 +99,25 @@ export default {
   width: 700px;
   margin: 0 auto;
   position: relative;
+  overflow: hidden;
+  margin-top: 100px;
   .mask {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
-    filter: blur(5px);
-    background-image: url("../assets/bg2.png");
+    // filter: blur(5px);
+    background-image: url("../assets/top.gif");
     background-repeat: no-repeat;
-    background-position: 0% 0%;
+    background-position: center;
     background-size: cover;
     animation: bgmove 2s infinite linear;
   }
   .el-card {
     background-color: transparent;
     margin-top: 100px;
+    margin: 20px;
+    background-color: rgba(255, 255, 255, 0.7);
     h2 {
       margin-bottom: 20px;
     }

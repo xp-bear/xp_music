@@ -107,15 +107,15 @@ export default {
     //   注册按钮
     submitForm(formName) {
       // 先验证验证码
-      console.log("表单验证码", this.ruleForm.checkEmail);
-      console.log("服务器验证码", this.verification);
+      // console.log("表单验证码", this.ruleForm.checkEmail);
+      // console.log("服务器验证码", this.verification);
       if (this.ruleForm.checkEmail.toLowerCase() !== this.verification.toLowerCase()) {
         return this.$message({ message: "验证码不正确", showClose: true, type: "error" });
       }
 
       // 在验证邮箱是都已经注册
       this.$http.post("/signup/judge", { type: "email", data: this.ruleForm.email }).then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.result != 0) {
           return this.$message({ message: "该邮箱已经被注册过!", showClose: true, type: "error" });
         } else {
@@ -130,11 +130,13 @@ export default {
                   pwd: this.ruleForm.pass,
                 })
                 .then((res) => {
-                  console.log(res.data);
-                  this.$message({ message: res.data.msg, showClose: true, type: "success" });
+                  // console.log(res.data);
                   if (res.data.code == 200) {
+                    this.$message({ message: res.data.msg, showClose: true, type: "success" });
                     //注册成功跳转登录页面
                     this.$router.push({ path: "/login" });
+                  } else {
+                    this.$message({ message: res.data.msg, showClose: true, type: "error" });
                   }
                 });
             } else {
@@ -153,7 +155,7 @@ export default {
           email: this.ruleForm.email,
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           this.verification = res.data.info_code; //保存验证码
 
           this.$message({ message: res.data.msg, showClose: true, type: "success" });
@@ -183,28 +185,33 @@ export default {
   width: 700px;
   margin: 0 auto;
   position: relative;
+  overflow: hidden;
+  margin-top: 70px;
+
   .mask {
     position: absolute;
     width: 100%;
     height: 100%;
     top: 0;
-    filter: blur(5px);
-    background-image: url("../assets/bg2.png");
+    // filter: blur(5px);
+    background-image: url("../assets/top.gif");
     background-repeat: no-repeat;
-    background-position: 0% 0%;
+    background-position: center;
     animation: bgmove 2s infinite linear;
     background-size: cover;
   }
   .el-card {
     background-color: transparent;
     margin-top: 100px;
+    background-color: rgba(255, 255, 255, 0.7);
+    margin: 20px;
     h2 {
       margin-bottom: 20px;
     }
     .el-form {
       font-size: 20px;
       /deep/.emailcheckd .el-form-item__content {
-        width: 84%;
+        width: 83%;
         display: flex;
       }
       /deep/.el-form-item__label {

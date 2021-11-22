@@ -139,9 +139,7 @@ export default {
     // 关闭对话框之前
     onBeforeClose(done) {
       // console.log("我关闭之前的回调函数");
-
       this.musicUrl = "";
-
       let video = document.querySelector(".vjs-tech");
       if (video) {
         video.pause();

@@ -16,7 +16,8 @@
         <el-button type="info" size="small" @click="register">注册</el-button>
       </div>
       <div class="user" v-else>
-        <img src="../assets/avatar.png" alt="" />&nbsp; <span> 想走过亚洲的熊</span>&nbsp;
+        <img src="../assets/avatar.png" alt="" />&nbsp; <span> {{ token.name }}</span
+        >&nbsp;
         <el-button type="danger" size="small" @click="exit">退出</el-button>
       </div>
     </div>
@@ -69,6 +70,7 @@
 </template>
 
 <script>
+import { MessageBox } from "element-ui";
 export default {
   name: "Home",
   data() {
@@ -79,6 +81,7 @@ export default {
       limitPlaylists: [], //限制歌单分页
       currentPage: 1, //页码
       isUser: false, //用户登录状态
+      token: {},
     };
   },
   methods: {
@@ -95,7 +98,8 @@ export default {
     },
     // 注册功能按钮
     register() {
-      this.$mb.alert("注册功能正在开发中", "注意", { confirmButtonText: "确定" });
+      // this.$mb.alert("注册功能正在开发中", "注意", { confirmButtonText: "确定" });
+      this.$router.push({ path: "/register" });
     },
     // 跳转歌单页面
     toPlaylistPage(pid) {
@@ -121,14 +125,29 @@ export default {
     },
     // 退出登录
     exit() {
-      localStorage.removeItem("user");
-      this.$message({ message: "退出登录成功!", type: "success", showClose: true, duration: 1000 });
-      this.isToken();
+      MessageBox.confirm("此操作将退出用户登录, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "成功退出登录!",
+          });
+
+          localStorage.clear();
+          this.isToken();
+        })
+        .catch(() => {});
+      // this.$message({ message: "退出登录成功!", type: "success", showClose: true, duration: 1000 });
     },
     // 判断token
     isToken() {
       // 根据token判断是否登录
-      let token = JSON.parse(localStorage.getItem("user")) ? JSON.parse(localStorage.getItem("user")).tokens : "";
+      let token = JSON.parse(localStorage.getItem("user")) || "";
+      this.token = token;
+      // console.log(this.token);
       if (token) {
         this.isUser = true;
       } else {

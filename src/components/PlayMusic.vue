@@ -65,10 +65,7 @@ export default {
       // 判断该歌曲有没有资源
       if (this.musicUrl == null) {
         // this.$mb.alert("当前歌曲暂无资源!", "注意", { confirmButtonText: "确定" });
-        this.$message({
-          message: "当前歌曲暂无资源!",
-          type: "warning",
-        });
+        this.$message({ message: "当前歌曲暂无资源!", type: "error" });
         this.musicUrl = "pause";
       }
     }, 500);

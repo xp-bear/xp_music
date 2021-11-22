@@ -50,6 +50,7 @@ import "element-ui/lib/theme-chalk/index.css";
 import { FormItem, Form, Pagination, Button, Input, Card, Table, TableColumn, Dialog, MessageBox, Carousel, CarouselItem, Tooltip, Backtop, Slider, Tabs, TabPane, Message } from "element-ui";
 
 Vue.prototype.$mb = MessageBox;
+
 Vue.prototype.$message = Message;
 
 Vue.use(Button);

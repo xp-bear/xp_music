@@ -40,7 +40,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: "hash",
   base: process.env.BASE_URL,
   routes,
 });
@@ -56,7 +56,7 @@ VueRouter.prototype.push = function push(location, onResolve, onReject) {
 router.beforeEach((to, from, next) => {
   // 此处进行鉴权操作
   let token;
-  if (JSON.parse(localStorage.getItem("user"))) {
+  if (JSON.parse(localStorage.getItem("user")) && JSON.parse(localStorage.getItem("user")) != undefined) {
     token = JSON.parse(localStorage.getItem("user")).tokens;
   } else {
     token = "";
