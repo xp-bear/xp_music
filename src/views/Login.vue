@@ -4,9 +4,10 @@
     <div class="mask" id="animation"></div>
     <el-card id="animation">
       <h2 class="Gradual" style="text-align: center">登录--熊仔音乐</h2>
-      <el-form :status-icon="true" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :hide-required-asterisk="true" :status-icon="true" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item :show-message="false" label="您的QQ邮箱" prop="email">
-          <el-input v-model="ruleForm.email"></el-input>
+          <el-input v-model="ruleForm.email" @input="tipEmail"> </el-input>
+          <div class="tipEmail" v-show="isshowEmail" @click="selectEmail">{{ ruleForm.email + "@qq.com" }}</div>
         </el-form-item>
 
         <el-form-item :show-message="false" label="您的密码" prop="pass">
@@ -44,7 +45,7 @@ export default {
       if (!value) {
         callback(this.$message.error({ message: "邮箱不可以为空!", duration: 1000, showClose: true }));
       } else if (reg.test(value) == false) {
-        return callback(this.$message.error({ message: "请输入正确的邮箱地址!", duration: 1000, showClose: true }));
+        // return callback(this.$message.error({ message: "请输入正确的邮箱地址!", duration: 1000, showClose: true }));
       } else {
         return callback();
       }
@@ -60,9 +61,10 @@ export default {
         email: [{ validator: Email, trigger: "blur" }],
       },
       isDisabled: false, //是否禁用
-      istext: "",
+      isshowEmail: false, //邮箱后缀提示
     };
   },
+
   methods: {
     //   登录
     submitForm(formName) {
@@ -89,6 +91,24 @@ export default {
           return false;
         }
       });
+    },
+    // 邮箱后缀提示
+    tipEmail() {
+      if (this.ruleForm.email.length > 0) {
+        this.isshowEmail = true;
+        if (this.ruleForm.email.indexOf("@") !== -1) {
+          this.isshowEmail = false;
+        }
+      } else {
+        this.isshowEmail = false;
+      }
+    },
+    // 选择邮箱
+    selectEmail() {
+      if (this.ruleForm.email.indexOf("@") == -1) {
+        this.ruleForm.email = this.ruleForm.email + "@qq.com";
+      }
+      this.isshowEmail = false;
     },
   },
 };
@@ -129,6 +149,16 @@ export default {
       }
       /deep/.el-form-item__label {
         font-weight: 700;
+      }
+      .tipEmail {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 0 15px;
+        cursor: pointer;
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.7);
+          transition: all 0.5s;
+        }
       }
     }
   }

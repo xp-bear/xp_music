@@ -40,24 +40,34 @@ export default {
   },
   mounted() {
     this.timer = setInterval(() => {
-      // console.log("***", this.cur);
       let p = document.querySelectorAll(".lyric p");
       let parent = document.querySelector(".lyric"); //父元素滚动
+
+      // 歌曲开始,滚动条置顶
+      if (Math.round(this.cur) == 0) {
+        parent.scrollTop = 0;
+      }
 
       for (let i = 0; i < p.length; i++) {
         p[i].style.color = "black";
         p[i].style.fontSize = "16px";
-        if (this.cur >= p[i].id) {
+        // console.log("***", Math.round(this.cur), p[i].id);
+
+        if (this.cur > p[i].id) {
           if (i > 1) {
             p[0].style.color = "black";
             p[0].style.fontSize = "16px";
             p[i - 1].style.color = "black";
             p[i - 1].style.fontSize = "16px";
-            // parent.scrollTop += 20;
           }
+
           p[i].style.color = "red";
           p[i].style.fontSize = "20px";
           p[i].style.transition = "all 0.5s";
+        } else if (Math.round(this.cur) == p[i].id && Math.round(this.cur) != 0) {
+          // console.log("当前", Math.round(this.cur), p[i].id);
+          parent.scrollTop += 6.4;
+          parent.style.transition = "all 0.5s";
         }
       }
     }, 100);

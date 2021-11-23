@@ -41,6 +41,7 @@ export default {
       timer: null,
       speeds: 0, //歌曲进度
       volume: 50,
+      copymusicUrl: "true", //歌曲url copy
     };
   },
 
@@ -63,10 +64,12 @@ export default {
       this.$store.commit("getMusic", obj);
 
       // 判断该歌曲有没有资源
-      if (this.musicUrl == null) {
+      this.copymusicUrl = this.musicUrl;
+      if (this.copymusicUrl == null) {
         // this.$mb.alert("当前歌曲暂无资源!", "注意", { confirmButtonText: "确定" });
-        this.$message({ message: "当前歌曲暂无资源!", type: "error" });
+        this.copymusicUrl = "pause";
         this.musicUrl = "pause";
+        return this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: true });
       }
     }, 500);
   },
@@ -128,6 +131,11 @@ export default {
       this.$refs.speedprocess.style.width = this.speeds + "%";
       this.cur = +((this.speeds * this.total) / 100).toFixed(0);
       this.$refs.audio.currentTime = this.cur;
+      let obj = {
+        cur: this.cur,
+        total: this.total,
+      };
+      this.$store.commit("getMusic", obj);
     },
   },
   watch: {

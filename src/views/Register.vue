@@ -10,9 +10,14 @@
         </el-form-item>
 
         <el-form-item :show-message="false" label="您的邮箱" prop="email" class="emailcheckd">
-          <el-input v-model="ruleForm.email"></el-input>
-          <el-button type="warning" @click="toSendMessage" :disabled="isDisabled">{{ istext || "发送验证码" }}</el-button>
+          <div class="zoom">
+            <el-input v-model="ruleForm.email" @input="tipEmail"></el-input>
+            <el-button type="warning" @click="toSendMessage" :disabled="isDisabled">{{ istext || "发送验证码" }}</el-button>
+          </div>
+
+          <div class="tipEmail" v-show="isshowEmail" @click="selectEmail">{{ ruleForm.email + "@qq.com" }}</div>
         </el-form-item>
+
         <el-form-item :show-message="false" label="邮箱验证码" prop="checkEmail">
           <el-input v-model="ruleForm.checkEmail"></el-input>
         </el-form-item>
@@ -101,6 +106,7 @@ export default {
       isDisabled: true, //是否禁用
       istext: "", //验证码文字倒计时
       verification: "", //验证码
+      isshowEmail: false, //邮箱后缀提示
     };
   },
   methods: {
@@ -176,6 +182,25 @@ export default {
         }
       }, 1000);
     },
+
+    // 邮箱后缀提示
+    tipEmail() {
+      if (this.ruleForm.email.length > 0) {
+        this.isshowEmail = true;
+        if (this.ruleForm.email.indexOf("@") !== -1) {
+          this.isshowEmail = false;
+        }
+      } else {
+        this.isshowEmail = false;
+      }
+    },
+    // 选择邮箱
+    selectEmail() {
+      if (this.ruleForm.email.indexOf("@") == -1) {
+        this.ruleForm.email = this.ruleForm.email + "@qq.com";
+      }
+      this.isshowEmail = false;
+    },
   },
 };
 </script>
@@ -211,11 +236,30 @@ export default {
     .el-form {
       font-size: 20px;
       /deep/.emailcheckd .el-form-item__content {
-        width: 83%;
+        width: 100%;
         display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        .zoom {
+          display: flex;
+          width: 100%;
+        }
+        &:nth-child(2) {
+          width: 83%;
+        }
       }
       /deep/.el-form-item__label {
         font-weight: 700;
+      }
+      .tipEmail {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 0 15px;
+        cursor: pointer;
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.7);
+          transition: all 0.5s;
+        }
       }
     }
   }
@@ -223,37 +267,39 @@ export default {
 
 // 弹起动画
 #animation {
-  -webkit-animation: bounce 1s 0.2s ease both;
-  -moz-animation: bounce 1s 0.2s ease both;
+  -webkit-animation: bounceIn 1s 0.2s ease both;
+  -moz-animation: bounceIn 1s 0.2s ease both;
 }
-@-webkit-keyframes bounce {
-  0%,
-  20%,
-  50%,
-  80%,
+@-webkit-keyframes bounceIn {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1.05);
+  }
+  70% {
+    -webkit-transform: scale(0.9);
+  }
   100% {
-    -webkit-transform: translateY(0);
-  }
-  40% {
-    -webkit-transform: translateY(-30px);
-  }
-  60% {
-    -webkit-transform: translateY(-15px);
+    -webkit-transform: scale(1);
   }
 }
-@-moz-keyframes bounce {
-  0%,
-  20%,
-  50%,
-  80%,
+@-moz-keyframes bounceIn {
+  0% {
+    opacity: 0;
+    -moz-transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    -moz-transform: scale(1.05);
+  }
+  70% {
+    -moz-transform: scale(0.9);
+  }
   100% {
-    -moz-transform: translateY(0);
-  }
-  40% {
-    -moz-transform: translateY(-30px);
-  }
-  60% {
-    -moz-transform: translateY(-15px);
+    -moz-transform: scale(1);
   }
 }
 </style>
