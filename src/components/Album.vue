@@ -30,7 +30,8 @@ export default {
   methods: {
     toAlbumDetail(aid) {
       console.log(aid);
-      this.$mb.alert("音乐专辑正在开发中,请耐心等待!", { confirmButtonText: "确定" });
+      // this.$mb.alert("音乐专辑正在开发中,请耐心等待!", { confirmButtonText: "确定" });
+      this.$router.push({ path: "/album", query: { aid: aid } });
     },
   },
 };
