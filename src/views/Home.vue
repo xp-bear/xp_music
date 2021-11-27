@@ -256,7 +256,7 @@ export default {
     },
     MvnextP() {
       this.mvCurPage += 1;
-      this.limitMvList = this.mvList.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
+      this.limitMvList = this.mvList.slice(12 * (this.mvCurPage - 1), 12 * this.mvCurPage);
       // console.log("下一页", this.mvCurPage);
     },
     // 上一页
@@ -266,7 +266,7 @@ export default {
     },
     MvprevP() {
       this.mvCurPage -= 1;
-      this.limitMvList = this.mvList.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
+      this.limitMvList = this.mvList.slice(12 * (this.mvCurPage - 1), 12 * this.mvCurPage);
       // console.log("上一页", this.mvCurPage);
     },
     // 退出登录
