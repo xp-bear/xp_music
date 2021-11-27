@@ -14,8 +14,8 @@
         <span>播放量：{{ playCount | numFilter }}</span>
         <span>收藏量：{{ subscribedCount | numFilter }}</span>
         <span>
-          <el-button type="primary"><i class="el-icon-video-play"></i> 播放全部</el-button>
-          <el-button type="warning"><i class="el-icon-chat-dot-square"></i> 评论</el-button>
+          <!-- <el-button type="primary"><i class="el-icon-video-play" @click="playAll"></i> 播放全部</el-button> -->
+          <el-button type="warning" @click="toComment"><i class="el-icon-chat-dot-square"></i> 评论</el-button>
           <el-button type="danger" icon="el-icon-star-off"> 收藏</el-button>
         </span>
       </div>
@@ -29,11 +29,20 @@
       <img :src="plistimgUrl" alt="" style="width: 100%" />
       <el-button type="primary" @click="downImg">下载图片</el-button>
     </el-dialog>
+
+    <!-- 查看歌单评论对话框  -->
+    <div class="tokes">
+      <el-dialog :show-close="false" :visible.sync="playListFlag" width="800px">
+        <!-- 评论  -->
+        <Comment :comments="comments" />
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 import ArtList from "@/components/ArtList";
+import Comment from "@/components/Comment";
 export default {
   name: "Playlist",
   data() {
@@ -47,6 +56,8 @@ export default {
       creator: "", //歌单创建者
       description: "", //歌单描述
       bigImgFlag: false,
+      comments: [], //歌曲评论
+      playListFlag: false,
     };
   },
   methods: {
@@ -78,8 +89,13 @@ export default {
       };
       ajax.send();
     },
+    // 图片大图
     bigImg() {
       this.bigImgFlag = true;
+    },
+    // 评论
+    toComment() {
+      this.playListFlag = true;
     },
   },
   mounted() {
@@ -95,9 +111,15 @@ export default {
       this.description = res.data.playlist.description;
       // console.log(res.data.playlist.tracks);
     });
+    //  评论发起请求
+    this.$http.get(`http://123.207.32.32:9001/comment/playlist?id=${this.$route.query.pid}`).then((res) => {
+      this.comments = res.data.comments;
+      // console.log(this.comments);
+    });
   },
   components: {
     ArtList,
+    Comment,
   },
   filters: {
     numFilter(val) {
@@ -115,6 +137,15 @@ export default {
 .Playlist {
   /deep/.el-dialog__body {
     text-align: right;
+  }
+  .tokes {
+    /deep/.el-dialog__body {
+      padding: 0;
+      text-align: left;
+    }
+    /deep/.el-dialog__header {
+      padding: 0;
+    }
   }
   .top {
     width: 800px;

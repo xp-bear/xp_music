@@ -27,6 +27,7 @@
         <img :src="item.imageUrl" alt="" />
       </el-carousel-item>
     </el-carousel>
+
     <!-- 热门歌单横幅 -->
     <p class="hot-top-title"><img src="../assets/selectlist.jpg" alt="" /></p>
     <!-- 热门歌单 -->
@@ -48,7 +49,7 @@
         </div>
       </div>
     </keep-alive>
-    <!-- 分页 -->
+    <!-- 歌单分页 -->
     <el-pagination
       :current-page="this.currentPage"
       :background="true"
@@ -66,11 +67,103 @@
       <span @click="psize(4)" :class="this.currentPage == 4 ? 'active' : ''">4</span>
       <span @click="psize(5)" :class="this.currentPage == 5 ? 'active' : ''">5</span>
     </el-pagination>
+
+    <!-- 最新mv横幅 -->
+    <p class="hot-top-title"><img src="../assets/albumlist.jpg" alt="" /></p>
+    <keep-alive>
+      <div class="hot">
+        <div class="h-item" v-for="item in limitMvList" :key="item.id" @click="toMV(item.id, item.name)">
+          <img :src="item.cover" alt="" />
+          <div class="h-title">
+            <i class="el-icon-headset"></i><span>{{ item.playCount | numFilter }}</span>
+          </div>
+          <div class="h-desc">
+            <span class="eclipse">{{ item.name }} - {{ item.artistName }}</span>
+          </div>
+          <!-- 播放按钮-遮罩层 -->
+          <div class="mask-play">
+            <i class="el-icon-video-play"></i>
+          </div>
+        </div>
+      </div>
+    </keep-alive>
+    <!-- MV分页 -->
+    <el-pagination
+      :current-page="this.mvCurPage"
+      :background="true"
+      layout="prev, slot, next,total"
+      :page-size="12"
+      :total="this.mvList.length"
+      @next-click="MvnextP"
+      @prev-click="MvprevP"
+      :hide-on-single-page="true"
+      ref="pagination"
+    >
+      <span @click="msize(1)" :class="this.mvCurPage == 1 ? 'active' : ''">1</span>
+      <span @click="msize(2)" :class="this.mvCurPage == 2 ? 'active' : ''">2</span>
+      <span @click="msize(3)" :class="this.mvCurPage == 3 ? 'active' : ''">3</span>
+    </el-pagination>
+
+    <!-- 排行榜横幅 -->
+    <p class="hot-top-title"><img src="../assets/hotlist.jpg" alt="" /></p>
+    <!-- 排行榜 -->
+    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+      <el-tab-pane label="飙升榜" name="first">
+        <keep-alive>
+          <ArtList :songs="topPlaySongs" :show="true" />
+        </keep-alive>
+      </el-tab-pane>
+      <el-tab-pane label="新歌榜" name="second">
+        <keep-alive>
+          <ArtList :songs="topPlaySongs" :show="true" />
+        </keep-alive>
+      </el-tab-pane>
+      <el-tab-pane label="原创榜" name="third">
+        <keep-alive>
+          <ArtList :songs="topPlaySongs" :show="true" />
+        </keep-alive>
+      </el-tab-pane>
+      <el-tab-pane label="热歌榜" name="fourth">
+        <keep-alive>
+          <ArtList :songs="topPlaySongs" :show="true" />
+        </keep-alive>
+      </el-tab-pane>
+      <el-tab-pane label="黑胶VIP爱听榜" name="fifth">
+        <keep-alive>
+          <ArtList :songs="topPlaySongs" :show="true" />
+        </keep-alive>
+      </el-tab-pane>
+      <el-tab-pane label="云音乐说唱榜" name="sixth">
+        <keep-alive>
+          <ArtList :songs="topPlaySongs" :show="true" />
+        </keep-alive>
+      </el-tab-pane>
+      <el-tab-pane label="云音乐说唱榜" name="seventh">
+        <keep-alive>
+          <ArtList :songs="topPlaySongs" :show="true" />
+        </keep-alive>
+      </el-tab-pane>
+      <el-tab-pane label="云音乐电音榜" name="eighth">
+        <keep-alive>
+          <ArtList :songs="topPlaySongs" :show="true" />
+        </keep-alive>
+      </el-tab-pane>
+    </el-tabs>
+
+    <!-- 播放视频对话框 -->
+    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true">
+      <div class="demo">
+        <video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"> </video-player>
+      </div>
+      <el-button type="primary" @click="downMV">下载MV</el-button>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { MessageBox } from "element-ui";
+import ArtList from "@/components/ArtList";
+
 export default {
   name: "Home",
   data() {
@@ -80,8 +173,49 @@ export default {
       playlists: [], //热门歌单
       limitPlaylists: [], //限制歌单分页
       currentPage: 1, //页码
+      limitMvList: [], //限制mv分页
+      mvCurPage: 1, //页码
       isUser: false, //用户登录状态
-      token: {},
+      token: {}, //保存token状态
+      activeName: "first",
+      topList: [], //排行榜数据
+      topPlaySongs: [], //排行榜歌曲
+      mvList: [], //mv数据
+      toMVFlag: false,
+      playerOptions: {
+        //播放速度
+        playbackRates: [0.5, 1.0, 1.5, 2.0],
+        //如果true,浏览器准备好时开始回放。
+        autoplay: false,
+        // 默认情况下将会消除任何音频。
+        muted: false,
+        // 导致视频一结束就重新开始。
+        loop: false,
+        // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+        preload: "auto",
+        language: "zh-CN",
+        // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+        aspectRatio: "16:9",
+        // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+        fluid: true,
+        sources: [
+          {
+            type: "video/mp4", //类型
+            src: "", //url地址
+          },
+        ],
+        //你的封面地址
+        poster: "",
+        //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+        notSupportedMessage: "该视频暂无资源!",
+        controlBar: {
+          timeDivider: true, // 当前时间和持续时间的分隔符
+          durationDisplay: true, // 显示持续时间
+          remainingTimeDisplay: false, // 是否显示剩余时间功能
+          fullscreenToggle: true, //全屏按钮
+        },
+      }, //视频播放配置
+      title: "", //mv标题
     };
   },
   methods: {
@@ -109,19 +243,31 @@ export default {
     psize(val) {
       this.currentPage = val;
       this.limitPlaylists = this.playlists.slice(12 * (val - 1), 12 * val);
+    },
+    msize(val) {
+      this.mvCurPage = val;
+      this.limitMvList = this.mvList.slice(12 * (val - 1), 12 * val);
       // console.log(this.currentPage);
     },
     // 下一页
     nextP() {
       this.currentPage += 1;
       this.limitPlaylists = this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
-      // console.log("下一页", this.currentPage);
+    },
+    MvnextP() {
+      this.mvCurPage += 1;
+      this.limitMvList = this.mvList.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
+      // console.log("下一页", this.mvCurPage);
     },
     // 上一页
     prevP() {
       this.currentPage -= 1;
       this.limitPlaylists = this.playlists.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
-      // console.log("上一页", this.currentPage);
+    },
+    MvprevP() {
+      this.mvCurPage -= 1;
+      this.limitMvList = this.mvList.slice(12 * (this.currentPage - 1), 12 * this.currentPage);
+      // console.log("上一页", this.mvCurPage);
     },
     // 退出登录
     exit() {
@@ -154,16 +300,59 @@ export default {
         this.isUser = false;
       }
     },
+    // tab栏切换
+    handleClick(tab, event) {
+      console.log(this.topList[tab.index].id);
+      // 点击请求排行数据
+      this.$http.get(`http://123.207.32.32:9001/playlist/detail?id=${this.topList[tab.index].id}`).then((res) => {
+        this.topPlaySongs = res.data.playlist.tracks.slice(0, 20);
+      });
+    },
+    // 播放MV
+    async toMV(id, title) {
+      this.title = title;
+      this.toMVFlag = true;
+      let mdata = await this.$http.get(`http://123.207.32.32:9001/mv/url?id=${id}`);
+      this.mvUrl = mdata.data.data.url; //高画质
+      if (this.mvUrl == null) {
+        this.toMVFlag = false;
+        this.$message({ message: "当前歌曲没有mv!", type: "warning", duration: 1000 });
+        return;
+      }
+      this.playerOptions.sources[0].src = mdata.data.data.url;
+    },
+    // 下载mv
+    downMV() {
+      this.downRow(this.mvUrl, this.title, "mp4");
+      this.$message({ message: "正在下载该MV,请勿重复点击!", type: "success", duration: 1000, showClose: true });
+    },
+    // 根据url下载
+    downRow(data, name, suffix) {
+      let ajax = new XMLHttpRequest();
+      ajax.open("GET", data, true);
+      ajax.responseType = "blob";
+      // ajx.withCredentials = true; //如果跨域
+      ajax.onload = function (oEvent) {
+        let content = ajax.response;
+        let a = document.createElement("a");
+        a.download = name + "." + suffix; //文件名
+        a.style.display = "none";
+        let blob = new Blob([content]);
+        a.href = URL.createObjectURL(blob);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+      ajax.send();
+    },
   },
   mounted() {
     // token 判断
     this.isToken();
-
     // 返回请求的关键字
     if (this.$route.query.val) {
       this.ipt = this.$route.query.val;
     }
-
     // 请求轮播图数据
     this.$http.get(`http://123.207.32.32:9001/banner`).then((bdata) => {
       this.banners = bdata.data.banners;
@@ -174,14 +363,33 @@ export default {
       this.playlists = hdata.data.playlists;
       this.limitPlaylists = this.playlists.slice(0, 12);
     });
+
+    // 请求排行榜数据
+    this.$http.get(`http://123.207.32.32:9001/toplist/detail`).then((pdata) => {
+      this.topList = pdata.data.list.slice(0, 8);
+      // console.log(this.topList);
+      // 请求第一页数据
+      this.$http.get(`http://123.207.32.32:9001/playlist/detail?id=${this.topList[0].id}`).then((res) => {
+        this.topPlaySongs = res.data.playlist.tracks.slice(0, 20);
+      });
+    });
+
+    // 请求最新MV数据
+    this.$http.get(`http://123.207.32.32:9001/mv/first`).then((mres) => {
+      this.mvList = mres.data.data;
+      this.limitMvList = this.mvList.slice(0, 12);
+    });
   },
-  updated() {},
+
   filters: {
     numFilter(val) {
       if (val > 10000) {
         return (val / 10000).toFixed(2) + "万";
       }
     },
+  },
+  components: {
+    ArtList,
   },
 };
 </script>
@@ -191,6 +399,9 @@ export default {
   margin: 0 auto;
   .active {
     background: #409eff;
+  }
+  /deep/.el-dialog__body {
+    text-align: right;
   }
   // 分页
   .el-pagination {
@@ -339,6 +550,26 @@ export default {
         opacity: 1;
         transition: all 0.3s;
       }
+    }
+  }
+  // 排行榜
+  .el-tabs {
+    width: 1000px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.3);
+
+    /deep/.el-tabs__content {
+      padding: 0;
+    }
+    /deep/.el-tabs__content {
+      // background: url("../assets/rain.gif") no-repeat;
+      // background-size: cover;
+    }
+    /deep/.el-tabs__item {
+      font-size: 16px;
+    }
+    .Lsit {
+      background-color: rgba(255, 255, 255, 0.5);
     }
   }
 }
