@@ -6,25 +6,25 @@
           <el-table-column type="index" label="#" width="80"> </el-table-column>
           <el-table-column width="50">
             <template slot-scope="scope">
-              <img :src="scope.row.al.picUrl" class="image" @click="bigImg(scope.row.al.picUrl, scope.row.name)" />
+              <img :src="scope.row.musicImg" class="image" @click="bigImg(scope.row.musicImg, scope.row.name)" />
             </template>
           </el-table-column>
           <el-table-column prop="name" label="标题" width="200"> </el-table-column>
           <el-table-column label="时长" width="130">
             <template slot-scope="scope">
-              <div>{{ scope.row.dt ? scope.row.dt : 0 | famter }}</div>
+              <div>{{ scope.row.duration ? scope.row.duration : 0 | famter }}</div>
             </template>
           </el-table-column>
           <el-table-column label="歌手" width="180">
             <template slot-scope="scope">
-              <div @click="toSingerPage(scope.row.ar[0].name)" class="at-singer">{{ scope.row.ar[0].name }}</div>
+              <div @click="toSingerPage(scope.row.singerName)" class="at-singer">{{ scope.row.singerName }}</div>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div>
                 <el-tooltip effect="dark" content="播放歌曲" placement="top">
-                  <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.al.picUrl, scope.row.name, scope.row.ar[0].name, scope.row.dt)"></i>
+                  <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.musicImg, scope.row.name)"></i>
                 </el-tooltip>
 
                 <el-tooltip effect="dark" content="下载歌曲" placement="top">
@@ -32,7 +32,10 @@
                 </el-tooltip>
 
                 <el-tooltip effect="dark" content="播放MV" placement="top">
-                  <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mv, scope.row.name)"></i>
+                  <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mid, scope.row.name)"></i>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="删除该条记录" placement="top">
+                  <i class="el-icon-delete" title="删除该条记录" @click="toDelete(scope.row.id)"></i>
                 </el-tooltip>
               </div>
             </template>
@@ -67,7 +70,6 @@
 </template>
 
 <script>
-import { Loading } from "element-ui";
 import PlayMusic from "@/components/PlayMusic.vue";
 import Lyric from "@/components/Lyric.vue";
 
@@ -86,6 +88,7 @@ export default {
       lyrics: "", //歌词
       mvId: 1, //mv 的id
       mvUrl: "", //mv 的url地址
+      simgUrl: "", //传递的图片url
       playerOptions: {
         //播放速度
         playbackRates: [0.5, 1.0, 1.5, 2.0],
@@ -104,22 +107,19 @@ export default {
         fluid: true,
         sources: [
           {
-            //类型
-            type: "video/mp4",
-            //url地址
-            src: "",
+            type: "video/mp4", //类型
+            src: "", //url地址
           },
         ],
         //你的封面地址
         poster: "",
         //允许覆盖Video.js无法播放媒体源时显示的默认信息。
-        notSupportedMessage: "此视频暂无法播放，请稍后再试",
+        notSupportedMessage: "该视频暂无资源!",
         controlBar: {
-          timeDivider: true,
-          durationDisplay: true,
-          remainingTimeDisplay: false,
-          //全屏按钮
-          fullscreenToggle: true,
+          timeDivider: true, // 当前时间和持续时间的分隔符
+          durationDisplay: true, // 显示持续时间
+          remainingTimeDisplay: false, // 是否显示剩余时间功能
+          fullscreenToggle: true, //全屏按钮
         },
       }, //视频播放配置
     };
@@ -151,7 +151,7 @@ export default {
       done();
     },
     // 播放歌曲
-    async vplay(id, src, name, singerName, duration) {
+    async vplay(id, src, name) {
       this.dialogTableVisible = true;
       // 发起请求拿到歌曲id
       let res = await this.$http.get(`http://123.207.32.32:9001/song/url?id=${id}`);
@@ -163,19 +163,17 @@ export default {
       this.title = name;
       this.mid = id;
       this.lyrics = lycdata.data.lrc.lyric;
-      // console.log(this.lyrics);
+      // 单个图片的url链接
+      this.simgUrl = src;
 
       // 提交数据到vuex
       let obj = {
         musicUrl: this.musicUrl,
-        musicImg: this.misicImg,
-        name: name,
+        misicImg: this.misicImg,
+        title: this.title,
         mid: this.mid,
-        simgUrl: src,
+        simgUrl: this.simgUrl,
         lyrics: this.lyrics,
-        singerName: singerName,
-        duration: duration,
-        id: id,
       };
       this.$store.commit("getSong", obj);
     },
@@ -218,18 +216,11 @@ export default {
     newChange(id, src, name) {
       this.vplay(id, src, name);
     },
-    // 加载更多
-    toLoading() {
-      let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
-      // 发起请求
-      // https://api.imjad.cn/cloudmusic/?type=search&s=的&offset=10&limit=20
-      // let res = await this.$http.get(`https://api.imjad.cn/cloudmusic/?type=search&search_type=1&s=${this.input}`);
-      // this.moreSongs = res.data.result.songs;
-      setTimeout(() => {
-        this.$mb.alert("加载更多正在开发中...", "注意", { confirmButtonText: "确定" });
-        loadingInstance.close();
-      }, 2000);
-    },
+    // // 加载更多
+    // toLoading() {
+    //   // 触发父组件的事件
+    //   this.$emit("toLoading");
+    // },
     // 播放MV
     async toMV(id, name) {
       this.toMVFlag = true;
@@ -245,7 +236,7 @@ export default {
       let mdata = await this.$http.get(`http://123.207.32.32:9001/mv/url?id=${this.mvId}`);
       // console.log(mdata.data);
       this.mvUrl = mdata.data.data.url; //高画质
-      //   console.log(this.mvUrl);
+      // console.log(this.mvUrl);
       if (this.mvUrl == null) {
         this.toMVFlag = false;
         // this.$mb.alert("当前歌曲没有mv", "注意", { confirmButtonText: "确定" });
@@ -274,6 +265,16 @@ export default {
     toSingerPage(singerName) {
       this.$router.push({ path: "/singer", query: { singerName: singerName } });
     },
+    //删除该条历史记录
+    toDelete(id) {
+      this.songs.forEach((item, index) => {
+        if (item.id == id) {
+          this.songs.splice(index, 1);
+        }
+      });
+      // 本地存储
+      localStorage.setItem("likeSongs", JSON.stringify(this.songs));
+    },
   },
   components: {
     PlayMusic,
@@ -284,9 +285,6 @@ export default {
 
 <style lang="less" scoped>
 .List {
-  .isHave {
-    color: rgb(182, 65, 19);
-  }
   .at-singer {
     cursor: pointer !important;
   }

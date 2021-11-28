@@ -78,7 +78,6 @@ export default {
   methods: {
     // 调整音乐声音大小
     justVolume() {
-      // console.log(this.volume);
       this.$refs.audio.volume = this.volume / 100;
     },
     //播放按钮

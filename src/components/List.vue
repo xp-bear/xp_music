@@ -24,7 +24,7 @@
             <template slot-scope="scope">
               <div>
                 <el-tooltip effect="dark" content="播放歌曲" placement="top">
-                  <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.artists[0].picUrl, scope.row.name)"></i>
+                  <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.artists[0].picUrl, scope.row.name, scope.row.artists[0].name, scope.row.duration)"></i>
                 </el-tooltip>
 
                 <el-tooltip effect="dark" content="下载歌曲" placement="top">
@@ -144,11 +144,10 @@ export default {
       if (video) {
         video.pause();
       }
-
       done();
     },
     // 播放歌曲
-    async vplay(id, src, name) {
+    async vplay(id, src, name, singerName, duration) {
       this.dialogTableVisible = true;
       // 发起请求拿到歌曲id
       let res = await this.$http.get(`http://123.207.32.32:9001/song/url?id=${id}`);
@@ -162,6 +161,20 @@ export default {
       this.lyrics = lycdata.data.lrc.lyric;
       // 单个图片的url链接
       this.simgUrl = src;
+
+      // 提交数据到vuex
+      let obj = {
+        musicUrl: this.musicUrl,
+        musicImg: this.misicImg,
+        name: name,
+        mid: this.mid,
+        simgUrl: this.simgUrl,
+        lyrics: this.lyrics,
+        singerName: singerName,
+        duration: duration,
+        id: id,
+      };
+      this.$store.commit("getSong", obj);
     },
     // 下载歌曲
     async vdown(id, name) {

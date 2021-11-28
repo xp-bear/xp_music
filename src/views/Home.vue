@@ -16,7 +16,7 @@
         <el-button type="info" size="small" @click="register">注册</el-button>
       </div>
       <div class="user" v-else>
-        <img src="../assets/avatar.png" alt="" />&nbsp; <span> {{ token.name }}</span
+        <img src="../assets/avatar.png" alt="" />&nbsp; <span @click="toUser"> {{ token.name }}</span
         >&nbsp;
         <el-button type="danger" size="small" @click="exit">退出</el-button>
       </div>
@@ -151,7 +151,7 @@
     </el-tabs>
 
     <!-- 播放视频对话框 -->
-    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true">
+    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose">
       <div class="demo">
         <video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"> </video-player>
       </div>
@@ -302,7 +302,7 @@ export default {
     },
     // tab栏切换
     handleClick(tab, event) {
-      console.log(this.topList[tab.index].id);
+      // console.log(this.topList[tab.index].id);
       // 点击请求排行数据
       this.$http.get(`http://123.207.32.32:9001/playlist/detail?id=${this.topList[tab.index].id}`).then((res) => {
         this.topPlaySongs = res.data.playlist.tracks.slice(0, 20);
@@ -344,6 +344,21 @@ export default {
         document.body.removeChild(a);
       };
       ajax.send();
+    },
+    // 关闭对话框之前
+    onBeforeClose(done) {
+      // console.log("我关闭之前的回调函数");
+      this.musicUrl = "";
+      let video = document.querySelector(".vjs-tech");
+      if (video) {
+        video.pause();
+      }
+
+      done();
+    },
+    // 调转到用户
+    toUser() {
+      this.$router.push({ path: "/user" });
     },
   },
   mounted() {

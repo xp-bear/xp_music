@@ -42,6 +42,11 @@ const routes = [
     name: "Album",
     component: () => import(/* webpackChunkName: "about" */ "../views/AlbumPlay.vue"),
   },
+  {
+    path: "/user",
+    name: "User",
+    component: () => import(/* webpackChunkName: "about" */ "../views/User.vue"),
+  },
 ];
 
 const router = new VueRouter({
