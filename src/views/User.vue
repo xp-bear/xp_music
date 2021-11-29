@@ -15,7 +15,7 @@
           <!-- 性别展示 -->
           <!-- <i class="el-icon-male"></i> -->
           <i class="el-icon-female" style="color: #cc5476"></i>
-          <el-button size="small" type="warning" class="poepleOne">编辑个人资料</el-button>
+          <el-button size="small" type="warning" class="poepleOne" @click="editUser">编辑个人资料</el-button>
         </div>
         <div class="dynamic">
           <span><strong>0</strong> <i>动态</i></span>
@@ -54,8 +54,13 @@ export default {
     this.songs = JSON.parse(localStorage.getItem("likeSongs"));
   },
   methods: {
+    // 返回
     toBack() {
       this.$router.go(-1);
+    },
+    // 编辑用户信息
+    editUser() {
+      this.$mb.alert("编辑用户信息正在开发中!", "注意", { confirmButtonText: "确定" });
     },
   },
   components: {

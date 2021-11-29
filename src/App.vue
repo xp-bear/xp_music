@@ -8,8 +8,9 @@
       <div class="main">
         <div>
           "本小破站完全开源,持续更新中!"<br />
-          "请不要随便攻击该网站,谢谢了!"<br />
-          "如果您有任何问题,请联系该邮箱: <span style="color: red">1693889638@qq.com</span>"
+          "github地址: "<a href="https://github.com/xp-coding/xp_music" target="_blank" style="font-weight: 700; color: red; text-decoration: underline">https://github.com/xp-coding/xp_music</a>
+          <br />
+          "如果您有任何问题,请联系该邮箱: <span style="color: #000; font-weight: 700">1693889638@qq.com</span>"
           <footer>
             ——
             <cite>想走过亚洲的熊</cite>
@@ -66,9 +67,9 @@ export default {
     }, 500);
 
     // 公告弹框提示
-    // setTimeout(() => {
-    //   this.dialogVisible = true;
-    // }, 1000);
+    setTimeout(() => {
+      this.dialogVisible = true;
+    }, 1000);
   },
   methods: {},
 };

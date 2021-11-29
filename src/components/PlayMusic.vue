@@ -110,8 +110,10 @@ export default {
       //判断某个字段是否在对象里面
       if (this.playsongs[num + counter].hasOwnProperty("artists")) {
         this.newUrl = this.playsongs[num + counter].artists[0].picUrl;
-      } else {
+      } else if (this.playsongs[num + counter].hasOwnProperty("al")) {
         this.newUrl = this.playsongs[num + counter].al.picUrl;
+      } else {
+        this.newUrl = this.playsongs[num + counter].simgUrl;
       }
 
       this.newNmae = this.playsongs[num + counter].name;
