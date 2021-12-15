@@ -22,7 +22,7 @@
           <span><strong>3</strong><i>关注</i></span>
           <span><strong>2</strong><i>粉丝</i></span>
         </div>
-        <div class="location">所在地区：湖北省-武汉市</div>
+        <div class="location">所在地区: 湖北省-武汉市</div>
         <div class="network">社交网络: 熊仔音乐,社交网络!</div>
       </div>
     </div>
@@ -35,6 +35,17 @@
       <!-- 歌单列表 -->
       <UserList :songs="songs" :show="true" />
     </div>
+
+    <!-- 修改信息对话框 -->
+    <el-dialog title="用户信息修改" :visible.sync="dialogVisible" width="800px">
+      <form class="userInfo">
+        <div><span style="width: 100px">你的名字</span> <el-input v-model="name" disabled>12</el-input></div>
+        <div><span style="width: 100px">你的密码</span> <el-input>12</el-input></div>
+        <div><span style="width: 100px">你的名字</span> <el-input>12</el-input></div>
+        <div><span style="width: 100px">你的名字</span> <el-input>12</el-input></div>
+        <el-button type="primary" style="display: block; margin-left: auto; margin-top: 10px">提交修改</el-button>
+      </form>
+    </el-dialog>
   </div>
 </template>
 
@@ -46,12 +57,14 @@ export default {
     return {
       userInfo: {},
       songs: [], //播放历史的歌曲
+      dialogVisible: false,
+      name: "用户信息",
     };
   },
   mounted() {
     this.userInfo = JSON.parse(localStorage.getItem("user"));
     // 拿到播放过的歌曲
-    this.songs = JSON.parse(localStorage.getItem("likeSongs"));
+    this.songs = JSON.parse(localStorage.getItem("likeSongs")) || [];
   },
   methods: {
     // 返回
@@ -60,7 +73,11 @@ export default {
     },
     // 编辑用户信息
     editUser() {
-      this.$mb.alert("编辑用户信息正在开发中!", "注意", { confirmButtonText: "确定" });
+      let user = JSON.parse(localStorage.getItem("user"));
+      this.dialogVisible = true;
+      console.log(user);
+
+      // this.$mb.alert("编辑用户信息正在开发中!", "注意", { confirmButtonText: "确定" });
     },
   },
   components: {
@@ -77,6 +94,7 @@ export default {
   background-color: #fff;
   box-shadow: 0 0 3px #ccc;
   position: relative;
+
   .back {
     position: absolute;
     top: 0;
@@ -159,6 +177,22 @@ export default {
     }
     .List {
       width: 900px;
+    }
+  }
+  /deep/.el-dialog__body {
+    padding-top: 0;
+  }
+  .userInfo {
+    div {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      margin: 10px 0px;
+
+      span {
+        height: 40px;
+        line-height: 40px;
+      }
     }
   }
 }

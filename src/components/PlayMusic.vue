@@ -9,10 +9,13 @@
 
     <!-- 播放条 -->
     <div class="bt-list">
+      <i class="iconfont icon-xunhuanbofang" style="font-size: 50px" @click="isloop" :class="isLoop == true ? '' : 'active'"></i>
+
       <i class="el-icon-d-arrow-left" @click="micChange(-1)"></i>
       <i :class="this.isPlay ? 'el-icon-video-pause' : 'el-icon-video-play'" @click="toPlay"></i>
 
       <i class="el-icon-d-arrow-right" @click="micChange(+1)"></i>
+      <i class="iconfont icon-danquxunhuan" style="font-size: 50px" @click="isloop" :class="isLoop == true ? 'active' : ''"></i>
       <!-- 歌曲进度条 -->
       <div id="progressBar" @click="speed">
         <div id="pgIcon" ref="speedprocess">
@@ -23,7 +26,7 @@
     <div class="block">
       <el-slider v-model="volume" vertical height="200px" @input="justVolume"></el-slider>
     </div>
-    <audio :src="musicUrl" :autoplay="isPlay && 'autoplay'" ref="audio"></audio>
+    <audio :src="musicUrl" :autoplay="isPlay && 'autoplay'" ref="audio" :loop="isLoop"></audio>
   </div>
 </template>
 <script>
@@ -42,6 +45,7 @@ export default {
       speeds: 0, //歌曲进度
       volume: 50,
       copymusicUrl: "true", //歌曲url copy
+      isLoop: false, //歌曲是否循环
     };
   },
 
@@ -138,13 +142,25 @@ export default {
       };
       this.$store.commit("getMusic", obj);
     },
+    // 歌曲播放模式
+    isloop() {
+      this.isLoop = !this.isLoop;
+      if (this.isLoop == true) {
+        console.log(this.cur, this.total);
+        this.$message({ message: "切换为: 单曲循环", type: "warning", duration: 1000 });
+      } else {
+        this.$message({ message: "切换为: 循环播放", type: "warning", duration: 1000 });
+      }
+    },
   },
   watch: {
     // 自动切换下一首歌曲
     cur(newVal, oldVal) {
-      if (newVal.toFixed(0) == this.total.toFixed(0)) {
-        // console.log("我进来了");
-        this.micChange(1);
+      if (this.isLoop == false) {
+        if (newVal.toFixed(0) == this.total.toFixed(0)) {
+          // console.log("我进来了");
+          this.micChange(1);
+        }
       }
     },
   },
@@ -278,55 +294,61 @@ export default {
         }
       }
     }
+    .active {
+      color: red;
+      background: linear-gradient(to right, #606c8860, #3f4c6b60);
+      border-radius: 5px;
+      box-shadow: 0 0 5px #606c88;
+    }
+  }
+}
+
+@keyframes streamer {
+  0% {
+    background-position: 0%;
   }
 
-  @keyframes streamer {
-    0% {
-      background-position: 0%;
-    }
+  100% {
+    background-position: 200%;
+  }
+}
 
-    100% {
-      background-position: 200%;
-    }
+@keyframes move {
+  0% {
+    transform: rotate(-25deg);
+    transform-origin: 0% 0%;
   }
+  100% {
+    transform: rotate(0deg);
+    transform-origin: 0% 0%;
+  }
+}
+.move {
+  animation: move 1.5s linear forwards;
+}
+@keyframes remove {
+  0% {
+    transform: rotate(0deg);
+    transform-origin: 0% 0%;
+  }
+  100% {
+    transform: rotate(-25deg);
+    transform-origin: 0% 0%;
+  }
+}
+.remove {
+  animation: remove 1.5s linear forwards;
+}
 
-  @keyframes move {
-    0% {
-      transform: rotate(-25deg);
-      transform-origin: 0% 0%;
-    }
-    100% {
-      transform: rotate(0deg);
-      transform-origin: 0% 0%;
-    }
+@keyframes mover {
+  0% {
+    transform: rotate(0deg);
   }
-  .move {
-    animation: move 1.5s linear forwards;
+  100% {
+    transform: rotate(360deg);
   }
-  @keyframes remove {
-    0% {
-      transform: rotate(0deg);
-      transform-origin: 0% 0%;
-    }
-    100% {
-      transform: rotate(-25deg);
-      transform-origin: 0% 0%;
-    }
-  }
-  .remove {
-    animation: remove 1.5s linear forwards;
-  }
-
-  @keyframes mover {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  .mover {
-    animation: mover 4s infinite linear;
-  }
+}
+.mover {
+  animation: mover 4s infinite linear;
 }
 </style>

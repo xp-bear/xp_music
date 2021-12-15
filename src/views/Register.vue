@@ -3,7 +3,7 @@
     <!-- 遮罩层 -->
     <div class="mask" id="animation"></div>
     <el-card id="animation">
-      <h2 class="Gradual" style="text-align: center">欢迎注册--熊仔音乐</h2>
+      <h2 style="text-align: center">请填写注册信息</h2>
       <el-form :status-icon="true" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item :show-message="false" label="您的昵称" prop="nickname">
           <el-input v-model="ruleForm.nickname"></el-input>
@@ -218,11 +218,14 @@ export default {
     width: 100%;
     height: 100%;
     top: 0;
-    // filter: blur(5px);
-    background-image: url("../assets/top.gif");
+    // filter: blur(2px);
+    background-image: url("../assets/bg1.gif");
     background-repeat: no-repeat;
     background-position: center;
-    animation: bgmove 2s infinite linear;
+
+    // background: linear-gradient(to right, #4e54c8, #8f94fb);
+    opacity: 0.6;
+    border-radius: 10px;
     background-size: cover;
   }
   .el-card {
@@ -232,6 +235,11 @@ export default {
     margin: 20px;
     h2 {
       margin-bottom: 20px;
+      color: transparent;
+      font-size: 40px;
+      font-weight: bold;
+      background: linear-gradient(45deg, rgba(0, 173, 181, 1) 0%, rgba(0, 173, 181, 0.4) 100%);
+      -webkit-background-clip: text;
     }
     .el-form {
       font-size: 20px;

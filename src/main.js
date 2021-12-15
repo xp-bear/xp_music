@@ -14,7 +14,7 @@ import "video.js/dist/video-js.css";
 Vue.use(VideoPlayer);
 
 //根url路径
-axios.defaults.baseURL = "http://81.68.150.58:5000";
+axios.defaults.baseURL = "http://150.158.21.251:5000";
 //配置超时时间
 // axios.defaults.timeout = 5000;
 
