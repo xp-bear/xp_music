@@ -10,8 +10,6 @@
           "本小破站完全开源,持续更新中!"<br />
           "github地址: "<a href="https://github.com/xp-coding/xp_music" target="_blank" style="font-weight: 700; color: red; text-decoration: underline">https://github.com/xp-coding/xp_music</a>
           <br />
-          "本网站<code style="font-weight: 700">12月6日</code>服务到期,请大家记住新域名: <br />
-          " <span style="font-weight: 700; text-align: center; color: blue">http://150.158.21.251</span> " <br />
           "如果您有任何问题,请联系该邮箱: <span style="color: #000; font-weight: 700">1693889638@qq.com</span>"
           <footer>
             ——
@@ -51,6 +49,22 @@ export default {
       dialogVisible: false,
     };
   },
+  created() {
+    // setTimeout(() => {
+    //   window.L2Dwidget.init({
+    //     pluginRootPath: "live2dw/",
+    //     pluginJsPath: "lib/",
+
+    //     pluginModelPath: "live2d-widget-model-haru_2/assets/",
+    //     tagMode: false,
+    //     debug: false,
+    //     model: { jsonPath: "../live2dw/live2d-widget-model-haru_2/assets/haru02.model.json" },
+    //     display: { position: "left", width: 150, height: 300 },
+    //     mobile: { show: true },
+    //     log: false,
+    //   });
+    // }, 1000);
+  },
   mounted() {
     // 加载看板娘
     setTimeout(() => {
@@ -69,9 +83,9 @@ export default {
     }, 500);
 
     // 公告弹框提示
-    // setTimeout(() => {
-    //   this.dialogVisible = true;
-    // }, 1000);
+    setTimeout(() => {
+      this.dialogVisible = true;
+    }, 1000);
   },
   methods: {},
 };

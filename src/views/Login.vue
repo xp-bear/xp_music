@@ -128,10 +128,10 @@ export default {
     top: 0;
     // filter: blur(2px);
     background-image: url("../assets/bg1.gif");
+    // background-image: linear-gradient(-90deg, #29bdd9 0%, #276ace 100%);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    // background: linear-gradient(to right, #4e54c8, #8f94fb);
     opacity: 0.6;
     border-radius: 10px;
   }

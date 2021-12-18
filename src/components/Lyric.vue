@@ -60,7 +60,6 @@ export default {
             p[i - 1].style.color = "black";
             p[i - 1].style.fontSize = "16px";
           }
-
           p[i].style.color = "red";
           p[i].style.fontSize = "20px";
           p[i].style.transition = "all 0.5s";

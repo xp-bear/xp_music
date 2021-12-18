@@ -1,5 +1,6 @@
 <template>
   <div class="playMusic">
+    <!-- 动的旋转的音乐转盘 -->
     <div class="bg"><img :src="misicImg" alt="" /></div>
     <div class="playContent">
       <img :class="this.isPlay ? 'move' : 'remove'" src="../assets/needle-ab.png" alt="" />
@@ -7,15 +8,15 @@
       <img :class="this.isPlay && 'mover'" :src="misicImg" alt="" />
     </div>
 
-    <!-- 播放条 -->
+    <!-- 播放条 按钮 -->
     <div class="bt-list">
-      <i class="iconfont icon-xunhuanbofang" style="font-size: 50px" @click="isloop" :class="isLoop == true ? '' : 'active'"></i>
+      <i class="iconfont icon-xunhuanbofang" @click="isloop" :class="isLoop == true ? '' : 'active'"></i>
 
       <i class="el-icon-d-arrow-left" @click="micChange(-1)"></i>
       <i :class="this.isPlay ? 'el-icon-video-pause' : 'el-icon-video-play'" @click="toPlay"></i>
 
       <i class="el-icon-d-arrow-right" @click="micChange(+1)"></i>
-      <i class="iconfont icon-danquxunhuan" style="font-size: 50px" @click="isloop" :class="isLoop == true ? 'active' : ''"></i>
+      <i class="iconfont icon-danquxunhuan" @click="isloop" :class="isLoop == true ? 'active' : ''"></i>
       <!-- 歌曲进度条 -->
       <div id="progressBar" @click="speed">
         <div id="pgIcon" ref="speedprocess">
@@ -147,9 +148,9 @@ export default {
       this.isLoop = !this.isLoop;
       if (this.isLoop == true) {
         console.log(this.cur, this.total);
-        this.$message({ message: "切换为: 单曲循环", type: "warning", duration: 1000 });
+        this.$message({ message: "切换为: 单曲循环", type: "warning", duration: 2000 });
       } else {
-        this.$message({ message: "切换为: 循环播放", type: "warning", duration: 1000 });
+        this.$message({ message: "切换为: 循环播放", type: "warning", duration: 2000 });
       }
     },
   },
@@ -233,7 +234,6 @@ export default {
     // background-color: rgba(0, 0, 0, 0.6);
     background: linear-gradient(to right, #606c8860, #3f4c6b60, #2193b060, #2193b060, #3f4c6b60, #606c8860);
     background-size: 200%;
-    font-size: 50px;
     z-index: 4;
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
@@ -244,6 +244,7 @@ export default {
     i {
       margin: 0 30px;
       color: #f47245;
+      font-size: 37px;
 
       &:hover {
         color: #429fff;
@@ -296,9 +297,9 @@ export default {
     }
     .active {
       color: red;
-      background: linear-gradient(to right, #606c8860, #3f4c6b60);
-      border-radius: 5px;
-      box-shadow: 0 0 5px #606c88;
+      // background: linear-gradient(to right, #606c8860, #3f4c6b60);
+      // border-radius: 5px;
+      // box-shadow: 0 0 5px #606c88;
     }
   }
 }
