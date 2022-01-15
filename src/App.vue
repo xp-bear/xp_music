@@ -10,6 +10,10 @@
           "本小破站完全开源,持续更新中!"<br />
           "github地址: "<a href="https://github.com/xp-coding/xp_music" target="_blank" style="font-weight: 700; color: red; text-decoration: underline">https://github.com/xp-coding/xp_music</a>
           <br />
+
+          "gitee地址: "<a href="https://gitee.com/xp-bear" target="_blank" style="font-weight: 700; color: red; text-decoration: underline">https://gitee.com/xp-bear</a>
+          <br />
+
           "如果您有任何问题,请联系该邮箱: <span style="color: #000; font-weight: 700">1693889638@qq.com</span>"
           <footer>
             ——
@@ -54,7 +58,6 @@ export default {
     //   window.L2Dwidget.init({
     //     pluginRootPath: "live2dw/",
     //     pluginJsPath: "lib/",
-
     //     pluginModelPath: "live2d-widget-model-haru_2/assets/",
     //     tagMode: false,
     //     debug: false,

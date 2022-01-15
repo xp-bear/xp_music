@@ -31,6 +31,7 @@
       <div class="u-title">
         <span>听歌排行</span>
         <span>累积听歌{{ songs.length }}首</span>
+        <el-button type="danger" size="mini" class="clear-music" @click="clearMusic">清空全部歌曲</el-button>
       </div>
       <!-- 歌单列表 -->
       <UserList :songs="songs" :show="true" />
@@ -50,6 +51,7 @@
 </template>
 
 <script>
+import { MessageBox } from "element-ui";
 import UserList from "@/components/UserList";
 export default {
   name: "User",
@@ -58,15 +60,20 @@ export default {
       userInfo: {},
       songs: [], //播放历史的歌曲
       dialogVisible: false,
-      name: "用户信息",
+      name: "",
     };
   },
   mounted() {
-    this.userInfo = JSON.parse(localStorage.getItem("user"));
-    // 拿到播放过的歌曲
-    this.songs = JSON.parse(localStorage.getItem("likeSongs")) || [];
+    this.getHistoryMusic();
   },
+
   methods: {
+    //获取历史歌曲
+    getHistoryMusic() {
+      this.userInfo = JSON.parse(localStorage.getItem("user"));
+      // 拿到播放过的歌曲
+      this.songs = JSON.parse(localStorage.getItem("likeSongs")) || [];
+    },
     // 返回
     toBack() {
       this.$router.go(-1);
@@ -75,9 +82,26 @@ export default {
     editUser() {
       let user = JSON.parse(localStorage.getItem("user"));
       this.dialogVisible = true;
-      console.log(user);
-
+      // console.log(user);
+      this.name = user.name;
       // this.$mb.alert("编辑用户信息正在开发中!", "注意", { confirmButtonText: "确定" });
+    },
+
+    // 清空所有歌曲
+    clearMusic() {
+      MessageBox.confirm("此操作将清空您的听歌历史, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$message({ type: "success", message: "删除成功!", showClose: true });
+          localStorage.removeItem("likeSongs");
+          this.getHistoryMusic();
+        })
+        .catch(() => {
+          this.$message({ type: "info", message: "已取消删除", showClose: true });
+        });
     },
   },
   components: {
@@ -173,6 +197,9 @@ export default {
           font-size: 12px;
           margin-left: 10px;
         }
+      }
+      .clear-music {
+        float: right;
       }
     }
     .List {
