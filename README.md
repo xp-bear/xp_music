@@ -26,5 +26,5 @@ npm run build
 
 ```
 http://150.158.21.251
-www.outman.cn
+www.xxoutman.cn
 ```
