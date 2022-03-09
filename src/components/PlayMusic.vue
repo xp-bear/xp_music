@@ -242,7 +242,7 @@ export default {
       animation: streamer 10s linear infinite;
     }
     i {
-      margin: 0 30px;
+      margin: 0 28px;
       color: #f47245;
       font-size: 37px;
 
