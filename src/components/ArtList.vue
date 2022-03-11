@@ -134,7 +134,7 @@ export default {
           fullscreenToggle: true,
         },
       }, //视频播放配置
-      comments: [],
+      comments: [], //歌曲评论
     };
   },
 
