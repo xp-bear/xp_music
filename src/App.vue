@@ -86,9 +86,9 @@ export default {
     }, 500);
 
     // 公告弹框提示
-    setTimeout(() => {
-      this.dialogVisible = true;
-    }, 1000);
+    // setTimeout(() => {
+    //   this.dialogVisible = true;
+    // }, 1000);
   },
   methods: {},
 };

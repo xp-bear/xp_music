@@ -27,6 +27,7 @@ export default {
 .Comment {
   width: 800px;
   margin: 5px auto 0;
+  text-align: left;
   .commentItem {
     display: flex;
     justify-content: space-between;

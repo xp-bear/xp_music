@@ -38,13 +38,13 @@
     </div>
 
     <!-- 修改信息对话框 -->
-    <el-dialog title="用户信息修改" :visible.sync="dialogVisible" width="800px">
+    <el-dialog title="用户信息修改" :visible.sync="dialogVisible" width="600px">
       <form class="userInfo">
-        <div><span style="width: 100px">你的名字</span> <el-input v-model="name" disabled>12</el-input></div>
-        <div><span style="width: 100px">你的密码</span> <el-input>12</el-input></div>
-        <div><span style="width: 100px">你的名字</span> <el-input>12</el-input></div>
-        <div><span style="width: 100px">你的名字</span> <el-input>12</el-input></div>
-        <el-button type="primary" style="display: block; margin-left: auto; margin-top: 10px">提交修改</el-button>
+        <div><span style="width: 100px">用户名</span> <el-input v-model="name"></el-input></div>
+        <div><span style="width: 100px">性别</span> <el-input v-model="sex"></el-input></div>
+        <div><span style="width: 100px">图像</span> <el-input v-model="picture"></el-input></div>
+        <div><span style="width: 100px">个性签名</span> <el-input v-model="sign"></el-input></div>
+        <el-button type="primary" style="display: block; margin-left: auto; margin-top: 10px" @click="currentUpdate">提交修改</el-button>
       </form>
     </el-dialog>
   </div>
@@ -60,7 +60,10 @@ export default {
       userInfo: {},
       songs: [], //播放历史的歌曲
       dialogVisible: false,
-      name: "",
+      name: "", //用户名
+      sign: "", //签名
+      picture: "", //头像
+      sex: "", //性别
     };
   },
   mounted() {
@@ -86,7 +89,10 @@ export default {
       this.name = user.name;
       // this.$mb.alert("编辑用户信息正在开发中!", "注意", { confirmButtonText: "确定" });
     },
-
+    // 确认修改用户信息
+    currentUpdate() {
+      this.$mb.alert("用户信息修改正在开发中!", "注意", { confirmButtonText: "确定" });
+    },
     // 清空所有歌曲
     clearMusic() {
       MessageBox.confirm("此操作将清空您的听歌历史, 是否继续?", "提示", {
