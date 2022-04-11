@@ -9,11 +9,7 @@
               <img :src="scope.row.artists[0].picUrl" class="image" @click="bigImg(scope.row.artists[0].picUrl, scope.row.name)" />
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="标题" width="200">
-            <template slot-scope="scope">
-              <div @click="songComment(scope.row.id)" class="at-singer">{{ scope.row.name }}</div>
-            </template>
-          </el-table-column>
+          <el-table-column prop="name" label="标题" width="200"> </el-table-column>
           <el-table-column label="时长" width="130">
             <template slot-scope="scope">
               <div>{{ scope.row.duration ? scope.row.duration : 0 | famter }}</div>
@@ -67,18 +63,12 @@
       </div>
       <el-button type="primary" @click="downMV">下载MV</el-button>
     </el-dialog>
-
-    <!-- 歌曲评论对话框  -->
-    <el-dialog :visible.sync="toCommentFlag" width="800px" :destroy-on-close="true" class="songComment">
-      <Comment :comments="comments"> </Comment>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import PlayMusic from "@/components/PlayMusic.vue";
 import Lyric from "@/components/Lyric.vue";
-import Comment from "@/components/Comment.vue";
 
 export default {
   data() {
@@ -86,7 +76,6 @@ export default {
       dialogTableVisible: false,
       bigImgFlag: false,
       toMVFlag: false,
-      toCommentFlag: false,
       musicUrl: "", //音乐url
       misicImg: "", //音乐图片url
       title: "", //音乐标题
@@ -130,7 +119,6 @@ export default {
           fullscreenToggle: true, //全屏按钮
         },
       }, //视频播放配置
-      comments: [],
     };
   },
 
@@ -276,19 +264,10 @@ export default {
     toSingerPage(singerName) {
       this.$router.push({ path: "/singer", query: { singerName: singerName } });
     },
-    //歌曲评论
-    async songComment(id) {
-      this.toCommentFlag = true;
-      // console.log(id); //拿到歌曲id
-      // 发起请求拿到歌曲评论
-      let res = await this.$http.get(`http://123.207.32.32:9001/comment/music?id=${id}`);
-      this.comments = res.data.comments;
-    },
   },
   components: {
     PlayMusic,
     Lyric,
-    Comment,
   },
 };
 </script>
@@ -347,11 +326,6 @@ export default {
     height: 70px;
     // background-color: pink;
     // margin-bottom: 18px;
-  }
-  .songComment {
-    /deep/.el-dialog__body {
-      padding: 10px 0 0;
-    }
   }
 }
 </style>
