@@ -6,7 +6,7 @@
     <!-- 公告 -->
     <el-dialog title="重要公告" :visible.sync="dialogVisible" width="800px">
       <div class="main">
-        <!-- <div>
+        <div>
           "本小破站完全开源,持续更新中!"<br />
           "github地址: "<a href="https://github.com/xp-coding/xp_music" target="_blank" style="font-weight: 700; color: red; text-decoration: underline">https://github.com/xp-coding/xp_music</a>
           <br />
@@ -19,16 +19,7 @@
             ——
             <cite>想走过亚洲的熊</cite>
           </footer>
-        </div> -->
-
-        <!-- 致敬遇难的同胞们 -->
-        <!-- <div>
-          "跟进时事,默哀,致敬遇难的同胞们!"<br />
-          </footer>
-            ——
-            <cite>想走过亚洲的熊</cite>
-          </footer>
-        </div> -->
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -71,11 +62,11 @@ export default {
     //     tagMode: false,
     //     debug: false,
     //     model: { jsonPath: "../live2dw/live2d-widget-model-haru_2/assets/haru02.model.json" },
-    //     display: { position: "left", width: 150, height: 300 },
+    //     display: { position: "right", width: 200, height: 400 },
     //     mobile: { show: true },
     //     log: false,
     //   });
-    // }, 1000);
+    // }, 500);
   },
   mounted() {
     // 加载看板娘
