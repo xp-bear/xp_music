@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="">
   <head>
+    <meta name="baidu-site-verification" content="code-8qypm80Xy2" />
     <meta name="applicable-device" content="pc,mobile" />
     <meta name="keywords" content="熊仔音乐，音乐，播放器，熊仔，下载，播放，DJ，免费，明星，精选，歌单，识别音乐，收藏，分享音乐，音乐互动，高音质，320K，音乐社交，官网，xxoutman.cn" />
-    <meta name="description" content="熊仔音乐是一款专注于发现与分享的音乐产品，依托专业音乐人、DJ、好友推荐及社交功能，为用户打造全新的音乐生活。" />
+    <meta
+      name="description"
+      content="熊仔音乐是一款专注于发现与分享的音乐产品，依托专业音乐人、DJ、好友推荐及社交功能，为用户打造全新的音乐生活。海量音乐在线试听、新歌热歌在线首发、歌词翻译、手机铃声下载、高品质无损音乐试听、海量无损曲库、正版音乐下载、空间背景音乐设置、MV观看等，是互联网音乐播放和下载的优选。"
+    />
     <meta property="og:title" content="熊仔音乐" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://xp-bird.gitee.io/food-image/logo3.png" />
@@ -16,7 +20,7 @@
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2953315_a19tgahqf45.css" />
 
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
-    <title>熊仔音乐--免费下载VIP歌曲</title>
+    <title>熊仔音乐_歌曲大全_免费下载_VIP 音乐、MV视频资源</title>
     <!-- <script type="text/javascript" src="<%= BASE_URL %>live2dw/lib/L2Dwidget.min.js"></script> -->
     <script type="text/javascript" src="/live2dw/lib/L2Dwidget.min.js"></script>
     <script src="/js/canvas-particle.js"></script>
@@ -66,6 +70,7 @@
     <!-- 背景配置 -->
     <script>
       window.onload = function () {
+        // 背景粒子特效
         //配置
         var config = {
           vx: 4, //小球x轴速度,正为右，负为左
@@ -78,12 +83,50 @@
           color: "30, 30, 30", //点颜色
           stroke: "79, 79, 79", //线条颜色
           dist: 6000, //点吸附距离
-          e_dist: 20000, //鼠标吸附加速距离
+          e_dist: 10000, //鼠标吸附加速距离
           max_conn: 10, //点到点最大连接数
         };
-
         //调用
         CanvasParticle(config);
+
+        // 鼠标点击特效
+        let emoji = ["富强", "民主", "文明", "和谐", "自由", "平等", "公正", "法治", "爱国", "敬业", "诚信", "友善"];
+        var $html = document.getElementsByTagName("html")[0];
+        var $body = document.getElementsByTagName("body")[0];
+        $html.onclick = function (e) {
+          var $elem = document.createElement("b");
+          let r = Math.floor(Math.random() * 255);
+          let g = Math.floor(Math.random() * 255);
+          let b = Math.floor(Math.random() * 255);
+          // $elem.style.color = "#E94F06";
+          $elem.style.color = "rgb(" + r + "," + g + "," + b + ")";
+          $elem.style.zIndex = 9999;
+          $elem.style.position = "absolute";
+          $elem.style.select = "none";
+          var x = e.pageX;
+          var y = e.pageY;
+          $elem.style.left = x - 10 + "px";
+          $elem.style.top = y - 20 + "px";
+          clearInterval(anim);
+          // 填充内容
+          const randomItem = emoji[(Math.random() * emoji.length) | 0];
+          $elem.innerText = randomItem;
+
+          $elem.style.fontSize = Math.random() * 5 + 14 + "px";
+          var increase = 0;
+          var anim;
+          setTimeout(function () {
+            anim = setInterval(function () {
+              if (++increase == 150) {
+                clearInterval(anim);
+                $body.removeChild($elem);
+              }
+              $elem.style.top = y - 20 - increase + "px";
+              $elem.style.opacity = (150 - increase) / 120;
+            }, 8);
+          }, 70);
+          $body.appendChild($elem);
+        };
       };
     </script>
   </body>
