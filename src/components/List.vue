@@ -52,7 +52,7 @@
 
     <!-- 查看图片大图对话框  -->
     <el-dialog :visible.sync="bigImgFlag" :title="title" width="800px">
-      <img :src="misicImg" alt="" style="width: 100%" />
+      <img :src="misicImg" class="demo" alt="" style="width: 100%" />
       <el-button type="primary" @click="downImg">下载图片</el-button>
     </el-dialog>
 

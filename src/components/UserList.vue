@@ -2,7 +2,7 @@
   <div class="List">
     <transition name="el-fade-in">
       <el-card v-show="show" class="box-card transition-box">
-        <el-table :data="songs" stripe style="width: 100%">
+        <el-table :data="songs" stripe style="width: 100%; margin-bottom: 10px">
           <el-table-column type="index" label="#" width="80"> </el-table-column>
           <el-table-column width="50">
             <template slot-scope="scope">
@@ -60,7 +60,7 @@
 
     <!-- 查看图片大图对话框  -->
     <el-dialog :visible.sync="bigImgFlag" :title="title" width="800px">
-      <img :src="misicImg" alt="" style="width: 100%" />
+      <img :src="misicImg" alt="" class="demo" style="width: 100%" />
       <el-button type="primary" @click="downImg">下载图片</el-button>
     </el-dialog>
 
