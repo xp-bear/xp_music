@@ -36,7 +36,7 @@ export default {
 
     let cres = await this.$http.get(`http://123.207.32.32:9001/comment/album?id=${this.$route.query.aid}`);
     this.comments = cres.data.comments;
-    console.log(this.comments);
+    // console.log(this.comments);
   },
   components: {
     ArtList,
@@ -53,7 +53,7 @@ export default {
   .back {
     position: absolute;
     top: 10px;
-    left: 20.5%;
+    left: 265px;
     width: 40px;
     height: 40px;
     text-align: center;

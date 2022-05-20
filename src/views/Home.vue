@@ -22,7 +22,7 @@
       </div>
     </div>
     <!-- 轮播图 -->
-    <el-carousel :interval="5000" arrow="always" trigger="click" height="370">
+    <el-carousel :interval="5000" type="card" arrow="always" trigger="click" height="200px">
       <el-carousel-item v-for="item in banners" :key="item.imageUrl">
         <img :src="item.imageUrl" alt="" />
       </el-carousel-item>
@@ -107,45 +107,45 @@
     <!-- 排行榜横幅 -->
     <p class="hot-top-title"><img src="../assets/hotlist.jpg" alt="" /></p>
     <!-- 排行榜 -->
-    <el-tabs v-model="activeName" type="border-card" @tab-click="handleClick">
+    <el-tabs v-model="activeName" class="test-5" type="border-card" @tab-click="handleClick">
       <el-tab-pane label="飙升榜" name="first">
         <keep-alive>
-          <ArtList :songs="topPlaySongs" :show="true" />
+          <HomeArtList :songs="topPlaySongs" :show="true" />
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="新歌榜" name="second">
         <keep-alive>
-          <ArtList :songs="topPlaySongs" :show="true" />
+          <HomeArtList :songs="topPlaySongs" :show="true" />
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="原创榜" name="third">
         <keep-alive>
-          <ArtList :songs="topPlaySongs" :show="true" />
+          <HomeArtList :songs="topPlaySongs" :show="true" />
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="热歌榜" name="fourth">
         <keep-alive>
-          <ArtList :songs="topPlaySongs" :show="true" />
+          <HomeArtList :songs="topPlaySongs" :show="true" />
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="黑胶VIP爱听榜" name="fifth">
         <keep-alive>
-          <ArtList :songs="topPlaySongs" :show="true" />
+          <HomeArtList :songs="topPlaySongs" :show="true" />
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="云音乐说唱榜" name="sixth">
         <keep-alive>
-          <ArtList :songs="topPlaySongs" :show="true" />
+          <HomeArtList :songs="topPlaySongs" :show="true" />
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="云音乐说唱榜" name="seventh">
         <keep-alive>
-          <ArtList :songs="topPlaySongs" :show="true" />
+          <HomeArtList :songs="topPlaySongs" :show="true" />
         </keep-alive>
       </el-tab-pane>
       <el-tab-pane label="云音乐电音榜" name="eighth">
         <keep-alive>
-          <ArtList :songs="topPlaySongs" :show="true" />
+          <HomeArtList :songs="topPlaySongs" :show="true" />
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -162,7 +162,7 @@
 
 <script>
 import { MessageBox } from "element-ui";
-import ArtList from "@/components/ArtList";
+import HomeArtList from "@/components/HomeArtList";
 
 export default {
   name: "Home",
@@ -404,7 +404,7 @@ export default {
     },
   },
   components: {
-    ArtList,
+    HomeArtList,
   },
 };
 </script>
@@ -422,6 +422,11 @@ export default {
   .el-pagination {
     text-align: center;
     cursor: pointer;
+  }
+  /deep/.el-pagination button,
+  .el-pagination span:not([class*="suffix"]) {
+    min-width: 27.5px !important;
+    border-radius: 3px;
   }
   // 顶栏
   .top {
@@ -444,8 +449,9 @@ export default {
       user-select: none;
       width: 298px;
       height: 34px;
+      box-sizing: border-box;
+      border-radius: 3px;
       border: 1px solid #ccc;
-
       input {
         width: 100%;
         height: 100%;
@@ -487,8 +493,9 @@ export default {
   }
   // 轮播
   /deep/.el-carousel__container {
-    height: 370px;
+    height: 200px;
   }
+
   .el-carousel {
     width: 1000px;
     margin: 0px auto 0;
@@ -498,7 +505,11 @@ export default {
   }
   .hot-top-title {
     width: 1000px;
-    margin: 10px auto;
+    margin: 0px auto 10px;
+    img {
+      transform-origin: 0 50%;
+      transform: scale(0.8);
+    }
   }
   // 歌单
   .hot {
@@ -506,10 +517,18 @@ export default {
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
+    // .hot-top-title {
+    //   img {
+    //     transform-origin: 0 50%;
+    //     transform: scale(0.8);
+    //   }
+    // }
     .h-item {
       position: relative;
       width: 160px;
       height: 160px;
+      border-radius: 5px;
+      overflow: hidden;
       color: #fff;
       cursor: pointer;
       margin-bottom: 10px;
@@ -570,9 +589,12 @@ export default {
   // 排行榜
   .el-tabs {
     width: 1000px;
+    // height: 600px;
     margin: 0 auto;
     background-color: rgba(255, 255, 255, 0.3);
-
+    // overflow-y: scroll;
+    // margin-bottom: 200px;
+    border-radius: 5px;
     /deep/.el-tabs__content {
       padding: 0;
     }
