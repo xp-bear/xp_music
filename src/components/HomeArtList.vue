@@ -57,13 +57,13 @@
 
     <!-- 查看图片大图对话框  -->
     <el-dialog :visible.sync="bigImgFlag" :title="title" width="800px" :destroy-on-close="true">
-      <img :src="misicImg" alt="" style="width: 100%" />
+      <img :src="misicImg" alt="" class="demo" style="width: 100%" />
       <el-button type="primary" @click="downImg">下载图片</el-button>
     </el-dialog>
 
     <!-- 播放视频对话框 -->
     <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose">
-      <div class="demo">
+      <div class="demo" style="margin-bottom: 10px">
         <video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"> </video-player>
       </div>
       <el-button type="primary" @click="downMV">下载MV</el-button>
