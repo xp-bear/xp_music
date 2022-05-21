@@ -22,7 +22,7 @@
           <span><strong>3</strong><i>关注</i></span>
           <span><strong>2</strong><i>粉丝</i></span>
         </div>
-        <div class="location">所在地区: 湖北省-武汉市</div>
+        <div class="location">所在地区: {{ province }}-{{ city }}--{{ district }}</div>
         <div class="network">社交网络: 熊仔音乐,社交网络!</div>
       </div>
     </div>
@@ -53,6 +53,7 @@
 <script>
 import { MessageBox } from "element-ui";
 import UserList from "@/components/UserList";
+
 export default {
   name: "User",
   data() {
@@ -64,13 +65,35 @@ export default {
       sign: "", //签名
       picture: "", //头像
       sex: "", //性别
+      province: "", //省
+      city: "", //市
+      district: "", //区
     };
   },
   mounted() {
     this.getHistoryMusic();
+    // 获取当前城市
+    this.getCurrentCity();
   },
 
   methods: {
+    // 利用百度地图API,获取用户定位
+    getCurrentCity() {
+      //根据用户IP 返回城市级别的定位结果
+      let native = new BMap.LocalCity();
+      native.get((res) => {
+        // console.log(res);
+        let gc = new BMap.Geocoder();
+        let pointAdd = new BMap.Point(res.center.lng, res.center.lat);
+        gc.getLocation(pointAdd, (rs) => {
+          // 百度地图解析城市名
+          // console.log(rs);
+          this.province = rs.addressComponents.province;
+          this.city = rs.addressComponents.city;
+          this.district = rs.addressComponents.district;
+        });
+      });
+    },
     //获取历史歌曲
     getHistoryMusic() {
       this.userInfo = JSON.parse(localStorage.getItem("user"));
