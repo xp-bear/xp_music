@@ -16,7 +16,8 @@
 
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
-          <el-button type="info"><router-link to="/register" style="color: #fff">没有账号,去注册</router-link></el-button>
+          <el-button type="warning"><router-link to="/register" style="color: #fff">没有账号,去注册</router-link></el-button>
+          <el-button type="danger"><router-link to="/forget" style="color: #fff">忘记密码</router-link></el-button>
         </el-form-item>
       </el-form>
     </el-card>

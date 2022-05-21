@@ -33,6 +33,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ "../views/Login.vue"),
   },
   {
+    path: "/forget",
+    name: "ForGet",
+    component: () => import(/* webpackChunkName: "about" */ "../views/ForGet.vue"),
+  },
+  {
     path: "/register",
     name: "Register",
     component: () => import(/* webpackChunkName: "about" */ "../views/Register.vue"),
@@ -78,6 +83,8 @@ router.beforeEach((to, from, next) => {
     } else if (to.path === "/") {
       next();
     } else if (to.path === "/register") {
+      next();
+    } else if (to.path === "/forget") {
       next();
     } else {
       Vue.prototype.$mb.alert("请先登录!", "注意", {

@@ -24,6 +24,7 @@
         </div>
         <div class="location">所在地区: {{ province }}-{{ city }}--{{ district }}</div>
         <div class="network">社交网络: 熊仔音乐,社交网络!</div>
+        <div class="location">个性签名: 这个人很懒,没有写签名!</div>
       </div>
     </div>
     <!-- 用户听歌排行 -->

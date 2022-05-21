@@ -3,12 +3,8 @@
     <!-- 遮罩层 -->
     <div class="mask" id="animation"></div>
     <el-card id="animation">
-      <h2 style="text-align: center">请填写注册信息</h2>
+      <h2 style="text-align: center">密码找回</h2>
       <el-form :status-icon="true" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item :show-message="false" label="您的昵称" prop="nickname">
-          <el-input v-model="ruleForm.nickname"></el-input>
-        </el-form-item>
-
         <el-form-item :show-message="false" label="您的邮箱" prop="email" class="emailcheckd">
           <div class="zoom">
             <el-input v-model="ruleForm.email" @input="tipEmail"></el-input>
@@ -21,15 +17,15 @@
         <el-form-item :show-message="false" label="邮箱验证码" prop="checkEmail">
           <el-input v-model="ruleForm.checkEmail"></el-input>
         </el-form-item>
-        <el-form-item :show-message="false" label="密码" prop="pass">
+        <el-form-item :show-message="false" label="新密码" prop="pass">
           <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item :show-message="false" label="确认密码" prop="checkPass">
+        <el-form-item :show-message="false" label="验证新密码" prop="checkPass">
           <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')">注册用户</el-button>
+          <el-button type="primary" @click="submitForm('ruleForm')">确认找回密码</el-button>
           <el-button type="warning"><router-link to="/login" style="color: #fff">已有账号,去登录</router-link></el-button>
         </el-form-item>
       </el-form>
@@ -39,15 +35,8 @@
 
 <script>
 export default {
-  name: "Register",
+  name: "ForGet",
   data() {
-    let checkNickname = (rule, value, callback) => {
-      if (!value) {
-        callback(this.$message.error({ message: "昵称不可以为空!", duration: 1000, showClose: true }));
-      } else {
-        return callback();
-      }
-    };
     let validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(this.$message.error({ message: "请输入密码!", duration: 1000, showClose: true }));
@@ -92,14 +81,12 @@ export default {
       ruleForm: {
         pass: "",
         checkPass: "",
-        nickname: "",
         email: "",
         checkEmail: "",
       },
       rules: {
         pass: [{ validator: validatePass, trigger: "blur" }],
         checkPass: [{ validator: validatePass2, trigger: "blur" }],
-        nickname: [{ validator: checkNickname, trigger: "blur" }],
         email: [{ validator: Email, trigger: "change" }],
         checkEmail: [{ validator: checkEmail, trigger: "blur" }],
       },
@@ -122,18 +109,17 @@ export default {
       // 在验证邮箱是都已经注册
       this.$http.post("/signup/judge", { type: "email", data: this.ruleForm.email }).then((res) => {
         // console.log(res.data);
-        if (res.data.result != 0) {
-          return this.$message({ message: "该邮箱已经被注册过!", showClose: true, type: "error" });
+        if (res.data.result == 0) {
+          return this.$message({ message: "该邮箱没有注册,请先注册!", showClose: true, type: "error" });
         } else {
           // 剩下在验证表单
           this.$refs[formName].validate((valid) => {
             if (valid) {
               //布尔值
               this.$http
-                .post("/signup/add", {
-                  name: this.ruleForm.nickname,
+                .post("/user/passwordupdate", {
                   email: this.ruleForm.email,
-                  pwd: this.ruleForm.pass,
+                  data: this.ruleForm.pass,
                 })
                 .then((res) => {
                   // console.log(res.data);
