@@ -15,42 +15,42 @@ const routes = [
   {
     path: "/search",
     name: "Search",
-    component: () => import(/* webpackChunkName: "about" */ "../views/Search.vue"),
+    component: () => import(/* webpackChunkName: "Search" */ "../views/Search.vue"),
   },
   {
     path: "/playlist",
     name: "Playlist",
-    component: () => import(/* webpackChunkName: "about" */ "../views/DetailPlaylist.vue"),
+    component: () => import(/* webpackChunkName: "DetailPlaylist" */ "../views/DetailPlaylist.vue"),
   },
   {
     path: "/singer",
     name: "Singer",
-    component: () => import(/* webpackChunkName: "about" */ "../views/Singer.vue"),
+    component: () => import(/* webpackChunkName: "Singer" */ "../views/Singer.vue"),
   },
   {
     path: "/login",
     name: "Login",
-    component: () => import(/* webpackChunkName: "about" */ "../views/Login.vue"),
+    component: () => import(/* webpackChunkName: "Login" */ "../views/Login.vue"),
   },
   {
     path: "/forget",
     name: "ForGet",
-    component: () => import(/* webpackChunkName: "about" */ "../views/ForGet.vue"),
+    component: () => import(/* webpackChunkName: "ForGet" */ "../views/ForGet.vue"),
   },
   {
     path: "/register",
     name: "Register",
-    component: () => import(/* webpackChunkName: "about" */ "../views/Register.vue"),
+    component: () => import(/* webpackChunkName: "Register" */ "../views/Register.vue"),
   },
   {
     path: "/album",
     name: "Album",
-    component: () => import(/* webpackChunkName: "about" */ "../views/AlbumPlay.vue"),
+    component: () => import(/* webpackChunkName: "AlbumPlay" */ "../views/AlbumPlay.vue"),
   },
   {
     path: "/user",
     name: "User",
-    component: () => import(/* webpackChunkName: "about" */ "../views/User.vue"),
+    component: () => import(/* webpackChunkName: "User" */ "../views/User.vue"),
   },
 ];
 
