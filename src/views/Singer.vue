@@ -57,14 +57,14 @@ export default {
     },
     // 初始加载的数据
     getData() {
-      this.$http.get(`http://123.207.32.32:9001/search?keywords=${this.$route.query.singerName}&type=100`).then((res) => {
+      this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/search?keywords=${this.$route.query.singerName}&type=100`).then((res) => {
         this.sid = res.data.result.artists[0].id;
         this.sUrl = res.data.result.artists[0].picUrl;
         this.albumSize = res.data.result.artists[0].albumSize;
         this.backgroundDiv.backgroundImage = `url(${res.data.result.artists[0].picUrl})`;
         // 发起请求,拿到热门歌曲
 
-        this.$http.get(`http://123.207.32.32:9001/artist/top/song?id=${this.sid}`).then((sdata) => {
+        this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/artist/top/song?id=${this.sid}`).then((sdata) => {
           // console.log(sdata.data);
           this.hotSongs = sdata.data.songs;
           // console.log(this.hotSongs);
@@ -73,7 +73,7 @@ export default {
     },
     // 音乐专辑
     async getAlbumData() {
-      let res = await this.$http.get(`http://123.207.32.32:9001/search?keywords=${this.$route.query.singerName}&type=10`);
+      let res = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/search?keywords=${this.$route.query.singerName}&type=10`);
       this.albums = res.data.result.albums;
       // console.log(this.albums);
     },

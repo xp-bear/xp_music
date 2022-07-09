@@ -165,9 +165,9 @@ export default {
     async vplay(id, src, name) {
       this.dialogTableVisible = true;
       // 发起请求拿到歌曲id
-      let res = await this.$http.get(`http://123.207.32.32:9001/song/url?id=${id}`);
+      let res = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/song/url?id=${id}`);
       // 发起请求拿到歌曲歌词
-      let lycdata = await this.$http.get(`http://123.207.32.32:9001/lyric?id=${id}`);
+      let lycdata = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/lyric?id=${id}`);
       // console.log(lycdata.data.lrc.lyric);
       this.musicUrl = res.data.data[0].url;
       this.misicImg = src;
@@ -191,7 +191,7 @@ export default {
     // 下载歌曲
     async vdown(id, name) {
       console.log("下载音乐", name, "mp3");
-      let res = await this.$http.get(`http://123.207.32.32:9001/song/url?id=${id}`);
+      let res = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/song/url?id=${id}`);
       let url = res.data.data[0].url;
       // 节流的使用
       if (this.clicktag == 0) {
@@ -244,7 +244,7 @@ export default {
       // this.mvId = res.data.result.mvs[0].id;
       this.mvId = id;
 
-      let mdata = await this.$http.get(`http://123.207.32.32:9001/mv/url?id=${this.mvId}`);
+      let mdata = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/mv/url?id=${this.mvId}`);
       // console.log(mdata.data);
       this.mvUrl = mdata.data.data.url; //高画质
       // console.log(this.mvUrl);
@@ -291,7 +291,7 @@ export default {
       this.toCommentFlag = true;
       console.log(id); //拿到歌曲id
       // 发起请求拿到歌曲评论
-      let res = await this.$http.get(`http://123.207.32.32:9001/comment/music?id=${id}`);
+      let res = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/comment/music?id=${id}`);
       this.comments = res.data.comments;
     },
   },

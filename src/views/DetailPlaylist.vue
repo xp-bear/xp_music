@@ -100,7 +100,7 @@ export default {
   },
   mounted() {
     // 根据歌单id发起请求
-    this.$http.get(`http://123.207.32.32:9001/playlist/detail?id=${this.$route.query.pid}`).then((res) => {
+    this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/playlist/detail?id=${this.$route.query.pid}`).then((res) => {
       this.playlistSongs = res.data.playlist.tracks;
       this.plistimgUrl = res.data.playlist.coverImgUrl;
       this.playlistTitle = res.data.playlist.name;
@@ -112,7 +112,7 @@ export default {
       // console.log(res.data.playlist.tracks);
     });
     //  评论发起请求
-    this.$http.get(`http://123.207.32.32:9001/comment/playlist?id=${this.$route.query.pid}`).then((res) => {
+    this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/comment/playlist?id=${this.$route.query.pid}`).then((res) => {
       this.comments = res.data.comments;
       // console.log(this.comments);
     });

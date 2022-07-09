@@ -43,10 +43,10 @@ export default {
     // 加载更多
     toLoading() {
       let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
-      this.$http.get(`http://123.207.32.32:9001/search?keywords=${this.input}&limit=30&offset=30`).then((res) => {
+      this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/search?keywords=${this.input}&limit=30&offset=30`).then((res) => {
         // 给新情求的数据添加一个picurl
         res.data.result.songs.forEach((item) => {
-          this.$http.get(`http://123.207.32.32:9001/song/detail?ids=${item.id}`).then((imgData) => {
+          this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/song/detail?ids=${item.id}`).then((imgData) => {
             item.artists[0].picUrl = imgData.data.songs[0].al.picUrl;
           });
         });
@@ -68,13 +68,13 @@ export default {
       // 发起请求
       // 加载图标
       let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
-      let res = await this.$http.get(`http://123.207.32.32:9001/search?keywords=${this.input}`);
+      let res = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/search?keywords=${this.input}`);
 
       this.songs = res.data.result.songs;
 
       // 给songs添加一个picurl
       this.songs.forEach(async (item) => {
-        let imgData = await this.$http.get(`http://123.207.32.32:9001/song/detail?ids=${item.id}`);
+        let imgData = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/song/detail?ids=${item.id}`);
         item.artists[0].picUrl = imgData.data.songs[0].al.picUrl;
       });
 
