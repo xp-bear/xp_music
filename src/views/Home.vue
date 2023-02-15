@@ -163,7 +163,7 @@
 <script>
 import { MessageBox } from "element-ui";
 import HomeArtList from "@/components/HomeArtList";
-
+import {MUSIC_API} from '@/config/index.js'
 export default {
   name: "Home",
   data() {
@@ -304,7 +304,7 @@ export default {
     handleClick(tab, event) {
       // console.log(this.topList[tab.index].id);
       // 点击请求排行数据
-      this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/playlist/detail?id=${this.topList[tab.index].id}`).then((res) => {
+      this.$http.get(`${MUSIC_API}playlist/detail?id=${this.topList[tab.index].id}`).then((res) => {
         this.topPlaySongs = res.data.playlist.tracks.slice(0, 20);
       });
     },
@@ -312,7 +312,7 @@ export default {
     async toMV(id, title) {
       this.title = title;
       this.toMVFlag = true;
-      let mdata = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/mv/url?id=${id}`);
+      let mdata = await this.$http.get(`${MUSIC_API}mv/url?id=${id}`);
       this.mvUrl = mdata.data.data.url; //高画质
       if (this.mvUrl == null) {
         this.toMVFlag = false;
@@ -369,28 +369,28 @@ export default {
       this.ipt = this.$route.query.val;
     }
     // 请求轮播图数据
-    this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/banner`).then((bdata) => {
+    this.$http.get(`${MUSIC_API}banner`).then((bdata) => {
       this.banners = bdata.data.banners;
       // console.log(this.banners);
     });
     // 请求热门歌单数据
-    this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/top/playlist/highquality`).then((hdata) => {
+    this.$http.get(`${MUSIC_API}top/playlist/highquality`).then((hdata) => {
       this.playlists = hdata.data.playlists;
       this.limitPlaylists = this.playlists.slice(0, 12);
     });
 
     // 请求排行榜数据
-    this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/toplist/detail`).then((pdata) => {
+    this.$http.get(`${MUSIC_API}toplist/detail`).then((pdata) => {
       this.topList = pdata.data.list.slice(0, 8);
       // console.log(this.topList);
       // 请求第一页数据
-      this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/playlist/detail?id=${this.topList[0].id}`).then((res) => {
+      this.$http.get(`${MUSIC_API}playlist/detail?id=${this.topList[0].id}`).then((res) => {
         this.topPlaySongs = res.data.playlist.tracks.slice(0, 20);
       });
     });
 
     // 请求最新MV数据
-    this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/mv/first`).then((mres) => {
+    this.$http.get(`${MUSIC_API}mv/first`).then((mres) => {
       this.mvList = mres.data.data;
       this.limitMvList = this.mvList.slice(0, 12);
     });

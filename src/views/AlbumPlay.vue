@@ -14,6 +14,7 @@
 <script>
 import ArtList from "@/components/ArtList";
 import Comment from "@/components/Comment";
+import {MUSIC_API} from '@/config/index.js'
 export default {
   name: "Album",
   data() {
@@ -30,11 +31,11 @@ export default {
     },
   },
   async mounted() {
-    let res = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/album?id=${this.$route.query.aid}`);
+    let res = await this.$http.get(`${MUSIC_API}album?id=${this.$route.query.aid}`);
     this.albums = res.data.songs;
     // console.log(this.albums);
 
-    let cres = await this.$http.get(`https://netease-cloud-music-api-azure-phi-86.vercel.app/comment/album?id=${this.$route.query.aid}`);
+    let cres = await this.$http.get(`${MUSIC_API}comment/album?id=${this.$route.query.aid}`);
     this.comments = cres.data.comments;
     // console.log(this.comments);
   },
