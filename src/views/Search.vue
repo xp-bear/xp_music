@@ -5,7 +5,9 @@
       <el-input placeholder="搜你想听的歌曲!" v-model="input" clearable :autofocus="true" @change="searchInput"> </el-input>
       <el-button type="primary" icon="el-icon-search" @click.trim="searchInput">搜索</el-button>
     </div>
-
+    <div class="back" @click="toBack">
+      <i class="el-icon-back"></i>
+    </div>
     <!-- 卡片列表 -->
     <List :show="show" :songs="songs" @toLoading="toLoading" />
   </div>
@@ -15,7 +17,7 @@
 import { Loading } from "element-ui";
 
 import List from "@/components/List.vue";
-import {MUSIC_API} from '@/config/index.js'
+import { MUSIC_API } from "@/config/index.js";
 export default {
   name: "Search",
   data() {
@@ -53,7 +55,6 @@ export default {
 
         this.songs = [...this.songs, ...res.data.result.songs];
         // console.log("新请求的数据", res.data.result.songs);
-        
       });
       loadingInstance.close();
     },
@@ -95,6 +96,10 @@ export default {
       // vuex的使用方式
       this.$store.commit("getValue", this.input);
     },
+    // 返回
+    toBack() {
+      this.$router.push({ path: "/" });
+    },
   },
 
   watch: {
@@ -124,6 +129,16 @@ export default {
       margin-right: 5px;
       font-size: 16px;
     }
+  }
+  .back {
+    position: absolute;
+    top: 0;
+    left: 510px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border: 1px solid #ccc;
   }
 }
 </style>

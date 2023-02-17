@@ -144,8 +144,11 @@ export default {
       if (val <= 0) {
         return "暂无记录";
       } else {
-        let num = "" + (val / 1000 / 60).toFixed(1);
-        return num.replace(".", "分") + "秒";
+        let minute = Math.floor(parseInt(val) / 1000 / 60);
+        let second = Math.floor((parseInt(val) / 1000) % 60);
+        second = second < 10 ? "0" + second : second;
+
+        return minute + "分" + second + "秒";
       }
     },
   },

@@ -56,6 +56,7 @@ export default {
     };
   },
   created() {
+    // 另外一个看板娘
     // setTimeout(() => {
     //   window.L2Dwidget.init({
     //     pluginRootPath: "live2dw/",

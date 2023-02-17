@@ -18,13 +18,13 @@
           <el-button size="small" type="warning" class="poepleOne" @click="editUser">编辑个人资料</el-button>
         </div>
         <div class="dynamic">
-          <span><strong>0</strong> <i>动态</i></span>
-          <span><strong>3</strong><i>关注</i></span>
-          <span><strong>2</strong><i>粉丝</i></span>
+          <span><strong>66</strong> <i>动态</i></span>
+          <span><strong>32</strong><i>关注</i></span>
+          <span><strong>2395</strong><i>粉丝</i></span>
         </div>
         <div class="location">所在地区: {{ province }}-{{ city }}--{{ district }}</div>
-        <div class="network">社交网络: 熊仔音乐,社交网络!</div>
-        <div class="location">个性签名: 这个人很懒,没有写签名!</div>
+        <div class="network">社交网络: 熊仔是一种在线音乐服务,它还提供音乐下载、在线收听、在线播放等功能!</div>
+        <div class="location">个性签名: 生活不止眼前的苟且，还有诗和远方!</div>
       </div>
     </div>
     <!-- 用户听歌排行 -->

@@ -9,7 +9,11 @@
               <img :src="scope.row.artists[0].picUrl" class="image" @click="bigImg(scope.row.artists[0].picUrl, scope.row.name)" />
             </template>
           </el-table-column>
-          <el-table-column prop="name" label="标题" width="200"> </el-table-column>
+          <el-table-column label="标题" width="200">
+            <template slot-scope="scope">
+              <div @click="songComment(scope.row.id)" class="at-singer">{{ scope.row.name }}</div>
+            </template>
+          </el-table-column>
           <el-table-column label="时长" width="130">
             <template slot-scope="scope">
               <div>{{ scope.row.duration ? scope.row.duration : 0 | famter }}</div>
@@ -63,6 +67,11 @@
       </div>
       <el-button type="primary" @click="downMV">下载MV</el-button>
     </el-dialog>
+
+    <!-- 歌曲评论对话框  -->
+    <el-dialog :visible.sync="toCommentFlag" width="800px" :destroy-on-close="true" class="songComment">
+      <Comment :comments="comments"> </Comment>
+    </el-dialog>
   </div>
 </template>
 
@@ -70,6 +79,7 @@
 import PlayMusic from "@/components/PlayMusic.vue";
 import Lyric from "@/components/Lyric.vue";
 import { MUSIC_API } from "@/config/index.js";
+import Comment from "@/components/Comment.vue";
 export default {
   data() {
     return {
@@ -119,6 +129,8 @@ export default {
           fullscreenToggle: true, //全屏按钮
         },
       }, //视频播放配置
+      toCommentFlag: false, //歌曲评论对话框
+      comments: [],
     };
   },
 
@@ -128,8 +140,11 @@ export default {
       if (val <= 0) {
         return "暂无记录";
       } else {
-        let num = "" + (val / 1000 / 60).toFixed(1);
-        return num.replace(".", "分") + "秒";
+        let minute = Math.floor(parseInt(val) / 1000 / 60);
+        let second = Math.floor((parseInt(val) / 1000) % 60);
+        second = second < 10 ? "0" + second : second;
+
+        return minute + "分" + second + "秒";
       }
     },
   },
@@ -264,10 +279,19 @@ export default {
     toSingerPage(singerName) {
       this.$router.push({ path: "/singer", query: { singerName: singerName } });
     },
+    //歌曲评论
+    async songComment(id) {
+      this.toCommentFlag = true;
+      // console.log(id); //拿到歌曲id
+      // 发起请求拿到歌曲评论
+      let res = await this.$http.get(`${MUSIC_API}comment/music?id=${id}`);
+      this.comments = res.data.comments;
+    },
   },
   components: {
     PlayMusic,
     Lyric,
+    Comment,
   },
 };
 </script>
@@ -326,6 +350,11 @@ export default {
     height: 70px;
     // background-color: pink;
     // margin-bottom: 18px;
+  }
+  .songComment {
+    /deep/.el-dialog__body {
+      padding: 10px 0 0;
+    }
   }
 }
 </style>
