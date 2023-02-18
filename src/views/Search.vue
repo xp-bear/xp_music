@@ -4,10 +4,11 @@
     <div class="box">
       <el-input placeholder="搜你想听的歌曲!" v-model="input" clearable :autofocus="true" @change="searchInput"> </el-input>
       <el-button type="primary" icon="el-icon-search" @click.trim="searchInput">搜索</el-button>
+      <div class="back" @click="toBack">
+        <i class="el-icon-back"></i>
+      </div>
     </div>
-    <div class="back" @click="toBack">
-      <i class="el-icon-back"></i>
-    </div>
+
     <!-- 卡片列表 -->
     <List :show="show" :songs="songs" @toLoading="toLoading" />
   </div>
@@ -125,20 +126,21 @@ export default {
     width: 800px;
     margin: 0 auto;
     display: flex;
+    position: relative;
     .el-input {
       margin-right: 5px;
       font-size: 16px;
     }
-  }
-  .back {
-    position: absolute;
-    top: 0;
-    left: 510px;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    border: 1px solid #ccc;
+    .back {
+      position: absolute;
+      top: 0;
+      left: -50px;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      border: 1px solid #ccc;
+    }
   }
 }
 </style>

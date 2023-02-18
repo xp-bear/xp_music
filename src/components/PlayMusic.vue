@@ -78,8 +78,17 @@ export default {
       }
     }, 500);
 
-    // enterKeyup//监听回车事件
+    // enterKeyup//监听空格事件
     this.enterKeyup();
+
+    //保存volume音量数据
+    // console.log("音量: ", this.volume);
+    // 先从localstorage中读取数据
+    let num = parseInt(localStorage.getItem("sound"));
+    if (num) {
+      this.$store.commit("updateColume", num);
+      this.volume = num;
+    }
   },
 
   props: ["musicUrl", "misicImg", "playsongs", "mid"],
@@ -88,6 +97,8 @@ export default {
     justVolume(value) {
       this.$store.commit("updateColume", value);
       this.$refs.audio.volume = this.volume / 100;
+      // 保存数据到localstorage中
+      localStorage.setItem("sound", this.volume);
     },
     //播放按钮
     toPlay() {
