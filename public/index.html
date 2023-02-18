@@ -27,6 +27,7 @@
     <script src="/js/canvas-particle.js"></script>
     <!-- 获取地理位置百度 -->
     <script type="text/javascript" src="http://api.map.baidu.com/getscript?v=2.0&ak=5m0QlcWQKtF7A7C7TuEGRXldzRA1oBfz"></script>
+
     <!-- 背景滚动条 -->
     <style>
       .test-5::-webkit-scrollbar {
@@ -63,6 +64,14 @@
         filter: grayscale(100%);
       }
     </style> -->
+    <!--xp字体  -->
+    <style>
+      @font-face {
+        font-family: xp;
+        /* src: url("@/assets/fonts/two.ttf"); */
+        src: url("http://cdn.xxoutman.cn/two.ttf");
+      }
+    </style>
   </head>
   <body class="test-5">
     <noscript>
@@ -106,6 +115,7 @@
           $elem.style.zIndex = 9999;
           $elem.style.position = "absolute";
           $elem.style.select = "none";
+          $elem.style.fontFamily = "xp";
           var x = e.pageX;
           var y = e.pageY;
           $elem.style.left = x - 10 + "px";

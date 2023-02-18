@@ -36,7 +36,7 @@ import { Message } from "element-ui";
 export default {
   data() {
     return {
-      isPlay: true,
+      isPlay: true, //是否播放
       newId: 0, //新歌曲id
       newUrl: "",
       newNmae: "",
@@ -77,6 +77,9 @@ export default {
         return this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: true });
       }
     }, 500);
+
+    // enterKeyup//监听回车事件
+    this.enterKeyup();
   },
 
   props: ["musicUrl", "misicImg", "playsongs", "mid"],
@@ -153,6 +156,19 @@ export default {
         this.$message({ message: "切换为: 循环播放", type: "warning", duration: 2000 });
       }
     },
+    //销毁空格事件
+    enterKeyupDestroyed() {
+      document.removeEventListener("keyup", this.enterKey);
+    },
+    // 监听空格事件
+    enterKeyup() {
+      document.addEventListener("keyup", this.enterKey);
+    },
+    enterKey(e) {
+      if (e.key == " ") {
+        this.toPlay();
+      }
+    },
   },
   watch: {
     // 自动切换下一首歌曲
@@ -167,6 +183,8 @@ export default {
   },
   destroyed() {
     clearInterval(this.timer);
+    // 销毁空格事件
+    this.enterKeyupDestroyed();
   },
 };
 </script>

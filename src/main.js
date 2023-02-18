@@ -4,7 +4,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import axios from "axios";
-
+import jquery from "jquery";
+Vue.prototype.$ = jquery;
 //公用css
 import "./style.css";
 

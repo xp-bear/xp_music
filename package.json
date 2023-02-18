@@ -10,6 +10,7 @@
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.6",
+    "jquery": "^3.6.3",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vue-video-player": "^5.0.2",

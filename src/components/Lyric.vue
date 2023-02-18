@@ -6,6 +6,7 @@
 
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
+import $ from "jquery";
 export default {
   data() {
     return {
@@ -13,7 +14,7 @@ export default {
     };
   },
   props: ["lyrics", "mid"],
-
+  methods: {},
   computed: {
     ...mapState(["cur", "total"]),
 
@@ -42,7 +43,7 @@ export default {
     this.timer = setInterval(() => {
       let p = document.querySelectorAll(".lyric p");
       let parent = document.querySelector(".lyric"); //父元素滚动
-
+      let counter = 0; //初始化滚动条位置
       // 歌曲开始,滚动条置顶
       if (Math.round(this.cur) == 0) {
         parent.scrollTop = 0;
@@ -63,10 +64,17 @@ export default {
           p[i].style.color = "red";
           p[i].style.fontSize = "20px";
           p[i].style.transition = "all 0.5s";
+          counter++;
+          // console.log(counter);
         } else if (Math.round(this.cur) == p[i].id && Math.round(this.cur) != 0) {
-          // console.log("当前", Math.round(this.cur), p[i].id);
-          parent.scrollTop += 6.4;
+          // counter++;
+
+          if (counter >= 8) {
+            $(".lyric").animate({ scrollTop: parent.scrollTop + 31 + "px" }, 300);
+          }
           parent.style.transition = "all 0.5s";
+          this.$store.commit("insertCur", Math.round(this.cur) + 1000);
+          // console.log("当前", this.cur, p[i].id, counter);
         }
       }
     }, 100);

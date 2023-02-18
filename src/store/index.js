@@ -11,6 +11,9 @@ export default new Vuex.Store({
     likeSongs: [], //收藏的歌曲列表
   },
   mutations: {
+    insertCur(state, value) {
+      state.cur = value;
+    },
     getMusic(state, obj) {
       state.cur = obj.cur;
       state.total = obj.total;
