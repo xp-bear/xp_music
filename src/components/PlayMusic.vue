@@ -25,7 +25,8 @@
       </div>
     </div>
     <div class="block">
-      <el-slider v-model="volume" vertical height="200px" @input="justVolume"></el-slider>
+      <el-slider v-model="volume" :show-tooltip="false" vertical height="200px" @input="justVolume"></el-slider>
+      <span>{{ volume }}&nbsp;%</span>
     </div>
     <audio :src="musicUrl" :autoplay="isPlay && 'autoplay'" ref="audio" :loop="isLoop"></audio>
   </div>
@@ -177,8 +178,25 @@ export default {
       document.addEventListener("keyup", this.enterKey);
     },
     enterKey(e) {
+      // console.log(e.key);
       if (e.key == " ") {
         this.toPlay();
+      } else if (e.key == "ArrowLeft") {
+        this.micChange(-1);
+      } else if (e.key == "ArrowRight") {
+        this.micChange(1);
+      } else if (e.key == "ArrowUp") {
+        // 增加音量
+        this.$store.commit("updateColume", 1);
+        this.volume++;
+        localStorage.setItem("sound", this.volume);
+      } else if (e.key == "ArrowDown") {
+        // 减小音量
+        if (this.volume > 0) {
+          this.volume--;
+          this.$store.commit("updateColume", -1);
+          localStorage.setItem("sound", this.volume);
+        }
       }
     },
   },
@@ -216,6 +234,17 @@ export default {
     top: 50%;
     transform: translateY(-50%);
     right: 0;
+    span {
+      display: flex;
+      width: 38px;
+      justify-content: center;
+      position: absolute;
+      bottom: -25px;
+      right: 0px;
+      color: #fff;
+      font-family: xp;
+      text-align: center;
+    }
   }
   .bg {
     position: absolute;
