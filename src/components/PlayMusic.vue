@@ -32,7 +32,7 @@
 </template>
 <script>
 import { Message } from "element-ui";
-
+import { mapState, mapMutations, mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -44,7 +44,7 @@ export default {
       total: 0,
       timer: null,
       speeds: 0, //歌曲进度
-      volume: 50,
+      volume: this.$store.state.volume,
       copymusicUrl: "true", //歌曲url copy
       isLoop: false, //歌曲是否循环
     };
@@ -85,7 +85,8 @@ export default {
   props: ["musicUrl", "misicImg", "playsongs", "mid"],
   methods: {
     // 调整音乐声音大小
-    justVolume() {
+    justVolume(value) {
+      this.$store.commit("updateColume", value);
       this.$refs.audio.volume = this.volume / 100;
     },
     //播放按钮

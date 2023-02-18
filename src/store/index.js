@@ -9,8 +9,12 @@ export default new Vuex.Store({
     total: 0, //总时间
     iptValue: "", //搜索关键字
     likeSongs: [], //收藏的歌曲列表
+    volume: 50, //音乐大小
   },
   mutations: {
+    updateColume(state, value) {
+      state.volume = value;
+    },
     insertCur(state, value) {
       state.cur = value;
     },
