@@ -27,17 +27,17 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div>
-                <el-tooltip effect="dark" content="播放歌曲" placement="top">
+                <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
                   <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.artists[0].picUrl, scope.row.name, scope.row.artists[0].name, scope.row.duration)"></i>
-                </el-tooltip>
+                <!-- </el-tooltip> -->
 
-                <el-tooltip effect="dark" content="下载歌曲" placement="top">
+                <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
                   <i class="el-icon-download" @click="vdown(scope.row.id, scope.row.name)"></i>
-                </el-tooltip>
+                <!-- </el-tooltip> -->
 
-                <el-tooltip effect="dark" content="播放MV" placement="top">
+                <!-- <el-tooltip effect="dark" content="播放MV" placement="top"> -->
                   <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mvid, scope.row.name)"></i>
-                </el-tooltip>
+                <!-- </el-tooltip> -->
               </div>
             </template>
           </el-table-column>

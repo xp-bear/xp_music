@@ -28,20 +28,20 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div>
-                <el-tooltip effect="dark" content="播放歌曲" placement="top">
+                <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
                   <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.musicImg, scope.row.name)"></i>
-                </el-tooltip>
+                <!-- </el-tooltip> -->
 
-                <el-tooltip effect="dark" content="下载歌曲" placement="top">
+                <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
                   <i class="el-icon-download" @click="vdown(scope.row.id, scope.row.name)"></i>
-                </el-tooltip>
+                <!-- </el-tooltip> -->
 
-                <el-tooltip effect="dark" content="播放MV" placement="top">
+                <!-- <el-tooltip effect="dark" content="播放MV" placement="top"> -->
                   <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mid, scope.row.name)"></i>
-                </el-tooltip>
-                <el-tooltip effect="dark" content="删除该条记录" placement="top">
+                <!-- </el-tooltip> -->
+                <!-- <el-tooltip effect="dark" content="删除该条记录" placement="top"> -->
                   <i class="el-icon-delete" title="删除该条记录" @click="toDelete(scope.row.id)"></i>
-                </el-tooltip>
+                <!-- </el-tooltip> -->
               </div>
             </template>
           </el-table-column>
