@@ -134,6 +134,7 @@ export default {
     },
     // 上下首歌曲切换
     micChange(counter) {
+      this.$message.closeAll()
       // 手动上下音乐切换
       let num = this.playsongs.findIndex((item) => {
         return item.id == this.mid;
