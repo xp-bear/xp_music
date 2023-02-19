@@ -4,8 +4,8 @@
     <div class="bg"><img :src="misicImg" alt="" /></div>
     <div class="playContent">
       <img :class="this.isPlay ? 'move' : 'remove'" src="../assets/needle-ab.png" alt="" />
-      <img :class="this.isPlay && 'mover'" src="../assets/bg.png" alt="" />
-      <img :class="this.isPlay && 'mover'" :src="misicImg" alt="" />
+      <img ref="moveBg" class="mover" src="../assets/bg.png" alt="" />
+      <img ref="moveImg" class="mover" :src="misicImg" alt="" />
     </div>
 
     <!-- 播放条 按钮 -->
@@ -22,6 +22,10 @@
         <div id="pgIcon" ref="speedprocess">
           <img src="../assets/rocket.png" />
         </div>
+      </div>
+      <div class="pro-info">
+        <span style="margin-left: 10px">{{ cur | musicTime }}</span> <br />
+        <span style="margin-right: 10px">{{ total | musicTime }}</span>
       </div>
     </div>
     <div class="block">
@@ -75,7 +79,7 @@ export default {
         // this.$mb.alert("当前歌曲暂无资源!", "注意", { confirmButtonText: "确定" });
         this.copymusicUrl = "pause";
         this.musicUrl = "pause";
-        return this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: true });
+        return this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: true, duration: 0 });
       }
     }, 500);
 
@@ -93,6 +97,20 @@ export default {
   },
 
   props: ["musicUrl", "misicImg", "playsongs", "mid"],
+  filters: {
+    // 处理时间格式
+    musicTime(val) {
+      val = Math.floor(val);
+      if (val <= 0) {
+        return "";
+      } else {
+        let minute = Math.floor(val / 60);
+        let second = Math.floor(val % 60);
+        second = second < 10 ? "0" + second : second;
+        return minute + "分" + second + "秒";
+      }
+    },
+  },
   methods: {
     // 调整音乐声音大小
     justVolume(value) {
@@ -105,8 +123,12 @@ export default {
     toPlay() {
       if (this.isPlay) {
         this.$refs.audio.pause();
+        this.$refs.moveBg.style.animationPlayState = "paused";
+        this.$refs.moveImg.style.animationPlayState = "paused";
       } else {
         this.$refs.audio.play();
+        this.$refs.moveBg.style.animationPlayState = "running";
+        this.$refs.moveImg.style.animationPlayState = "running";
       }
       this.isPlay = !this.isPlay;
     },
@@ -358,9 +380,19 @@ export default {
     }
     .active {
       color: red;
-      // background: linear-gradient(to right, #606c8860, #3f4c6b60);
-      // border-radius: 5px;
-      // box-shadow: 0 0 5px #606c88;
+    }
+    .pro-info {
+      display: flex;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      justify-content: space-between;
+      align-items: center;
+      z-index: -1;
+      font-size: 18px;
+      font-family: xp;
+      color: #fff;
+      text-shadow: 0px 0px 1px #ccc;
     }
   }
 }
