@@ -35,7 +35,11 @@ export default {
         if (text) {
           html += "<p id=" + timer + " style='padding:5px 0;' >" + text + "</p>";
         }
+        if (i == lrcArr.length - 1) {
+          html += "<p id='666' style='padding:5px 0;' ></p>";
+        }
       }
+
       return html;
     },
   },
@@ -64,17 +68,16 @@ export default {
           p[i].style.color = "red";
           p[i].style.fontSize = "20px";
           p[i].style.transition = "all 0.5s";
+
           counter++;
-          // console.log(counter);
         } else if (Math.round(this.cur) == p[i].id && Math.round(this.cur) != 0) {
-          // counter++;
+          // console.log("当前", this.cur, p[i].id, counter);
 
           if (counter >= 8) {
             $(".lyric").animate({ scrollTop: parent.scrollTop + 31 + "px" }, 300);
           }
           parent.style.transition = "all 0.5s";
           this.$store.commit("insertCur", Math.round(this.cur) + 1000);
-          // console.log("当前", this.cur, p[i].id, counter);
         }
       }
     }, 100);
