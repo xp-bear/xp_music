@@ -2,7 +2,8 @@
   <div class="home">
     <!-- 搜索框 -->
     <div class="box">
-      <el-input placeholder="搜你想听的歌曲!" v-model="input" clearable :autofocus="true" @change="searchInput"> </el-input>
+      <!-- @change="searchInput -->
+      <el-input placeholder="搜你想听的歌曲!" v-model="input" clearable :autofocus="true"> </el-input>
       <el-select v-model="value" placeholder="请选择">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
       </el-select>
@@ -14,7 +15,8 @@
     </div>
 
     <!-- 卡片列表 -->
-    <List :show="show" :songs="songs" @toLoading="toLoading" />
+    <List v-if="value == 'A'" :show="show" :songs="songs" @toLoading="toLoading" />
+    <OtherApiList v-else-if="value == 'B'" :show="show" :songs="songs"></OtherApiList>
   </div>
 </template>
 
@@ -22,6 +24,7 @@
 import { Loading } from "element-ui";
 
 import List from "@/components/List.vue";
+import OtherApiList from "@/components/OtherApiList.vue";
 import { MUSIC_API } from "@/config/index.js";
 export default {
   name: "Search",
@@ -30,6 +33,7 @@ export default {
       input: "",
       show: false,
       songs: [],
+      Bsongs: [],
       timer: null,
       options: [
         {
@@ -49,7 +53,7 @@ export default {
           label: "BliBli",
         },
       ],
-      value: "A",
+      value: "B",
     };
   },
 
@@ -92,33 +96,63 @@ export default {
         this.show = false;
         return;
       }
-      // 发起请求
-      // 加载图标
-      let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
+      // 1.聚合数据
+      if (this.value == "A") {
+        // 发起请求 // 加载图标
+        let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
 
-      // 聚合接口
-      console.log(this.value);
-      let res = await this.$http.get(`${MUSIC_API}search?keywords=${this.input}`);
-      this.songs = res.data.result.songs;
+        let res = await this.$http.get(`${MUSIC_API}search?keywords=${this.input}`);
+        this.songs = res.data.result.songs;
 
-      // 给songs添加一个picurl
-      this.songs.forEach(async (item) => {
-        let imgData = await this.$http.get(`${MUSIC_API}song/detail?ids=${item.id}`);
-        item.artists[0].picUrl = imgData.data.songs[0].al.picUrl;
-      });
+        // 给songs添加一个picurl
+        this.songs.forEach(async (item) => {
+          let imgData = await this.$http.get(`${MUSIC_API}song/detail?ids=${item.id}`);
+          item.artists[0].picUrl = imgData.data.songs[0].al.picUrl;
+        });
 
-      // 关闭加载图标
-      loadingInstance.close();
-
-      // 网络请求超时处理 5 秒
-      this.timer = setTimeout(() => {
-        this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });
+        // 关闭加载图标
         loadingInstance.close();
-        return;
-      }, 5000);
-      // 请求到数据之后,清除定时器
-      if (res) {
-        clearTimeout(this.timer);
+
+        // 网络请求超时处理 5 秒
+        this.timer = setTimeout(() => {
+          this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });
+          loadingInstance.close();
+          return;
+        }, 5000);
+        // 请求到数据之后,清除定时器
+        if (res) {
+          clearTimeout(this.timer);
+        }
+        // ----------------------------------------
+      } else if (this.value == "B") {
+        // 发起请求 // 加载图标
+        let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
+
+        let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=B&keyword=${this.input}&type=music&offset=0&limit=20`);
+        // console.log(this.Bsongs);
+        // 给songs添加一个picurl
+        res.data.forEach(async (item) => {
+          let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
+          item.picUrl = imgData.data.img;
+          item.src = imgData.data.src;
+        });
+        // 等待数据加载
+        setTimeout(() => {
+          this.songs = res.data;
+          // 关闭加载图标
+          loadingInstance.close();
+        }, 1200);
+
+        // 网络请求超时处理 5 秒
+        this.timer = setTimeout(() => {
+          this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });
+          loadingInstance.close();
+          return;
+        }, 5000);
+        // 请求到数据之后,清除定时器
+        if (res) {
+          clearTimeout(this.timer);
+        }
       }
 
       // vuex的使用方式
@@ -140,6 +174,7 @@ export default {
   // 加载组件
   components: {
     List,
+    OtherApiList,
   },
 };
 </script>
