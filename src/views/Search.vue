@@ -2,9 +2,9 @@
   <div class="home">
     <!-- 搜索框 -->
     <div class="box">
-      <!-- @change="searchInput -->
-      <el-input placeholder="搜你想听的歌曲!" v-model="input" clearable :autofocus="true"> </el-input>
-      <el-select v-model="value" placeholder="请选择">
+      <!-- @change="searchInput" -->
+      <el-input placeholder="搜你想听的歌曲!" v-model="input" clearable :autofocus="true" @change="searchInput"> </el-input>
+      <el-select v-model="value" placeholder="请选择" @change="changeOrigin">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
       </el-select>
       <el-button type="primary" icon="el-icon-search" @click.trim="searchInput" style="margin-left: 5px">搜索</el-button>
@@ -16,7 +16,7 @@
 
     <!-- 卡片列表 -->
     <List v-if="value == 'A'" :show="show" :songs="songs" @toLoading="toLoading" />
-    <OtherApiList v-else-if="value == 'B'" :show="show" :songs="songs"></OtherApiList>
+    <OtherApiList v-else :show="show" :songs="songs"></OtherApiList>
   </div>
 </template>
 
@@ -33,7 +33,6 @@ export default {
       input: "",
       show: false,
       songs: [],
-      Bsongs: [],
       timer: null,
       options: [
         {
@@ -53,13 +52,13 @@ export default {
           label: "BliBli",
         },
       ],
-      value: "B",
+      value: "A",
     };
   },
 
   mounted() {
     // 测试接口
-
+    this.$message.closeAll();
     // 传入搜索关键字
     if (this.$route.params.ipt) {
       this.input = this.$route.params.ipt;
@@ -72,6 +71,13 @@ export default {
     }
   },
   methods: {
+    // 切换请求源
+    changeOrigin() {
+      this.songs = [];
+      this.searchInput();
+      // dayinb
+      // console.log("当前标签:", this.value);
+    },
     // 加载更多
     toLoading() {
       let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
@@ -90,12 +96,14 @@ export default {
     },
 
     async searchInput() {
+      this.songs = [];
       if (this.input.length > 0) {
         this.show = true;
       } else {
         this.show = false;
         return;
       }
+      // console.log(this.value);
       // 1.聚合数据
       if (this.value == "A") {
         // 发起请求 // 加载图标
@@ -128,7 +136,7 @@ export default {
         // 发起请求 // 加载图标
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
 
-        let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=B&keyword=${this.input}&type=music&offset=0&limit=20`);
+        let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
         // console.log(this.Bsongs);
         // 给songs添加一个picurl
         res.data.forEach(async (item) => {
@@ -137,11 +145,73 @@ export default {
           item.src = imgData.data.src;
         });
         // 等待数据加载
-        setTimeout(() => {
-          this.songs = res.data;
-          // 关闭加载图标
+        // setTimeout(() => {
+        this.songs = res.data;
+        // 关闭加载图标
+        loadingInstance.close();
+        // }, 1200);
+
+        // 网络请求超时处理 5 秒
+        this.timer = setTimeout(() => {
+          this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });
           loadingInstance.close();
-        }, 1200);
+          return;
+        }, 5000);
+        // 请求到数据之后,清除定时器
+        if (res) {
+          clearTimeout(this.timer);
+        }
+        // --------------------------------------
+      } else if (this.value == "C") {
+        // 发起请求 // 加载图标
+        let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
+
+        let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
+        // console.log(this.Bsongs);
+        // 给songs添加一个picurl
+        res.data.forEach(async (item) => {
+          let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
+          item.picUrl = imgData.data.img;
+          item.src = imgData.data.src;
+        });
+        // 等待数据加载
+        // setTimeout(() => {
+        this.songs = res.data;
+        // 关闭加载图标
+        loadingInstance.close();
+        // }, 1200);
+
+        // 网络请求超时处理 5 秒
+        this.timer = setTimeout(() => {
+          this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });
+          loadingInstance.close();
+          return;
+        }, 5000);
+        // 请求到数据之后,清除定时器
+        if (res) {
+          clearTimeout(this.timer);
+        }
+        // -----------------------------
+      } else if (this.value == "Q") {
+        // 发起请求 // 加载图标
+        let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
+
+        let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
+        // console.log(this.Bsongs);
+        // 给songs添加一个picurl
+        res.data.forEach(async (item) => {
+          let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
+          item.picUrl = imgData.data.img;
+          item.src = imgData.data.src;
+          item.lyric = imgData.data.lrc;
+        });
+        // 等待数据加载
+        // setTimeout(() => {
+        this.songs = res.data;
+        // console.log(this.songs);
+        // 关闭加载图标
+        loadingInstance.close();
+        // }, 1200);
 
         // 网络请求超时处理 5 秒
         this.timer = setTimeout(() => {
@@ -154,7 +224,6 @@ export default {
           clearTimeout(this.timer);
         }
       }
-
       // vuex的使用方式
       this.$store.commit("getValue", this.input);
     },

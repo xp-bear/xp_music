@@ -21,22 +21,18 @@
           </el-table-column>
           <el-table-column label="歌手" width="180">
             <template slot-scope="scope">
-              <div @click="toSingerPage(scope.row.artist[0])" class="at-singer">{{ scope.row.artist[0] }}</div>
+              <div class="at-singer">{{ scope.row.artist[0] }}</div>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div>
                 <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
-                <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.artists[0].picUrl, scope.row.name, scope.row.artists[0].name, scope.row.duration)"></i>
+                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.picUrl, scope.row.src, scope.row.lyric)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
-                <i class="el-icon-download" @click="vdown(scope.row.id, scope.row.name)"></i>
-                <!-- </el-tooltip> -->
-
-                <!-- <el-tooltip effect="dark" content="播放MV" placement="top"> -->
-                <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mvid, scope.row.name)"></i>
+                <i class="el-icon-download" @click="vdown(scope.row.src, scope.row.name)"></i>
                 <!-- </el-tooltip> -->
               </div>
             </template>
@@ -49,7 +45,7 @@
     <!-- 播放歌曲与歌词对话框 -->
     <el-dialog :visible.sync="dialogTableVisible" :title="title" :fullscreen="true" :destroy-on-close="true" :before-close="onBeforeClose">
       <div class="lan">
-        <PlayMusic :musicUrl="musicUrl" :misicImg="misicImg" :playsongs="songs" :mid="mid" @newChange="newChange" />
+        <OtherPlayMusic :musicUrl="musicUrl" :misicImg="misicImg" :playsongs="songs" :mid="mid" @newChange="newChange" @updateUrl="updateUrl" />
         <Lyric :mid="mid" :lyrics="lyrics" />
       </div>
     </el-dialog>
@@ -61,7 +57,7 @@
     </el-dialog>
 
     <!-- 播放视频对话框 -->
-    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose">
+    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose" :closed="closedDailog">
       <div class="demo">
         <video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"> </video-player>
       </div>
@@ -76,7 +72,7 @@
 </template>
 
 <script>
-import PlayMusic from "@/components/PlayMusic.vue";
+import OtherPlayMusic from "@/components/OtherPlayMusic.vue";
 import Lyric from "@/components/Lyric.vue";
 import { MUSIC_API } from "@/config/index.js";
 import Comment from "@/components/Comment.vue";
@@ -151,6 +147,10 @@ export default {
   },
 
   methods: {
+    updateUrl(value) {
+      console.log(value);
+      this.musicUrl = value;
+    },
     // 关闭对话框之前
     onBeforeClose(done) {
       // console.log("我关闭之前的回调函数");
@@ -161,21 +161,19 @@ export default {
       }
       done();
     },
+    // 关闭对话框之后
+    closedDailog() {},
     // 播放歌曲
-    async vplay(id, src, name, singerName, duration) {
+    vplay(name, picUrl, src, lyric) {
       this.dialogTableVisible = true;
-      // 发起请求拿到歌曲id
-      let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-      // 发起请求拿到歌曲歌词
-      let lycdata = await this.$http.get(`${MUSIC_API}lyric?id=${id}`);
-      // console.log(lycdata.data.lrc.lyric);
-      this.musicUrl = res.data.data[0].url;
-      this.misicImg = src;
+      this.musicUrl = src;
+      this.misicImg = picUrl;
       this.title = name;
-      this.mid = id;
-      this.lyrics = lycdata.data.lrc.lyric;
+
+      this.mid = name;
+      this.lyrics = lyric;
       // 单个图片的url链接
-      this.simgUrl = src;
+      this.simgUrl = picUrl;
 
       // 提交数据到vuex
       let obj = {
@@ -185,21 +183,91 @@ export default {
         mid: this.mid,
         simgUrl: this.simgUrl,
         lyrics: this.lyrics,
-        singerName: singerName,
-        duration: duration,
-        id: id,
+        singerName: name,
+        duration: "00:00",
+        id: name,
       };
       this.$store.commit("getSong", obj);
     },
+    // --------------------
+    // 下载文件三部曲
+    async downloadFileProcess(fileUrl, fileName) {
+      let blob = await this.getBlob(fileUrl);
+      this.saveFile(blob, fileName);
+    },
+    getBlob(fileUrl) {
+      let that = this;
+      return new Promise((resolve) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", fileUrl, true);
+        //监听进度事件
+        xhr.addEventListener(
+          "progress",
+          function (evt) {
+            if (evt.lengthComputable) {
+              let percentComplete = evt.loaded / evt.total;
+              // percentage是当前下载进度，可根据自己的需求自行处理
+              let percentage = percentComplete * 100;
+              // console.log(percentage);
+              that.download_process = parseFloat(percentage.toFixed(2));
+            }
+          },
+          false
+        );
+        xhr.responseType = "blob";
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          }
+        };
+        xhr.send();
+      });
+    },
+    saveFile(blob, fileName) {
+      // ie的下载
+      if (window.navigator.msSaveOrOpenBlob) {
+        navigator.msSaveBlob(blob, filename);
+      } else {
+        // 非ie的下载
+        const link = document.createElement("a");
+        link.classList.add("download_link");
+        const body = document.querySelector("body");
+
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+
+        // fix Firefox
+        link.style.display = "none";
+        body.appendChild(link);
+
+        link.click();
+        body.removeChild(link);
+
+        window.URL.revokeObjectURL(link.href);
+      }
+    },
+    // 根据a标签下载
+    downloadMusic(url, fileName) {
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.download = fileName;
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+
     // 下载歌曲
-    async vdown(id, name) {
+    async vdown(url, name) {
       console.log("下载音乐", name, "mp3");
-      let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-      let url = res.data.data[0].url;
+      // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+      // let url = res.data.data[0].url;
       // 节流的使用
       if (this.clicktag == 0) {
         this.clicktag = 1;
-        this.downRow(url, name, "mp3");
+        this.downloadMusic(url, name);
+        // this.downRow(url, name, "mp3");
         setTimeout(() => {
           this.clicktag = 0;
         }, 3000);
@@ -212,7 +280,7 @@ export default {
       let ajax = new XMLHttpRequest();
       ajax.open("GET", data, true);
       ajax.responseType = "blob";
-      // ajx.withCredentials = true; //如果跨域
+      ajax.withCredentials = true; //如果跨域
       ajax.onload = function (oEvent) {
         let content = ajax.response;
         let a = document.createElement("a");
@@ -227,8 +295,8 @@ export default {
       ajax.send();
     },
     // 子传父 回来的数据
-    newChange(id, src, name) {
-      this.vplay(id, src, name);
+    newChange(name, picUrl, src, lyric) {
+      this.vplay(name, picUrl, src, lyric);
     },
     // 加载更多
     toLoading() {
@@ -266,11 +334,12 @@ export default {
       this.title = name;
       this.misicImg = imgSrc.split("?")[0];
       this.bigImgFlag = true;
-      console.log(this.misicImg);
+      // console.log(this.misicImg);
     },
     // 下载图片
     downImg() {
-      this.downRow(this.misicImg, this.title, "png");
+      // this.downRow(this.misicImg, this.title, "png");
+      this.downloadMusic(this.misicImg, this.title);
     },
     // 下载mv
     downMV() {
@@ -290,7 +359,7 @@ export default {
     },
   },
   components: {
-    PlayMusic,
+    OtherPlayMusic,
     Lyric,
     Comment,
   },
