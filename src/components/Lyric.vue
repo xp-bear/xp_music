@@ -59,12 +59,13 @@ export default {
         // console.log("***", Math.round(this.cur), p[i].id);
 
         if (this.cur > p[i].id) {
-          if (i > 1) {
+          if (i > 0) {
             p[0].style.color = "black";
             p[0].style.fontSize = "16px";
             p[i - 1].style.color = "black";
             p[i - 1].style.fontSize = "16px";
           }
+
           p[i].style.color = "red";
           p[i].style.fontSize = "20px";
           p[i].style.transition = "all 0.5s";

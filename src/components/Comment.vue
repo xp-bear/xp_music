@@ -1,14 +1,14 @@
 <template>
   <div class="Comment">
-    <el-card>
+    <el-card style="box-shadow: 0 0 0 transparent; border: 0; margin-top: -50px">
       <h2 style="border-bottom: 1px solid #ccc">精彩评论</h2>
       <div class="commentItem" v-for="item in comments">
         <!-- <div class="left"><img :src="item.user.avatarUrl" alt="" @click.stop="downImg(item.user.avatarUrl, item.user.nickname)" /></div> -->
         <div class="left"><img :src="item.user.avatarUrl" alt="" /></div>
         <div class="right">
-          <span>{{ item.user.nickname }}</span>
-          <span>{{ item.timeStr }}</span>
-          <p>{{ item.content }}</p>
+          <span style="font-size: 14px; font-family: xp">{{ item.user.nickname }}&nbsp;&nbsp;&nbsp;&nbsp;{{ item.timeStr }}</span>
+
+          <p style="font-family: consolas">{{ item.content }}</p>
         </div>
       </div>
     </el-card>
@@ -68,7 +68,7 @@ export default {
 <style lang="less" scoped>
 .Comment {
   width: 800px;
-  margin: 5px auto 0;
+  margin: 0px auto 0;
   text-align: left;
   .commentItem {
     display: flex;

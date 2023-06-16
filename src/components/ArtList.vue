@@ -295,8 +295,8 @@ export default {
       this.toCommentFlag = true;
       // console.log(id); //拿到歌曲id
       // 发起请求拿到歌曲评论
-      let res = await this.$http.get(`${MUSIC_API}comment/music?id=${id}`);
-      this.comments = res.data.comments;
+      let res = await this.$http.get(`${MUSIC_API}comment/hot?id=${id}&type=0`);
+      this.comments = res.data.hotComments;
     },
   },
   components: {

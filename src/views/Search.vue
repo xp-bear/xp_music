@@ -3,7 +3,11 @@
     <!-- 搜索框 -->
     <div class="box">
       <el-input placeholder="搜你想听的歌曲!" v-model="input" clearable :autofocus="true" @change="searchInput"> </el-input>
-      <el-button type="primary" icon="el-icon-search" @click.trim="searchInput">搜索</el-button>
+      <el-select v-model="value" placeholder="请选择">
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+      </el-select>
+      <el-button type="primary" icon="el-icon-search" @click.trim="searchInput" style="margin-left: 5px">搜索</el-button>
+      <!-- 返回按钮 -->
       <div class="back" @click="toBack">
         <i class="el-icon-back"></i>
       </div>
@@ -27,10 +31,31 @@ export default {
       show: false,
       songs: [],
       timer: null,
+      options: [
+        {
+          value: "A",
+          label: "聚合搜索",
+        },
+        {
+          value: "C",
+          label: "网易云",
+        },
+        {
+          value: "Q",
+          label: "QQ",
+        },
+        {
+          value: "B",
+          label: "BliBli",
+        },
+      ],
+      value: "A",
     };
   },
 
   mounted() {
+    // 测试接口
+
     // 传入搜索关键字
     if (this.$route.params.ipt) {
       this.input = this.$route.params.ipt;
@@ -70,8 +95,10 @@ export default {
       // 发起请求
       // 加载图标
       let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
-      let res = await this.$http.get(`${MUSIC_API}search?keywords=${this.input}`);
 
+      // 聚合接口
+      console.log(this.value);
+      let res = await this.$http.get(`${MUSIC_API}search?keywords=${this.input}`);
       this.songs = res.data.result.songs;
 
       // 给songs添加一个picurl

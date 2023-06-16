@@ -28,15 +28,15 @@
             <template slot-scope="scope">
               <div>
                 <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
-                  <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.al.picUrl, scope.row.name, scope.row.ar[0].name, scope.row.dt)"></i>
+                <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.al.picUrl, scope.row.name, scope.row.ar[0].name, scope.row.dt)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
-                  <i class="el-icon-download" @click="vdown(scope.row.id, scope.row.name)"></i>
+                <i class="el-icon-download" @click="vdown(scope.row.id, scope.row.name)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="播放MV" placement="top"> -->
-                  <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mv, scope.row.name)"></i>
+                <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mv, scope.row.name)"></i>
                 <!-- </el-tooltip> -->
               </div>
             </template>
@@ -295,8 +295,8 @@ export default {
       this.toCommentFlag = true;
       // console.log(id); //拿到歌曲id
       // 发起请求拿到歌曲评论
-      let res = await this.$http.get(`${MUSIC_API}comment/music?id=${id}`);
-      this.comments = res.data.comments;
+      let res = await this.$http.get(`${MUSIC_API}comment/hot?id=${id}&type=0`);
+      this.comments = res.data.hotComments;
     },
   },
 

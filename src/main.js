@@ -69,6 +69,8 @@ import {
   Tabs,
   TabPane,
   Message,
+  Select,
+  Option,
 } from "element-ui";
 
 Vue.prototype.$mb = MessageBox;
@@ -92,6 +94,8 @@ Vue.use(Pagination);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Autocomplete);
+Vue.use(Select);
+Vue.use(Option);
 
 new Vue({
   router,
