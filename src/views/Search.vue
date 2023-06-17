@@ -137,16 +137,17 @@ export default {
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
 
         let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
+        this.songs = res.data;
         // console.log(this.Bsongs);
         // 给songs添加一个picurl
-        res.data.forEach(async (item) => {
+        this.songs.forEach(async (item) => {
           let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
           item.picUrl = imgData.data.img;
           item.src = imgData.data.src;
         });
         // 等待数据加载
         // setTimeout(() => {
-        this.songs = res.data;
+        // this.songs = res.data;
         // 关闭加载图标
         loadingInstance.close();
         // }, 1200);
@@ -167,16 +168,17 @@ export default {
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
 
         let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
+        this.songs = res.data;
+
         // console.log(this.Bsongs);
         // 给songs添加一个picurl
-        res.data.forEach(async (item) => {
+        this.songs.forEach(async (item) => {
           let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
           item.picUrl = imgData.data.img;
           item.src = imgData.data.src;
         });
         // 等待数据加载
         // setTimeout(() => {
-        this.songs = res.data;
         // 关闭加载图标
         loadingInstance.close();
         // }, 1200);
@@ -197,9 +199,11 @@ export default {
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
 
         let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
+        this.songs = res.data;
+
         // console.log(this.Bsongs);
         // 给songs添加一个picurl
-        res.data.forEach(async (item) => {
+        this.songs.forEach(async (item) => {
           let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
           item.picUrl = imgData.data.img;
           item.src = imgData.data.src;
@@ -207,12 +211,11 @@ export default {
         });
         // 等待数据加载
         // setTimeout(() => {
-        this.songs = res.data;
-        // console.log(this.songs);
-        // 关闭加载图标
-        loadingInstance.close();
+        //   this.songs = this.songs;
+        //   // console.log(this.songs);
+        //   // 关闭加载图标
         // }, 1200);
-
+        loadingInstance.close();
         // 网络请求超时处理 5 秒
         this.timer = setTimeout(() => {
           this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });

@@ -11,7 +11,7 @@
           </el-table-column>
           <el-table-column label="标题" width="200">
             <template slot-scope="scope">
-              <div @click="songComment(scope.row.id)" class="at-singer">{{ scope.row.name }}</div>
+              <div class="at-singer">{{ scope.row.name }}</div>
             </template>
           </el-table-column>
           <el-table-column label="时长" width="130">
@@ -57,7 +57,7 @@
     </el-dialog>
 
     <!-- 播放视频对话框 -->
-    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose" :closed="closedDailog">
+    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose" @close="closedDailog">
       <div class="demo">
         <video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"> </video-player>
       </div>
@@ -148,6 +148,7 @@ export default {
 
   methods: {
     updateUrl(value) {
+      this.$message.closeAll();
       console.log(value);
       this.musicUrl = value;
     },
@@ -159,10 +160,15 @@ export default {
       if (video) {
         video.pause();
       }
+
+      this.$message.closeAll();
       done();
     },
     // 关闭对话框之后
-    closedDailog() {},
+    closedDailog() {
+      console.log(11);
+      this.$message.closeAll();
+    },
     // 播放歌曲
     vplay(name, picUrl, src, lyric) {
       this.dialogTableVisible = true;
@@ -174,6 +180,17 @@ export default {
       this.lyrics = lyric;
       // 单个图片的url链接
       this.simgUrl = picUrl;
+
+      // 判断该歌曲有没有资源
+      if (this.musicUrl == "") {
+        // return this.$mb.alert("当前歌曲暂无资源!", "注意", { confirmButtonText: "确定" });
+        // this.musicUrl = "pause";
+        setTimeout(() => {
+          return this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: true, duration: 0 });
+        }, 300);
+      } else {
+        this.$message.closeAll();
+      }
 
       // 提交数据到vuex
       let obj = {
@@ -268,6 +285,9 @@ export default {
         this.clicktag = 1;
         this.downloadMusic(url, name);
         // this.downRow(url, name, "mp3");
+        // this.downRow(downloadImg2, name, "mp3");
+        // this.export_raw("1.mp3", url);
+
         setTimeout(() => {
           this.clicktag = 0;
         }, 3000);
@@ -275,6 +295,45 @@ export default {
         this.$mb.alert("当前歌曲正在下载中,请勿重复点击!", "注意", { confirmButtonText: "确定" });
       }
     },
+
+    fake_click(obj) {
+      var ev = document.createEvent("MouseEvents");
+      ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      obj.dispatchEvent(ev);
+    },
+
+    export_raw(name, data) {
+      var urlObject = window.URL || window.webkitURL || window;
+      var export_blob = new Blob([data]);
+      var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+      save_link.href = urlObject.createObjectURL(export_blob);
+      save_link.download = name;
+      this.fake_click(save_link);
+    },
+
+    // 方式2：给一个图片地址，用canvas转base64进行下载，可以前端指定下载名
+    downloadImg2(url, name, suffix) {
+      const image = new Image();
+      image.src = url;
+      image.crossOrigin = "anonymous";
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      image.onload = function () {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        context.drawImage(image, 0, 0, image.width, image.height);
+        const base64 = canvas.toDataURL("image/jpeg");
+        const a = document.createElement("a");
+        a.href = base64;
+        a.download = name + "." + suffix;
+        const mouseEvent = new MouseEvent("click");
+        a.dispatchEvent(mouseEvent);
+      };
+      image.onerror = function () {
+        console.log("图片加载失败");
+      };
+    },
+
     // 根据url下载
     downRow(data, name, suffix) {
       let ajax = new XMLHttpRequest();
@@ -339,6 +398,7 @@ export default {
     // 下载图片
     downImg() {
       // this.downRow(this.misicImg, this.title, "png");
+      // this.downloadImg2(this.misicImg, this.title, "png");
       this.downloadMusic(this.misicImg, this.title);
     },
     // 下载mv

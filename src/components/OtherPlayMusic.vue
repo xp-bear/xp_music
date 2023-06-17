@@ -73,22 +73,6 @@ export default {
         total: this.total,
       };
       this.$store.commit("getMusic", obj);
-
-      // 判断该歌曲有没有资源
-      //   console.log(this.$store.state.total);
-    //   if (isNaN(this.$store.state.total)) {
-    //     return this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: true, duration: 0 });
-    //   } else {
-    //     this.$message.closeAll();
-    //     this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: false, duration: 0 });
-    //     clearInterval(this.timer);
-    //   }
-      //   if (isNaN(this.$store.state.total)) {
-      //     this.$message({ message: "当前歌曲暂无资源,3s后切换下一首!", type: "error", showClose: true, duration: 3000 });
-      //     setTimeout(() => {
-      //       this.micChange(1);
-      //     }, 3000);
-      //   }
     }, 500);
 
     // enterKeyup//监听空格事件
@@ -142,7 +126,6 @@ export default {
     },
     // 上下首歌曲切换
     micChange(counter) {
-      this.$message.closeAll();
       // 手动上下音乐切换
       let num = this.playsongs.findIndex((item) => {
         // console.log(item.src, this.musicUrl);
@@ -171,8 +154,6 @@ export default {
       if (this.playsongs[num + counter].hasOwnProperty("name")) {
         this.newNmae = this.playsongs[num + counter].name;
       }
-
-      // console.log("新id", this.newId);
       this.$emit("newChange", this.newNmae, this.newPicUrl, this.newUrl, this.newLyric);
     },
     // 进度条
