@@ -29,18 +29,18 @@
             <template slot-scope="scope">
               <div>
                 <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
-                  <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.musicImg, scope.row.name)"></i>
+                <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.musicImg, scope.row.name, scope.row.musicUrl, scope.row.lyrics)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
-                  <i class="el-icon-download" @click="vdown(scope.row.id, scope.row.name)"></i>
+                <i class="el-icon-download" @click="vdown(scope.row.id, scope.row.name, scope.row.musicUrl)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="播放MV" placement="top"> -->
-                  <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mid, scope.row.name)"></i>
+                <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mid, scope.row.name)"></i>
                 <!-- </el-tooltip> -->
                 <!-- <el-tooltip effect="dark" content="删除该条记录" placement="top"> -->
-                  <i class="el-icon-delete" title="删除该条记录" @click="toDelete(scope.row.id)"></i>
+                <i class="el-icon-delete" title="删除该条记录" @click="toDelete(scope.row.id)"></i>
                 <!-- </el-tooltip> -->
               </div>
             </template>
@@ -166,37 +166,54 @@ export default {
       done();
     },
     // 播放歌曲
-    async vplay(id, src, name) {
+    async vplay(id, src, name, musicUrl, lyrics) {
       this.dialogTableVisible = true;
-      // 发起请求拿到歌曲id
-      let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-      // 发起请求拿到歌曲歌词
-      let lycdata = await this.$http.get(`${MUSIC_API}lyric?id=${id}`);
-      // console.log(lycdata.data.lrc.lyric);
-      this.musicUrl = res.data.data[0].url;
-      this.misicImg = src;
-      this.title = name;
-      this.mid = id;
-      this.lyrics = lycdata.data.lrc.lyric;
-      // 单个图片的url链接
-      this.simgUrl = src;
+      if (typeof id == "number") {
+        // 发起请求拿到歌曲id
+        let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+        // 发起请求拿到歌曲歌词
+        let lycdata = await this.$http.get(`${MUSIC_API}lyric?id=${id}`);
+        // console.log(lycdata.data.lrc.lyric);
+        this.musicUrl = res.data.data[0].url;
+        this.misicImg = src;
+        this.title = name;
+        this.mid = id;
+        this.lyrics = lycdata.data.lrc.lyric;
+        // 单个图片的url链接
+        this.simgUrl = src;
+      } else {
+        this.musicUrl = musicUrl;
+        this.misicImg = src;
+        this.title = name;
+        this.mid = id;
+        this.lyrics = lyrics;
+        // 单个图片的url链接
+        this.simgUrl = src;
+      }
 
       // 提交数据到vuex
-      let obj = {
-        musicUrl: this.musicUrl,
-        misicImg: this.misicImg,
-        title: this.title,
-        mid: this.mid,
-        simgUrl: this.simgUrl,
-        lyrics: this.lyrics,
-      };
-      this.$store.commit("getSong", obj);
+      // let obj = {
+      //   musicUrl: this.musicUrl,
+      //   misicImg: this.misicImg,
+      //   title: this.title,
+      //   mid: this.mid,
+      //   simgUrl: this.simgUrl,
+      //   lyrics: this.lyrics,
+      // };
+      // this.$store.commit("getSong", obj);
     },
     // 下载歌曲
-    async vdown(id, name) {
-      console.log("下载音乐", name, "mp3");
-      let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-      let url = res.data.data[0].url;
+    async vdown(id, name, musicUrl) {
+      // console.log("下载音乐", name, musicUrl);
+      let url = null;
+      if (typeof id == "number") {
+        let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+        url = res.data.data[0].url;
+      } else {
+        url = musicUrl;
+        return this.$message({ message: "请搜索该歌曲进行下载!", type: "warning", showClose: true, duration: 1000 });
+      }
+
       // 节流的使用
       if (this.clicktag == 0) {
         this.clicktag = 1;
@@ -228,8 +245,8 @@ export default {
       ajax.send();
     },
     // 子传父 回来的数据
-    newChange(id, src, name) {
-      this.vplay(id, src, name);
+    newChange(id, src, name, musicUrl, lyrics) {
+      this.vplay(id, src, name, musicUrl, lyrics);
     },
     // // 加载更多
     // toLoading() {

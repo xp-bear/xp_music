@@ -134,7 +134,8 @@ export default {
     },
     // 上下首歌曲切换
     micChange(counter) {
-      this.$message.closeAll()
+      // console.log(this.playsongs);
+      this.$message.closeAll();
       // 手动上下音乐切换
       let num = this.playsongs.findIndex((item) => {
         return item.id == this.mid;
@@ -163,7 +164,7 @@ export default {
       this.newNmae = this.playsongs[num + counter].name;
 
       // console.log("新id", this.newId);
-      this.$emit("newChange", this.newId, this.newUrl, this.newNmae);
+      this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.playsongs[num + counter].musicUrl, this.playsongs[num + counter].lyrics);
     },
     // 进度条
     speed(e) {
@@ -186,7 +187,7 @@ export default {
     isloop() {
       this.isLoop = !this.isLoop;
       if (this.isLoop == true) {
-        console.log(this.cur, this.total);
+        // console.log(this.cur, this.total);
         this.$message({ message: "切换为: 单曲循环", type: "warning", duration: 2000 });
       } else {
         this.$message({ message: "切换为: 循环播放", type: "warning", duration: 2000 });

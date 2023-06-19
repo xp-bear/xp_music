@@ -138,19 +138,20 @@ export default {
 
         let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
         this.songs = res.data;
-        // console.log(this.Bsongs);
+        // console.log(this.songs);
         // 给songs添加一个picurl
         this.songs.forEach(async (item) => {
           let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
           item.picUrl = imgData.data.img;
           item.src = imgData.data.src;
+          item.lyric = imgData.data.lrc;
         });
         // 等待数据加载
         // setTimeout(() => {
-        // this.songs = res.data;
-        // 关闭加载图标
-        loadingInstance.close();
-        // }, 1200);
+          // this.songs = res.data;
+          // 关闭加载图标
+          loadingInstance.close();
+        // }, 300);
 
         // 网络请求超时处理 5 秒
         this.timer = setTimeout(() => {
@@ -176,6 +177,7 @@ export default {
           let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
           item.picUrl = imgData.data.img;
           item.src = imgData.data.src;
+          item.lyric = imgData.data.lrc;
         });
         // 等待数据加载
         // setTimeout(() => {

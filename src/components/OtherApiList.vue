@@ -28,7 +28,7 @@
             <template slot-scope="scope">
               <div>
                 <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
-                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.picUrl, scope.row.src, scope.row.lyric)"></i>
+                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.picUrl, scope.row.src, scope.row.lrc)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
@@ -171,13 +171,15 @@ export default {
     },
     // 播放歌曲
     vplay(name, picUrl, src, lyric) {
+      // console.log(name, picUrl, src, lyric);
       this.dialogTableVisible = true;
       this.musicUrl = src;
       this.misicImg = picUrl;
       this.title = name;
 
       this.mid = name;
-      this.lyrics = lyric;
+      this.lyrics = lyric || "[00:00.00]木有歌词哦";
+      // console.log(this.lyrics);
       // 单个图片的url链接
       this.simgUrl = picUrl;
 
