@@ -15,8 +15,8 @@
         <el-button type="primary" size="small" @click="loginIN">登录</el-button>
         <el-button type="info" size="small" @click="register">注册</el-button>
       </div>
-      <div class="user" v-else>
-        <img src="../assets/avatar.png" alt="" />&nbsp; <span @click="toUser"> {{ token.name }}</span
+      <div class="user" v-else style="display: flex; align-items: center">
+        <img :src="token.imgUrl" alt="" style="width: 40px; height: 40px; object-fit: cover; ,object-position: center" />&nbsp; <span @click="toUser"> {{ token.name }}</span
         >&nbsp;
         <el-button type="danger" size="small" @click="exit">退出</el-button>
       </div>
@@ -443,12 +443,13 @@ export default {
       }
     }
     .search_input {
+      position: relative;
       display: flex;
       align-items: center;
       text-size-adjust: none;
       user-select: none;
       width: 298px;
-      height: 34px;
+      height: 36px;
       box-sizing: border-box;
       border-radius: 3px;
       border: 1px solid #ccc;
@@ -466,6 +467,28 @@ export default {
           color: #1fa0ff;
           transition: all 0.3s;
         }
+      }
+    }
+    .search_input::before {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      content: "";
+      width: 101.5%;
+      height: 110%;
+      background: linear-gradient(90deg, #00b09b, #96c93d, #e4ccab, #ec776f, #00b09b);
+      z-index: -1;
+      background-size: 600px auto;
+      border-radius: 2px;
+      animation: searchAnimate 8s linear infinite;
+    }
+    @keyframes searchAnimate {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: -600% 0;
       }
     }
     .user {

@@ -37,19 +37,19 @@ export default {
       options: [
         {
           value: "A",
-          label: "聚合搜索",
-        },
-        {
-          value: "C",
           label: "网易云",
         },
+        // {
+        //   value: "C",
+        //   label: "网易云",
+        // },
         {
           value: "Q",
           label: "QQ",
         },
         {
           value: "B",
-          label: "BliBli",
+          label: "VIP解析",
         },
       ],
       value: "A",
@@ -148,9 +148,9 @@ export default {
         });
         // 等待数据加载
         // setTimeout(() => {
-          // this.songs = res.data;
-          // 关闭加载图标
-          loadingInstance.close();
+        // this.songs = res.data;
+        // 关闭加载图标
+        loadingInstance.close();
         // }, 300);
 
         // 网络请求超时处理 5 秒

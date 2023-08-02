@@ -15,8 +15,16 @@ import "vue-video-player/src/custom-theme.css";
 import "video.js/dist/video-js.css";
 Vue.use(VideoPlayer);
 
-//根url路径
-axios.defaults.baseURL = "http://150.158.21.251:5000";
+if (process.env.NODE_ENV === "production") {
+  // 生产环境的逻辑
+  //根url路径
+  axios.defaults.baseURL = "http://150.158.21.251:5000";
+} else {
+  // 开发环境的逻辑
+  //根url路径
+  axios.defaults.baseURL = "http://127.0.0.1:5000";
+}
+
 //配置超时时间
 // axios.defaults.timeout = 5000;
 
@@ -71,6 +79,7 @@ import {
   Message,
   Select,
   Option,
+  Radio,
 } from "element-ui";
 
 Vue.prototype.$mb = MessageBox;
@@ -96,6 +105,7 @@ Vue.use(FormItem);
 Vue.use(Autocomplete);
 Vue.use(Select);
 Vue.use(Option);
+Vue.use(Radio);
 
 new Vue({
   router,
