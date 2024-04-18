@@ -52,7 +52,7 @@ export default {
           label: "VIP解析",
         },
       ],
-      value: "A",
+      value: "B",
     };
   },
 
@@ -140,20 +140,24 @@ export default {
         let res = await this.$http.get(`https://dataiqs.com/api/kgmusic/?msg=${this.input}&type=mv&count=20`);
 
         this.songs = res.data.data;
-
+        let array = []; //缓冲数组
         // 给songs添加一个src
         this.songs.forEach(async (item, index) => {
           let imgData = await this.$http.get(`https://dataiqs.com/api/kgmusic/?msg=${this.input}&type=mv&count=20&n=${index}`);
           item.src = imgData.data.data.mv_url;
           item.picUrl = imgData.data.data.cover_url;
           item.lyric = "[00:00.00]木有歌词哦";
+          if (item.src) {
+            array.push(item);
+          }
         });
-
+        this.songs = array;
         // 等待数据加载
-        setTimeout(() => {
-          // 关闭加载图标
-          loadingInstance.close();
-        }, 300);
+        // setTimeout(() => {
+        // 关闭加载图标
+        loadingInstance.close();
+        // console.log(this.songs);
+        // }, 2000);
 
         // 网络请求超时处理 5 秒
         this.timer = setTimeout(() => {

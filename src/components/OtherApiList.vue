@@ -28,7 +28,7 @@
             <template slot-scope="scope">
               <div>
                 <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
-                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.picUrl, scope.row.src, scope.row.lrc)"></i>
+                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.picUrl, scope.row.src, scope.row.lrc, scope.row.duration)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
@@ -166,12 +166,18 @@ export default {
     },
     // 关闭对话框之后
     closedDailog() {
-      console.log(11);
       this.$message.closeAll();
     },
     // 播放歌曲
-    vplay(name, picUrl, src, lyric) {
+    vplay(name, picUrl, src, lyric, duration) {
       // console.log(name, picUrl, src, lyric);
+      // 把 05:17转化成 毫秒数
+      var timeParts = duration.split(":");
+      var minutes = parseInt(timeParts[0], 10);
+      var seconds = parseInt(timeParts[1], 10);
+      // 将小时和分钟转换为毫秒
+      var minutesSenconds = minutes * 60 * 1000 + seconds * 1000;
+
       this.dialogTableVisible = true;
       this.musicUrl = src;
       this.misicImg = picUrl;
@@ -203,7 +209,7 @@ export default {
         simgUrl: this.simgUrl,
         lyrics: this.lyrics,
         singerName: name,
-        duration: "00:00",
+        duration: minutesSenconds,
         id: name,
       };
       this.$store.commit("getSong", obj);
@@ -356,8 +362,8 @@ export default {
       ajax.send();
     },
     // 子传父 回来的数据
-    newChange(name, picUrl, src, lyric) {
-      this.vplay(name, picUrl, src, lyric);
+    newChange(name, picUrl, src, lyric, duration) {
+      this.vplay(name, picUrl, src, lyric, duration);
     },
     // 加载更多
     toLoading() {

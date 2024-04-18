@@ -211,7 +211,9 @@ export default {
         url = res.data.data[0].url;
       } else {
         url = musicUrl;
-        return this.$message({ message: "请搜索该歌曲进行下载!", type: "warning", showClose: true, duration: 1000 });
+        this.downRow(url, name, "mp3");
+        return this.$message({ message: "歌曲已经在下载中,请等待!", type: "success", showClose: true, duration: 1000 });
+        // return this.$message({ message: "请搜索该歌曲进行下载!", type: "warning", showClose: true, duration: 1000 });
       }
 
       // 节流的使用

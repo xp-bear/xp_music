@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       isPlay: true, //是否播放
-      newId: 0, //新歌曲id
+      // newId: {}, //新歌曲id
       newUrl: "",
       newNmae: "",
       cur: 0,
@@ -53,6 +53,7 @@ export default {
       copymusicUrl: "true", //歌曲url copy
       isLoop: false, //歌曲是否循环
       newLyric: "",
+      Duration: "", //歌曲时间字符串 "05:17"
     };
   },
 
@@ -128,9 +129,9 @@ export default {
     micChange(counter) {
       // 手动上下音乐切换
       let num = this.playsongs.findIndex((item) => {
-        // console.log(item.src, this.musicUrl);
         return item.src == this.musicUrl;
       });
+
       if (num == 0 && counter == -1) {
         this.$mb.alert("当前已经是第一首歌", "注意", { confirmButtonText: "确定" });
         return;
@@ -139,11 +140,12 @@ export default {
         this.$mb.alert("当前已经是最后一首歌", "注意", { confirmButtonText: "确定" });
         return;
       }
-      this.newId = this.playsongs[num + counter];
-
+      // this.newId = this.playsongs[num + counter];
+      // console.log(this.newId);
+      // console.log(this.playsongs[num + counter]);
       //   判断某个字段是否在对象里面;
-      if (this.playsongs[num + counter].hasOwnProperty("picUrl")) {
-        this.newPicUrl = this.playsongs[num + counter].picUrl;
+      if (this.playsongs[num + counter].hasOwnProperty("cover_url")) {
+        this.newPicUrl = this.playsongs[num + counter].cover_url;
       }
       if (this.playsongs[num + counter].hasOwnProperty("src")) {
         this.newUrl = this.playsongs[num + counter].src;
@@ -154,7 +156,11 @@ export default {
       if (this.playsongs[num + counter].hasOwnProperty("name")) {
         this.newNmae = this.playsongs[num + counter].name;
       }
-      this.$emit("newChange", this.newNmae, this.newPicUrl, this.newUrl, this.newLyric);
+      if (this.playsongs[num + counter].hasOwnProperty("duration")) {
+        this.Duration = this.playsongs[num + counter].duration;
+      }
+      // console.log(this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration);
+      this.$emit("newChange", this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration);
     },
     // 进度条
     speed(e) {

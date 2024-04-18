@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === "production") {
 } else {
   // 开发环境的逻辑
   //根url路径
-  axios.defaults.baseURL = "http://127.0.0.1:5000";
+  axios.defaults.baseURL = "http://150.158.21.251:5000";
 }
 
 //配置超时时间
