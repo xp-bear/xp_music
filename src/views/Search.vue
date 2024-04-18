@@ -43,10 +43,10 @@ export default {
         //   value: "C",
         //   label: "网易云",
         // },
-        {
-          value: "Q",
-          label: "QQ",
-        },
+        // {
+        //   value: "Q",
+        //   label: "QQ",
+        // },
         {
           value: "B",
           label: "VIP解析",
@@ -104,7 +104,7 @@ export default {
         return;
       }
       // console.log(this.value);
-      // 1.聚合数据
+      // 1.网易云数据
       if (this.value == "A") {
         // 发起请求 // 加载图标
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
@@ -118,6 +118,7 @@ export default {
           item.artists[0].picUrl = imgData.data.songs[0].al.picUrl;
         });
 
+        // console.log(this.songs);
         // 关闭加载图标
         loadingInstance.close();
 
@@ -136,22 +137,23 @@ export default {
         // 发起请求 // 加载图标
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
 
-        let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
-        this.songs = res.data;
-        // console.log(this.songs);
-        // 给songs添加一个picurl
-        this.songs.forEach(async (item) => {
-          let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
-          item.picUrl = imgData.data.img;
-          item.src = imgData.data.src;
-          item.lyric = imgData.data.lrc;
+        let res = await this.$http.get(`https://dataiqs.com/api/kgmusic/?msg=${this.input}&type=mv&count=20`);
+
+        this.songs = res.data.data;
+
+        // 给songs添加一个src
+        this.songs.forEach(async (item, index) => {
+          let imgData = await this.$http.get(`https://dataiqs.com/api/kgmusic/?msg=${this.input}&type=mv&count=20&n=${index}`);
+          item.src = imgData.data.data.mv_url;
+          item.picUrl = imgData.data.data.cover_url;
+          item.lyric = "[00:00.00]木有歌词哦";
         });
+
         // 等待数据加载
-        // setTimeout(() => {
-        // this.songs = res.data;
-        // 关闭加载图标
-        loadingInstance.close();
-        // }, 300);
+        setTimeout(() => {
+          // 关闭加载图标
+          loadingInstance.close();
+        }, 300);
 
         // 网络请求超时处理 5 秒
         this.timer = setTimeout(() => {

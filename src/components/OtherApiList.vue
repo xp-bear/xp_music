@@ -6,7 +6,7 @@
           <el-table-column type="index" label="#" width="80"> </el-table-column>
           <el-table-column width="50">
             <template slot-scope="scope">
-              <img :src="scope.row.picUrl" class="image" @click="bigImg(scope.row.picUrl, scope.row.name)" />
+              <img :src="scope.row.cover_url" class="image" @click="bigImg(scope.row.picUrl, scope.row.name)" />
             </template>
           </el-table-column>
           <el-table-column label="标题" width="200">
@@ -16,12 +16,12 @@
           </el-table-column>
           <el-table-column label="时长" width="130">
             <template slot-scope="scope">
-              <div>00:00</div>
+              <div>{{ scope.row.duration }}</div>
             </template>
           </el-table-column>
           <el-table-column label="歌手" width="180">
             <template slot-scope="scope">
-              <div class="at-singer">{{ scope.row.artist[0] }}</div>
+              <div class="at-singer">{{ scope.row.singername }}</div>
             </template>
           </el-table-column>
           <el-table-column label="操作">

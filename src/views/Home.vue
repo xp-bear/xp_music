@@ -16,7 +16,7 @@
         <el-button type="info" size="small" @click="register">注册</el-button>
       </div>
       <div class="user" v-else style="display: flex; align-items: center">
-        <img :src="token.imgUrl" alt="" style="width: 40px; height: 40px; object-fit: cover; ,object-position: center" />&nbsp; <span @click="toUser"> {{ token.name }}</span
+        <img :src="token.imgUrl" alt="" style="width: 40px; height: 40px; object-fit: cover; object-position: center" />&nbsp; <span @click="toUser"> {{ token.name }}</span
         >&nbsp;
         <el-button type="danger" size="small" @click="exit">退出</el-button>
       </div>
@@ -412,6 +412,7 @@ export default {
 <style lang="less" scoped>
 .Index {
   margin: 0 auto;
+
   .active {
     background: #409eff;
   }
