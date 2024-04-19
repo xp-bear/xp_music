@@ -146,7 +146,7 @@ export default {
           let imgData = await this.$http.get(`https://dataiqs.com/api/kgmusic/?msg=${this.input}&type=mv&count=20&n=${index}`);
           item.src = imgData.data.data.mv_url;
           item.picUrl = imgData.data.data.cover_url;
-          item.lyric = "[00:00.00]木有歌词哦";
+          item.lyric = "[00:00.00]VIP解析,暂无歌词!";
           if (item.src) {
             array.push(item);
           }

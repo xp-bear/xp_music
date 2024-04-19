@@ -10,7 +10,7 @@
           "本音乐网站完全开源,持续更新中!"<br />
           "github地址: "<a href="https://github.com/xp-coding/xp_music" target="_blank" style="font-weight: 700; color: red; text-decoration: underline">https://github.com/xp-coding/xp_music</a>
           <br />
-          "赞助作者: "<a href="http://cdn.xxoutman.cn/pay.png" target="_blank" style="font-weight: 700; color: red; text-decoration: underline">打赏作者一瓶快阔水!</a>
+          "赞助作者: "<a href="http://cdn.xxoutman.cn/pay.png" target="_blank" style="font-weight: 700; color: red; text-decoration: underline">打赏作者一杯卡布奇诺!</a>
           <br />
           "如果您有任何问题,请联系该邮箱: <span style="color: #000; font-weight: 700">1693889638@qq.com</span>"
           <footer>
@@ -24,7 +24,7 @@
       </span>
     </el-dialog>
     <!-- 回到顶部  250 85-->
-    <el-backtop :bottom="265" :right="80">
+    <el-backtop :bottom="275" :right="81">
       <div style="height: 100%; width: 100%; background-color: #f2f5f6; box-shadow: 0 0 6px rgba(0, 0, 0, 0.12); text-align: center; line-height: 40px; color: #1989fa">
         <i class="el-icon-top"></i>
       </div>
