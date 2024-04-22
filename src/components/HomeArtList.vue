@@ -231,8 +231,9 @@ export default {
       ajax.send();
     },
     // 子传父 回来的数据
-    newChange(id, src, name) {
-      this.vplay(id, src, name);
+    newChange(id, src, name, singleMusic) {
+      // console.log(singleMusic);
+      this.vplay(id, src, name, singleMusic.ar[0].name, singleMusic.dt);
     },
     // 加载更多
     toLoading() {

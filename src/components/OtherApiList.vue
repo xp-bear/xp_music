@@ -28,7 +28,7 @@
             <template slot-scope="scope">
               <div>
                 <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
-                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.picUrl, scope.row.src, scope.row.lrc, scope.row.duration)"></i>
+                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.picUrl, scope.row.src, scope.row.lrc, scope.row.duration, scope.row.singername)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
@@ -169,7 +169,7 @@ export default {
       this.$message.closeAll();
     },
     // 播放歌曲
-    vplay(name, picUrl, src, lyric, duration) {
+    vplay(name, picUrl, src, lyric, duration, singername) {
       // console.log(name, picUrl, src, lyric);
       // 把 05:17转化成 毫秒数
       var timeParts = duration.split(":");
@@ -208,7 +208,7 @@ export default {
         mid: this.mid,
         simgUrl: this.simgUrl,
         lyrics: this.lyrics,
-        singerName: name,
+        singerName: singername,
         duration: minutesSenconds,
         id: name,
       };
@@ -362,8 +362,8 @@ export default {
       ajax.send();
     },
     // 子传父 回来的数据
-    newChange(name, picUrl, src, lyric, duration) {
-      this.vplay(name, picUrl, src, lyric, duration);
+    newChange(name, picUrl, src, lyric, duration, singername) {
+      this.vplay(name, picUrl, src, lyric, duration, singername);
     },
     // 加载更多
     toLoading() {

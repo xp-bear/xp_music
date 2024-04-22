@@ -54,6 +54,7 @@ export default {
       isLoop: false, //歌曲是否循环
       newLyric: "",
       Duration: "", //歌曲时间字符串 "05:17"
+      singername: "", //歌手名称
     };
   },
 
@@ -159,8 +160,11 @@ export default {
       if (this.playsongs[num + counter].hasOwnProperty("duration")) {
         this.Duration = this.playsongs[num + counter].duration;
       }
-      // console.log(this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration);
-      this.$emit("newChange", this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration);
+      if (this.playsongs[num + counter].hasOwnProperty("singername")) {
+        this.singername = this.playsongs[num + counter].singername;
+      }
+      // console.log(this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration, this.singername);
+      this.$emit("newChange", this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration, this.singername);
     },
     // 进度条
     speed(e) {

@@ -52,6 +52,7 @@ export default {
       volume: this.$store.state.volume,
       copymusicUrl: "true", //歌曲url copy
       isLoop: false, //歌曲是否循环
+      singleMusic: "", //单曲
     };
   },
 
@@ -162,9 +163,9 @@ export default {
       }
 
       this.newNmae = this.playsongs[num + counter].name;
-
-      // console.log("新id", this.newId);
-      this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.playsongs[num + counter].musicUrl, this.playsongs[num + counter].lyrics);
+      this.singleMusic = this.playsongs[num + counter];
+      // console.log("新id", this.playsongs[num + counter]);
+      this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic);
     },
     // 进度条
     speed(e) {
