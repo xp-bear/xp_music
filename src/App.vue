@@ -180,10 +180,10 @@ export default {
 
 @font-face {
   font-family: xp;
-  src: url("http://cdn.xxoutman.cn/two.ttf");
+  src: url("https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/common/consolas.ttf");
 }
 @font-face {
   font-family: consolas;
-  src: url("http://cdn.xxoutman.cn/one.ttf");
+  src: url("https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/common/consolas.ttf");
 }
 </style>

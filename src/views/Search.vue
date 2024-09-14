@@ -47,12 +47,12 @@ export default {
         //   value: "Q",
         //   label: "QQ",
         // },
-        {
-          value: "B",
-          label: "VIP解析",
-        },
+        // {
+        //   value: "B",
+        //   label: "VIP解析",
+        // },
       ],
-      value: "B",
+      value: "A",
     };
   },
 
