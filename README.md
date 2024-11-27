@@ -4,7 +4,7 @@
 
 ![1637307100726](assets/1637307100726.png)
 
-![image-20240419110041111](http://mk.xxoutman.cn/img/image-20240419110041111.png)
+![image-20241127102700711](https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/typora/image-20241127102700711.png)
 
 ## 安装依赖包
 

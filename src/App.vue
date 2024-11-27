@@ -44,36 +44,36 @@ export default {
   },
   created() {
     // 另外一个看板娘
-    setTimeout(() => {
-      window.L2Dwidget.init({
-        pluginRootPath: "live2dw/",
-        pluginJsPath: "lib/",
-        pluginModelPath: "live2d-widget-model-haru_2/assets/",
-        tagMode: false,
-        debug: false,
-        model: { jsonPath: "../live2dw/live2d-widget-model-haru_2/assets/haru02.model.json" },
-        display: { position: "right", width: 200, height: 400 },
-        mobile: { show: true },
-        log: false,
-      });
-    }, 500);
-  },
-  mounted() {
-    // 加载看板娘
     // setTimeout(() => {
     //   window.L2Dwidget.init({
     //     pluginRootPath: "live2dw/",
     //     pluginJsPath: "lib/",
-
-    //     pluginModelPath: "live2d-widget-model-shizuku/assets/",
+    //     pluginModelPath: "live2d-widget-model-haru_2/assets/",
     //     tagMode: false,
     //     debug: false,
-    //     model: { jsonPath: "../live2dw/live2d-widget-model-shizuku/assets/shizuku.model.json" },
-    //     display: { position: "right", width: 200, height: 300 },
+    //     model: { jsonPath: "../live2dw/live2d-widget-model-haru_2/assets/haru02.model.json" },
+    //     display: { position: "right", width: 200, height: 400 },
     //     mobile: { show: true },
     //     log: false,
     //   });
     // }, 500);
+  },
+  mounted() {
+    // 加载看板娘
+    setTimeout(() => {
+      window.L2Dwidget.init({
+        pluginRootPath: "live2dw/",
+        pluginJsPath: "lib/",
+
+        pluginModelPath: "live2d-widget-model-shizuku/assets/",
+        tagMode: false,
+        debug: false,
+        model: { jsonPath: "../live2dw/live2d-widget-model-shizuku/assets/shizuku.model.json" },
+        display: { position: "right", width: 200, height: 300 },
+        mobile: { show: true },
+        log: false,
+      });
+    }, 500);
 
     // 公告弹框提示
     // 获取今天当前日期
