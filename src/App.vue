@@ -143,14 +143,21 @@ export default {
   padding: 19px 29px;
   border-radius: 0.3em;
   text-shadow: 0 1px 1px hsla(0, 0%, 100%, 0.3);
-  box-shadow: 0 0 0 1px hsla(0, 0%, 100%, 0.3) inset, 0 0.3em 1em rgba(0, 0, 0, 0.12);
-  font: 150%/1.6 Baskerville, Palatino, serif;
+  box-shadow:
+    0 0 0 1px hsla(0, 0%, 100%, 0.3) inset,
+    0 0.3em 1em rgba(0, 0, 0, 0.12);
+  font:
+    150%/1.6 Baskerville,
+    Palatino,
+    serif;
 }
+
 .main,
 .main > div::before {
   background: url("./assets/top.gif") no-repeat center;
   background-size: cover;
 }
+
 .main > div::before {
   content: "";
   position: absolute;
@@ -162,6 +169,7 @@ export default {
   filter: blur(10px);
   margin: -30px;
 }
+
 .main > div {
   color: #000;
   padding: 30px;
@@ -170,9 +178,11 @@ export default {
   overflow: hidden;
   position: relative;
 }
+
 .main > div cite {
   font-style: normal;
 }
+
 .main footer {
   text-align: right;
   font-weight: 700;
@@ -182,6 +192,7 @@ export default {
   font-family: xp;
   src: url("https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/common/consolas.ttf");
 }
+
 @font-face {
   font-family: consolas;
   src: url("https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/common/consolas.ttf");

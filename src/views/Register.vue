@@ -7,7 +7,7 @@
       <el-form :status-icon="true" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item :show-message="false" label="您的昵称" prop="nickname">
           <el-input v-model="ruleForm.nickname"></el-input>
-        </el-form-item>
+        </el-form-item>   
 
         <el-form-item :show-message="false" label="您的邮箱" prop="email" class="emailcheckd">
           <div class="zoom">
@@ -244,7 +244,7 @@ export default {
       font-size: 40px;
       font-weight: bold;
       background: linear-gradient(45deg, rgba(0, 173, 181, 1) 0%, rgba(0, 173, 181, 0.4) 100%);
-      -webkit-background-clip: text;
+      background-clip: text;
     }
     .el-form {
       font-size: 20px;
@@ -282,12 +282,13 @@ export default {
 #animation {
   -webkit-animation: bounceIn 1s 0.2s ease both;
   -moz-animation: bounceIn 1s 0.2s ease both;
+  animation: bounceIn 1s 0.2s ease both;
 }
 @-webkit-keyframes bounceIn {
   0% {
     opacity: 0;
     -webkit-transform: scale(0.3);
-  }
+  }  
   50% {
     opacity: 1;
     -webkit-transform: scale(1.05);
@@ -315,4 +316,21 @@ export default {
     -moz-transform: scale(1);
   }
 }
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    -moz-transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    -moz-transform: scale(1.05);
+  }
+  70% {
+    -moz-transform: scale(0.9);
+  }
+  100% {
+    -moz-transform: scale(1);
+  }
+}
+
 </style>

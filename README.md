@@ -4,8 +4,6 @@
 
 ![1637307100726](assets/1637307100726.png)
 
-![image-20241127102700711](https://xp-cdn-oss.oss-cn-wuhan-lr.aliyuncs.com/typora/image-20241127102700711.png)
-
 ## 安装依赖包
 
 ```
@@ -27,6 +25,6 @@ npm run build
 ### 项目预览地址
 
 ```
-http://150.158.21.251
-http://www.xxoutman.cn
+http://1.94.161.15
+在config.js和mian.js里面进行服务端地址的修改。
 ```

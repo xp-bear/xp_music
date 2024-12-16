@@ -13,10 +13,11 @@
   color: transparent;
   /*设置字体颜色透明*/
   -webkit-background-clip: text;
+  background-clip: text;
   /*背景裁剪为文本形式*/
   animation: ran 15s linear infinite;
   /*动态10s展示*/
-}
+}   
 
 @keyframes ran {
   from {
@@ -38,5 +39,6 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
 }
