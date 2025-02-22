@@ -170,11 +170,16 @@ export default {
     async vplay(id, src, name, singerName, duration) {
       this.dialogTableVisible = true;
       // 发起请求拿到歌曲id
-      let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+      // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+      // this.musicUrl = res.data.data[0].url;
+
+      let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+      this.musicUrl = res.data.data.url;
+
       // 发起请求拿到歌曲歌词
       let lycdata = await this.$http.get(`${MUSIC_API}lyric?id=${id}`);
       // console.log(lycdata.data.lrc.lyric);
-      this.musicUrl = res.data.data[0].url;
+
       this.misicImg = src;
       this.title = name;
       this.mid = id;
@@ -198,8 +203,10 @@ export default {
     // 下载歌曲
     async vdown(id, name) {
       console.log("下载音乐", name, "mp3");
-      let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-      let url = res.data.data[0].url;
+      // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+      // let url = res.data.data[0].url;
+      let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+      let url = res.data.data.url;
       // 节流的使用
       if (this.clicktag == 0) {
         this.clicktag = 1;

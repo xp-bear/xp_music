@@ -170,11 +170,14 @@ export default {
       this.dialogTableVisible = true;
       if (typeof id == "number") {
         // 发起请求拿到歌曲id
-        let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+        // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+        // this.musicUrl = res.data.data[0].url;
+
+        let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+        this.musicUrl = res.data.data.url;
         // 发起请求拿到歌曲歌词
         let lycdata = await this.$http.get(`${MUSIC_API}lyric?id=${id}`);
         // console.log(lycdata.data.lrc.lyric);
-        this.musicUrl = res.data.data[0].url;
         this.misicImg = src;
         this.title = name;
         this.mid = id;
@@ -207,8 +210,11 @@ export default {
       // console.log("下载音乐", name, musicUrl);
       let url = null;
       if (typeof id == "number") {
-        let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-        url = res.data.data[0].url;
+        // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+        // url = res.data.data[0].url;
+
+        let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+        url = res.data.data.url;
       } else {
         url = musicUrl;
         this.downRow(url, name, "mp3");
