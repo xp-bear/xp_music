@@ -174,7 +174,13 @@ export default {
         // this.musicUrl = res.data.data[0].url;
 
         let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
-        this.musicUrl = res.data.data.url;
+        if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+          let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+          this.musicUrl = res.data.data[0].url;
+        } else {
+          this.musicUrl = res.data.data.url;
+        }
+
         // 发起请求拿到歌曲歌词
         let lycdata = await this.$http.get(`${MUSIC_API}lyric?id=${id}`);
         // console.log(lycdata.data.lrc.lyric);
@@ -213,8 +219,14 @@ export default {
         // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
         // url = res.data.data[0].url;
 
+        let url = null;
         let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
-        url = res.data.data.url;
+        if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+          let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+          url = res.data.data[0].url;
+        } else {
+          url = res.data.data.url;
+        }
       } else {
         url = musicUrl;
         this.downRow(url, name, "mp3");

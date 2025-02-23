@@ -17,7 +17,7 @@
   /*背景裁剪为文本形式*/
   animation: ran 15s linear infinite;
   /*动态10s展示*/
-}   
+}
 
 @keyframes ran {
   from {

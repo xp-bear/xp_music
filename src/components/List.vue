@@ -164,16 +164,17 @@ export default {
     // 播放歌曲
     async vplay(id, src, name, singerName, duration) {
       this.dialogTableVisible = true;
-      // *************************************************************************
       // 发起请求拿到歌曲id
       // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
       // this.musicUrl = res.data.data[0].url;
 
-      // 使用层层鬼api接口的id 拿到歌曲播放地址
-      // https://api.cenguigui.cn/api/netease/music_v1.php?id=1463165983&type=json&level=standard
       let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
-      this.musicUrl = res.data.data.url;
-      // *************************************************************************
+      if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+        let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+        this.musicUrl = res.data.data[0].url;
+      } else {
+        this.musicUrl = res.data.data.url;
+      }
 
       // 发起请求拿到歌曲歌词
       let lycdata = await this.$http.get(`${MUSIC_API}lyric?id=${id}`);
@@ -205,13 +206,19 @@ export default {
     // 下载歌曲
     async vdown(id, name) {
       console.log("下载音乐", name, "mp3");
-      // **************************************
+
       // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
       // let url = res.data.data[0].url;
 
+      let url = null;
       let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
-      let url = res.data.data.url;
-      // **************************************
+      if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+        let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+        url = res.data.data[0].url;
+      } else {
+        url = res.data.data.url;
+      }
+
       // 节流的使用
       if (this.clicktag == 0) {
         this.clicktag = 1;
