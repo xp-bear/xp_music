@@ -167,13 +167,18 @@ export default {
       // 发起请求拿到歌曲id
       // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
       // this.musicUrl = res.data.data[0].url;
+      try {
+        let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
 
-      let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
-      if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+        if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+          let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+          this.musicUrl = res.data.data[0].url;
+        } else {
+          this.musicUrl = res.data.data.url;
+        }
+      } catch (error) {
         let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
         this.musicUrl = res.data.data[0].url;
-      } else {
-        this.musicUrl = res.data.data.url;
       }
 
       // 发起请求拿到歌曲歌词
@@ -211,12 +216,19 @@ export default {
       // let url = res.data.data[0].url;
 
       let url = null;
-      let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
-      if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+
+      try {
+        let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+
+        if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+          let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+          this.musicUrl = res.data.data[0].url;
+        } else {
+          this.musicUrl = res.data.data.url;
+        }
+      } catch (error) {
         let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-        url = res.data.data[0].url;
-      } else {
-        url = res.data.data.url;
+        this.musicUrl = res.data.data[0].url;
       }
 
       // 节流的使用
