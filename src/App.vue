@@ -23,8 +23,8 @@
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- 回到顶部  250 85-->
-    <el-backtop :bottom="275" :right="81">
+    <!-- 回到顶部  240 81   --> 
+    <el-backtop :bottom="240" :right="81">
       <div style="height: 100%; width: 100%; background-color: #f2f5f6; box-shadow: 0 0 6px rgba(0, 0, 0, 0.12); text-align: center; line-height: 40px; color: #1989fa">
         <i class="el-icon-top"></i>
       </div>

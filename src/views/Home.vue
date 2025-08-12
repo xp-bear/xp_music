@@ -150,6 +150,8 @@
       </el-tab-pane>
     </el-tabs>
 
+    <!-- 全局视频播放器 -->
+
     <!-- 播放视频对话框 -->
     <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose">
       <div class="demo" style="margin-bottom: 10px">
@@ -302,10 +304,12 @@ export default {
     },
     // tab栏切换
     handleClick(tab, event) {
+      this.topPlaySongs = []; //清空之前的歌曲
       // console.log(this.topList[tab.index].id);
       // 点击请求排行数据
       this.$http.get(`${MUSIC_API}playlist/detail?id=${this.topList[tab.index].id}`).then((res) => {
         this.topPlaySongs = res.data.playlist.tracks.slice(0, 20);
+        // 滚动到最底部
       });
     },
     // 播放MV
@@ -561,8 +565,12 @@ export default {
         margin-right: 0px;
       }
       img {
-        width: 100%;
-        height: 100%;
+        // width: 100%;
+        // height: 100%;
+        width: 160px;
+        height: 160px;
+        object-fit: cover;
+        object-position: right right;
       }
       .h-title {
         position: absolute;

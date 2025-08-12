@@ -1,3 +1,4 @@
+<!-- 用户信息页面 之前听过的历史歌单 -->
 <template>
   <div class="List">
     <transition name="el-fade-in">
@@ -37,7 +38,7 @@
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="播放MV" placement="top"> -->
-                <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mid, scope.row.name)"></i>
+                <!-- <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mid, scope.row.name)"></i> -->
                 <!-- </el-tooltip> -->
                 <!-- <el-tooltip effect="dark" content="删除该条记录" placement="top"> -->
                 <i class="el-icon-delete" title="删除该条记录" @click="toDelete(scope.row.id)"></i>
@@ -151,6 +152,9 @@ export default {
       }
     },
   },
+  mounted() {
+    // console.log(this.songs);
+  },
   props: ["show", "songs"],
 
   methods: {
@@ -218,37 +222,53 @@ export default {
       // this.$store.commit("getSong", obj);
     },
     // 下载歌曲
-    async vdown(id, name, musicUrl) {
-      // console.log("下载音乐", name, musicUrl);
-      let url = null;
-      if (typeof id == "number") {
-        // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-        // url = res.data.data[0].url;
-        let url = null;
-        try {
-          let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+    async vdown(id, name) {
+      console.log("下载音乐", name, "mp3");
 
-          if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
-            let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-            this.musicUrl = res.data.data[0].url;
-          } else {
-            this.musicUrl = res.data.data.url;
-          }
-        } catch (error) {
-          let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-          this.musicUrl = res.data.data[0].url;
+      try {
+        // 尝试从第一个API获取音乐URL
+        let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+
+        if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
+          // 如果第一个API失败，尝试备用API
+          let backupRes = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+          this.musicUrl = backupRes.data.data[0].url;
+        } else {
+          this.musicUrl = res.data.data.url;
         }
-      } else {
-        url = musicUrl;
-        this.downRow(url, name, "mp3");
-        return this.$message({ message: "歌曲已经在下载中,请等待!", type: "success", showClose: true, duration: 1000 });
-        // return this.$message({ message: "请搜索该歌曲进行下载!", type: "warning", showClose: true, duration: 1000 });
+      } catch (error) {
+        // 如果全部失败，使用备用API
+        let backupRes = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
+        this.musicUrl = backupRes.data.data[0].url;
       }
 
-      // 节流的使用
+      // 节流控制
       if (this.clicktag == 0) {
         this.clicktag = 1;
-        this.downRow(url, name, "mp3");
+
+        try {
+          // 创建下载链接
+          const link = document.createElement("a");
+          link.href = this.musicUrl;
+          link.target = "_blank";
+
+          // 设置下载属性（文件名）
+          link.download = `${name}.mp3`;
+
+          // 触发点击事件开始下载
+          document.body.appendChild(link);
+          link.click();
+
+          // 清理DOM
+          document.body.removeChild(link);
+
+          console.log(`歌曲 ${name} 开始下载`);
+        } catch (error) {
+          console.error("下载失败:", error);
+          this.$mb.alert("歌曲下载失败，请重试！", "错误", { confirmButtonText: "确定" });
+        }
+
+        // 3秒后重置节流标记
         setTimeout(() => {
           this.clicktag = 0;
         }, 3000);
@@ -286,6 +306,8 @@ export default {
     // },
     // 播放MV
     async toMV(id, name) {
+      console.log(id, name);
+
       this.toMVFlag = true;
       this.title = name;
       this.mid = id;

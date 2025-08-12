@@ -1,3 +1,4 @@
+<!-- 搜索页面 多选框不是网易云选项 list列表展示 -->
 <template>
   <div class="List">
     <transition name="el-fade-in">

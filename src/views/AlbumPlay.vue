@@ -54,7 +54,7 @@ export default {
   .back {
     position: absolute;
     top: 10px;
-    left: 265px;
+    left: 395px;
     width: 40px;
     height: 40px;
     text-align: center;
