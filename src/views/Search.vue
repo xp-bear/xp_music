@@ -4,7 +4,7 @@
     <div class="box">
       <!-- @change="searchInput" -->
       <el-input placeholder="搜你想听的歌曲!" v-model="input" clearable :autofocus="true" @change="searchInput"> </el-input>
-      <el-select v-model="value" placeholder="请选择" @change="changeOrigin">
+      <el-select v-model="value" placeholder="请选择" @change="changeOrigin" :disabled="selectChangeOrigin">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
       </el-select>
       <el-button type="primary" icon="el-icon-search" @click.trim="searchInput" style="margin-left: 5px">搜索</el-button>
@@ -34,10 +34,15 @@ export default {
       show: false,
       songs: [],
       timer: null,
+      selectChangeOrigin: false, // 是否切换了请求源 状态
       options: [
         {
           value: "A",
           label: "网易云",
+        },
+        {
+          value: "B",
+          label: "QQ音源",
         },
         // {
         //   value: "C",
@@ -71,6 +76,34 @@ export default {
     }
   },
   methods: {
+    // 从歌词中提取最后一个时间标签，计算歌曲总时长
+    getDurationFromLyric(lyric) {
+      if (!lyric) return 0; // 如果没有歌词，返回0
+
+      // 匹配所有时间标签，如 [03:38.19]
+      const timeTags = lyric.match(/\[\d+:\d+\.\d+\]/g);
+      if (!timeTags || timeTags.length === 0) return 0;
+
+      // 取最后一个时间标签
+      const lastTimeTag = timeTags[timeTags.length - 1];
+
+      // 提取分钟、秒数（如 "03:38.19" → ["03", "38", "19"]）
+      const [minutes, seconds] = lastTimeTag
+        .replace(/[\[\]]/g, "") // 去掉方括号
+        .split(":")
+        .map((part) => parseFloat(part));
+
+      // 计算总秒数（分钟*60 + 秒）
+      const durationInSeconds = minutes * 60 + seconds;
+
+      // 返回格式化字符串（如 "3:38"）
+      const formattedMinutes = Math.floor(durationInSeconds / 60);
+      const formattedSeconds = Math.floor(durationInSeconds % 60)
+        .toString()
+        .padStart(2, "0");
+
+      return `${formattedMinutes}:${formattedSeconds}`;
+    },
     // 切换请求源
     changeOrigin() {
       this.songs = [];
@@ -134,42 +167,53 @@ export default {
         }
         // ----------------------------------------
       } else if (this.value == "B") {
-        // 发起请求 // 加载图标
-        let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
-
-        let res = await this.$http.get(`https://dataiqs.com/api/kgmusic/?msg=${this.input}&type=mv&count=20`);
-
-        this.songs = res.data.data;
-        let array = []; //缓冲数组
-        // 给songs添加一个src
-        this.songs.forEach(async (item, index) => {
-          let imgData = await this.$http.get(`https://dataiqs.com/api/kgmusic/?msg=${this.input}&type=mv&count=20&n=${index}`);
-          item.src = imgData.data.data.mv_url;
-          item.picUrl = imgData.data.data.cover_url;
-          item.lyric = "[00:00.00]VIP解析,暂无歌词!";
-          if (item.src) {
-            array.push(item);
-          }
+        // 发起请求，显示 Loading
+        let loadingInstance = Loading.service({
+          lock: true,
+          text: "疯狂加载中...",
+          background: "rgba(0, 0, 0, 0.7)",
         });
-        this.songs = array;
-        // 等待数据加载
-        // setTimeout(() => {
-        // 关闭加载图标
-        loadingInstance.close();
-        // console.log(this.songs);
-        // }, 2000);
 
-        // 网络请求超时处理 5 秒
-        this.timer = setTimeout(() => {
-          this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });
+        try {
+          this.selectChangeOrigin = true; // 禁止切换请求源
+          // 1. 第一次请求：获取歌曲列表
+          let res = await this.$http.get(`https://www.hhlqilongzhu.cn/api/dg_QQmusicflac.php?msg=${this.input}&type=json`);
+
+          // 2. 遍历每首歌，获取详细信息（url、lyrics等）
+          let songsWithDetails = [];
+          for (const song of res.data.data) {
+            try {
+              // 对每首歌单独请求，获取详细信息
+              let detailRes = await this.$http.get(`https://www.hhlqilongzhu.cn/api/dg_QQmusicflac.php?msg=${this.input}&type=json&n=${song.n}`);
+              // console.log(`歌曲 ${song.song_title} 的详细信息:`, detailRes.data.data);
+
+              // 合并数据（保留原信息，并添加 url、lyrics 等）
+              songsWithDetails.push({
+                ...song, // 保留原来的 song_title, song_singer 等
+                url: detailRes.data.data.music_url, // 歌曲播放地址
+                lyric: detailRes.data.data.lyric || "[00:00.00]VIP解析，暂无歌词！", // 歌词（如果没有则默认）
+                picUrl: detailRes.data.data.cover, // 封面图（如果有）
+                singer: detailRes.data.data.song_singer,
+                duration: this.getDurationFromLyric(detailRes.data.data.lyric), // 计算歌曲总时长
+              });
+              // 3. 更新到 Vue 的 data 里
+              this.songs = songsWithDetails;
+              // console.log("获取到的歌曲列表:", this.songs);
+              loadingInstance.close();
+            } catch (error) {
+              console.error(`获取歌曲 ${song.song_title} 详情失败:`, error);
+            }
+          }
+
+          // 请求完成
+          this.selectChangeOrigin = false; // 恢复切换请求源
+        } catch (error) {
+          console.error("请求失败:", error);
+          this.$mb.alert("请求失败，请检查网络或重试！", { confirmButtonText: "确定" });
+        } finally {
+          // 无论成功或失败，都关闭 Loading
           loadingInstance.close();
-          return;
-        }, 5000);
-        // 请求到数据之后,清除定时器
-        if (res) {
-          clearTimeout(this.timer);
         }
-        // --------------------------------------
       } else if (this.value == "C") {
         // 发起请求 // 加载图标
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });

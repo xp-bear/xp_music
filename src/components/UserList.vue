@@ -153,7 +153,9 @@ export default {
     },
   },
   mounted() {
-    // console.log(this.songs);
+    // setTimeout(() => {
+    //   console.log(" 用户信息列表", this.songs);
+    // }, 1000);
   },
   props: ["show", "songs"],
 
@@ -171,6 +173,8 @@ export default {
     },
     // 播放歌曲
     async vplay(id, src, name, musicUrl, lyrics) {
+      // console.log("播放音乐", id, src, name, musicUrl, lyrics);
+
       this.dialogTableVisible = true;
       if (typeof id == "number") {
         // 发起请求拿到歌曲id
@@ -222,9 +226,8 @@ export default {
       // this.$store.commit("getSong", obj);
     },
     // 下载歌曲
-    async vdown(id, name) {
-      console.log("下载音乐", name, "mp3");
-
+    async vdown(id, name, url) {
+      console.log("下载音乐", id, name, url);
       try {
         // 尝试从第一个API获取音乐URL
         let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
@@ -237,9 +240,7 @@ export default {
           this.musicUrl = res.data.data.url;
         }
       } catch (error) {
-        // 如果全部失败，使用备用API
-        let backupRes = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-        this.musicUrl = backupRes.data.data[0].url;
+        this.musicUrl = url;
       }
 
       // 节流控制

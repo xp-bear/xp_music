@@ -1,4 +1,4 @@
-<!-- 搜索页面 多选框不是网易云选项 list列表展示 -->
+<!-- 搜索页面 多选框是QQ音源选项 list列表展示 -->
 <template>
   <div class="List">
     <transition name="el-fade-in">
@@ -7,12 +7,12 @@
           <el-table-column type="index" label="#" width="80"> </el-table-column>
           <el-table-column width="50">
             <template slot-scope="scope">
-              <img :src="scope.row.cover_url" class="image" @click="bigImg(scope.row.picUrl, scope.row.name)" />
+              <img :src="scope.row.picUrl" class="image" @click="bigImg(scope.row.picUrl, scope.row.song_title)" />
             </template>
           </el-table-column>
           <el-table-column label="标题" width="200">
             <template slot-scope="scope">
-              <div class="at-singer">{{ scope.row.name }}</div>
+              <div class="at-singer">{{ scope.row.song_title }}</div>
             </template>
           </el-table-column>
           <el-table-column label="时长" width="130">
@@ -22,18 +22,18 @@
           </el-table-column>
           <el-table-column label="歌手" width="180">
             <template slot-scope="scope">
-              <div class="at-singer">{{ scope.row.singername }}</div>
+              <div class="at-singer">{{ scope.row.song_singer }}</div>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div>
                 <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
-                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.picUrl, scope.row.src, scope.row.lrc, scope.row.duration, scope.row.singername)"></i>
+                <i class="el-icon-video-play" @click="vplay(scope.row.song_title, scope.row.picUrl, scope.row.url, scope.row.lyric, scope.row.duration, scope.row.song_singer, scope.row.n)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
-                <i class="el-icon-download" @click="vdown(scope.row.src, scope.row.name)"></i>
+                <i class="el-icon-download" @click="vdown(scope.row.url, scope.row.song_title)"></i>
                 <!-- </el-tooltip> -->
               </div>
             </template>
@@ -170,8 +170,9 @@ export default {
       this.$message.closeAll();
     },
     // 播放歌曲
-    vplay(name, picUrl, src, lyric, duration, singername) {
-      // console.log(name, picUrl, src, lyric);
+    vplay(name, picUrl, src, lyric, duration, singername, n) {
+      console.log("播放音乐 qq  ", n);
+
       // 把 05:17转化成 毫秒数
       var timeParts = duration.split(":");
       var minutes = parseInt(timeParts[0], 10);
@@ -185,7 +186,12 @@ export default {
       this.title = name;
 
       this.mid = name;
-      this.lyrics = lyric || "[00:00.00]木有歌词哦";
+      // 去除歌词中\n为空的情况
+      let lyricArr = lyric.split("\\n");
+      let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
+      let newLyric = newLyricArr.join("\n");
+      this.lyrics = newLyric || "[00:00.00]木有歌词哦";
+      // this.lyrics = lyric || "[00:00.00]木有歌词哦";
       // console.log(this.lyrics);
       // 单个图片的url链接
       this.simgUrl = picUrl;
@@ -212,7 +218,10 @@ export default {
         singerName: singername,
         duration: minutesSenconds,
         id: name,
+        song_id: 1, // 歌曲 ID
       };
+      // console.log("提交到vuex的数据:", obj);
+
       this.$store.commit("getSong", obj);
     },
     // --------------------
@@ -286,17 +295,35 @@ export default {
 
     // 下载歌曲
     async vdown(url, name) {
-      console.log("下载音乐", name, "mp3");
-      // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-      // let url = res.data.data[0].url;
-      // 节流的使用
+      console.log("下载音乐", name, url);
+      this.musicUrl = url;
+      // 节流控制
       if (this.clicktag == 0) {
         this.clicktag = 1;
-        this.downloadMusic(url, name);
-        // this.downRow(url, name, "mp3");
-        // this.downRow(downloadImg2, name, "mp3");
-        // this.export_raw("1.mp3", url);
 
+        try {
+          // 创建下载链接
+          const link = document.createElement("a");
+          link.href = this.musicUrl;
+          link.target = "_blank";
+
+          // 设置下载属性（文件名）
+          link.download = `${name}.mp3`;
+
+          // 触发点击事件开始下载
+          document.body.appendChild(link);
+          link.click();
+
+          // 清理DOM
+          document.body.removeChild(link);
+
+          console.log(`歌曲 ${name} 开始下载`);
+        } catch (error) {
+          console.error("下载失败:", error);
+          this.$mb.alert("歌曲下载失败，请重试！", "错误", { confirmButtonText: "确定" });
+        }
+
+        // 3秒后重置节流标记
         setTimeout(() => {
           this.clicktag = 0;
         }, 3000);

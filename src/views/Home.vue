@@ -150,7 +150,8 @@
       </el-tab-pane>
     </el-tabs>
 
-    <!-- 全局视频播放器 -->
+    <!-- 全局音乐播放器,固定到最底部 -->
+     
 
     <!-- 播放视频对话框 -->
     <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose">
@@ -630,10 +631,10 @@ export default {
     /deep/.el-tabs__content {
       padding: 0;
     }
-    /deep/.el-tabs__content {
-      // background: url("../assets/rain.gif") no-repeat;
-      // background-size: cover;
-    }
+    // /deep/.el-tabs__content {
+    //   // background: url("../assets/rain.gif") no-repeat;
+    //   // background-size: cover;
+    // }
     /deep/.el-tabs__item {
       font-size: 16px;
     }

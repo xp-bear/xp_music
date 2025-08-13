@@ -130,8 +130,9 @@ export default {
     micChange(counter) {
       // 手动上下音乐切换
       let num = this.playsongs.findIndex((item) => {
-        return item.src == this.musicUrl;
+        return item.url == this.musicUrl;
       });
+      // console.log("当前歌曲索引:", num);
 
       if (num == 0 && counter == -1) {
         this.$mb.alert("当前已经是第一首歌", "注意", { confirmButtonText: "确定" });
@@ -145,23 +146,23 @@ export default {
       // console.log(this.newId);
       // console.log(this.playsongs[num + counter]);
       //   判断某个字段是否在对象里面;
-      if (this.playsongs[num + counter].hasOwnProperty("cover_url")) {
-        this.newPicUrl = this.playsongs[num + counter].cover_url;
+      if (this.playsongs[num + counter].hasOwnProperty("picUrl")) {
+        this.newPicUrl = this.playsongs[num + counter].picUrl;
       }
-      if (this.playsongs[num + counter].hasOwnProperty("src")) {
-        this.newUrl = this.playsongs[num + counter].src;
+      if (this.playsongs[num + counter].hasOwnProperty("url")) {
+        this.newUrl = this.playsongs[num + counter].url;
       }
       if (this.playsongs[num + counter].hasOwnProperty("lyric")) {
         this.newLyric = this.playsongs[num + counter].lyric;
       }
-      if (this.playsongs[num + counter].hasOwnProperty("name")) {
-        this.newNmae = this.playsongs[num + counter].name;
+      if (this.playsongs[num + counter].hasOwnProperty("song_title")) {
+        this.newNmae = this.playsongs[num + counter].song_title;
       }
       if (this.playsongs[num + counter].hasOwnProperty("duration")) {
         this.Duration = this.playsongs[num + counter].duration;
       }
-      if (this.playsongs[num + counter].hasOwnProperty("singername")) {
-        this.singername = this.playsongs[num + counter].singername;
+      if (this.playsongs[num + counter].hasOwnProperty("song_singer")) {
+        this.singername = this.playsongs[num + counter].song_singer;
       }
       // console.log(this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration, this.singername);
       this.$emit("newChange", this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration, this.singername);

@@ -135,14 +135,14 @@ export default {
     },
     // 上下首歌曲切换
     micChange(counter) {
-      // console.log(this.playsongs);
+      console.log(this.playsongs);
       this.$message.closeAll();
       // 手动上下音乐切换
       let num = this.playsongs.findIndex((item) => {
         return item.id == this.mid;
       });
       // console.log(counter);
-      // console.log("当前索引位置: ", num);
+      console.log("当前索引位置: ", num);
       if (num == 0 && counter == -1) {
         this.$mb.alert("当前已经是第一首歌", "注意", { confirmButtonText: "确定" });
         return;
@@ -153,19 +153,51 @@ export default {
       }
       this.newId = this.playsongs[num + counter].id;
 
-      //判断某个字段是否在对象里面
-      if (this.playsongs[num + counter].hasOwnProperty("artists")) {
-        this.newUrl = this.playsongs[num + counter].artists[0].picUrl;
-      } else if (this.playsongs[num + counter].hasOwnProperty("al")) {
-        this.newUrl = this.playsongs[num + counter].al.picUrl;
-      } else {
-        this.newUrl = this.playsongs[num + counter].simgUrl;
-      }
+      // 兼容qq音乐音源处理
+      if (this.playsongs[num + counter].song_id != undefined) {
+        // 发起请求获取音乐url
+        this.$http.get(`https://www.hhlqilongzhu.cn/api/dg_QQmusicflac.php?msg=${this.playsongs[num + counter].name}&type=json&n=${this.playsongs[num + counter].song_id}`).then(
+          (res) => {
+            this.playsongs[num + counter].musicUrl = res.data.data.music_url; // 获取到的音乐url
+            this.playsongs[num + counter].musicImg = res.data.data.cover; // 获取到的音乐封面
+            this.playsongs[num + counter].lyrics = res.data.data.lyric; // 获取到的歌词
+            let lyricArr = this.playsongs[num + counter].lyrics.split("\\n");
+            let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
+            let newLyric = newLyricArr.join("\n");
 
-      this.newNmae = this.playsongs[num + counter].name;
-      this.singleMusic = this.playsongs[num + counter];
-      // console.log("新id", this.playsongs[num + counter]);
-      this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic);
+            console.log("获取到的音乐url", res.data.data);
+            this.newUrl = res.data.data.cover;
+            this.newNmae = this.playsongs[num + counter].name;
+            this.singleMusic = this.playsongs[num + counter].musicUrl;
+            this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic, newLyric);
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+
+        // this.newUrl = this.playsongs[num + counter].musicImg;
+        // this.newNmae = this.playsongs[num + counter].name;
+        // this.singleMusic = this.playsongs[num + counter].musicUrl;
+        // let lyricArr = this.playsongs[num + counter].lyrics.split("\\n");
+        // let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
+        // let newLyric = newLyricArr.join("\n");
+        // this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic, newLyric);
+      } else {
+        //判断某个字段是否在对象里面
+        if (this.playsongs[num + counter].hasOwnProperty("artists")) {
+          this.newUrl = this.playsongs[num + counter].artists[0].picUrl;
+        } else if (this.playsongs[num + counter].hasOwnProperty("al")) {
+          this.newUrl = this.playsongs[num + counter].al.picUrl;
+        } else {
+          this.newUrl = this.playsongs[num + counter].simgUrl;
+        }
+
+        this.newNmae = this.playsongs[num + counter].name;
+        this.singleMusic = this.playsongs[num + counter];
+        // console.log("新id", this.playsongs[num + counter]);
+        this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic);
+      }
     },
     // 进度条
     speed(e) {
