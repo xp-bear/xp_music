@@ -171,7 +171,7 @@ export default {
     },
     // 播放歌曲
     vplay(name, picUrl, src, lyric, duration, singername, n) {
-      console.log("播放音乐 qq  ", n);
+      // console.log("播放音乐 qq  ", n);
 
       // 把 05:17转化成 毫秒数
       var timeParts = duration.split(":");

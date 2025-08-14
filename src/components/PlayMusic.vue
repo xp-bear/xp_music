@@ -142,7 +142,7 @@ export default {
         return item.id == this.mid;
       });
       // console.log(counter);
-      console.log("当前索引位置: ", num);
+      // console.log("当前索引位置: ", num);
       if (num == 0 && counter == -1) {
         this.$mb.alert("当前已经是第一首歌", "注意", { confirmButtonText: "确定" });
         return;
@@ -165,7 +165,7 @@ export default {
             let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
             let newLyric = newLyricArr.join("\n");
 
-            console.log("获取到的音乐url", res.data.data);
+            // console.log("获取到的音乐url", res.data.data);
             this.newUrl = res.data.data.cover;
             this.newNmae = this.playsongs[num + counter].name;
             this.singleMusic = this.playsongs[num + counter].musicUrl;

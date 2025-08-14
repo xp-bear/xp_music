@@ -209,7 +209,12 @@ export default {
         this.misicImg = src;
         this.title = name;
         this.mid = id;
-        this.lyrics = lyrics;
+
+        let lyricArr = lyrics.split("\\n");
+        let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
+        let newLyric = newLyricArr.join("\n");
+        this.lyrics = newLyric;
+
         // 单个图片的url链接
         this.simgUrl = src;
       }

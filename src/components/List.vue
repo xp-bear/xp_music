@@ -132,6 +132,7 @@ export default {
       }, //视频播放配置
       toCommentFlag: false, //歌曲评论对话框
       comments: [],
+      // listSongs: [], //列表歌曲
     };
   },
 
@@ -150,6 +151,16 @@ export default {
     },
   },
   props: ["show", "songs"],
+
+  mounted() {
+    // console.log("mounted");
+    // console.log("传递过来的", this.songs);
+    // setTimeout(() => {
+    //   console.log("传递过来的", this.songs);
+    //   this.listSongs = this.songs;
+    //   console.log("listSongs", this.listSongs);
+    // }, 1000);
+  },
 
   methods: {
     // 关闭对话框之前
