@@ -16,7 +16,8 @@
 
     <!-- 卡片列表 -->
     <List v-if="value == 'A'" :show="show" :songs="songs" @toLoading="toLoading" />
-    <OtherApiList v-else :show="show" :songs="songs"></OtherApiList>
+    <OtherApiList v-else-if="value == 'B'" :show="show" :songs="songs"></OtherApiList>
+    <MiguApiList v-else-if="value == 'C'" :show="show" :songs="songs"></MiguApiList>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { Loading } from "element-ui";
 
 import List from "@/components/List.vue";
 import OtherApiList from "@/components/OtherApiList.vue";
+import MiguApiList from "../components/MiguApiList.vue";
 import { MUSIC_API } from "@/config/index.js";
 export default {
   name: "Search",
@@ -38,24 +40,16 @@ export default {
       options: [
         {
           value: "A",
-          label: "网易云",
+          label: "网易云音源",
         },
-        {
-          value: "B",
-          label: "QQ音源",
-        },
-        // {
-        //   value: "C",
-        //   label: "网易云",
-        // },
-        // {
-        //   value: "Q",
-        //   label: "QQ",
-        // },
         // {
         //   value: "B",
-        //   label: "VIP解析",
+        //   label: "QQ音源",
         // },
+        {
+          value: "C",
+          label: "咪咕音源",
+        },
       ],
       value: "A",
     };
@@ -167,6 +161,7 @@ export default {
         }
         // ----------------------------------------
       } else if (this.value == "B") {
+        // 2.QQ音源
         // 发起请求，显示 Loading
         let loadingInstance = Loading.service({
           lock: true,
@@ -215,37 +210,33 @@ export default {
           loadingInstance.close();
         }
       } else if (this.value == "C") {
+        // 3.咪咕音源
+        this.selectChangeOrigin = true; // 禁止切换请求源
         // 发起请求 // 加载图标
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
 
-        let res = await this.$http.get(`http://150.158.21.251:3500/search?platform=${this.value}&keyword=${this.input}&type=music&offset=0&limit=20`);
-        this.songs = res.data;
+        let res = await this.$http.get(`/api/migu-search?text=${this.input}&pageNo=1&pageSize=30`);
 
-        // console.log(this.Bsongs);
-        // 给songs添加一个picurl
-        this.songs.forEach(async (item) => {
-          let imgData = await this.$http.get(`http://150.158.21.251:3500/play?mid=${item.mid}&type=music`);
-          item.picUrl = imgData.data.img;
-          item.src = imgData.data.src;
-          item.lyric = imgData.data.lrc;
-        });
-        // 等待数据加载
-        // setTimeout(() => {
-        // 关闭加载图标
-        loadingInstance.close();
-        // }, 1200);
+        for (const song of res.data) {
+          try {
+            // 发起请求
+            const res = await this.$http.get(`https://api.cenguigui.cn/api/mg_music/api.php?id=${song.songId}`);
 
-        // 网络请求超时处理 5 秒
-        this.timer = setTimeout(() => {
-          this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });
-          loadingInstance.close();
-          return;
-        }, 5000);
-        // 请求到数据之后,清除定时器
-        if (res) {
-          clearTimeout(this.timer);
+            // 计算并添加 duration 字段
+            res.data.data.duration = this.getDurationFromLyric(res.data.data.lyric) || "0:00";
+            res.data.data.type = "C"; // 标记数据来源为咪咕
+            this.songs.push(res.data.data);
+            // console.log(res.data.data);
+            loadingInstance.close(); // 关闭加载图标
+          } catch (err) {
+            console.error(`获取 songId=${song.songId} 详情失败`, err);
+            // this.$mb.alert("网络请求超时,请重试!", { confirmButtonText: "确定" });
+            loadingInstance.close(); // 关闭加载图标
+          }
         }
-        // -----------------------------
+        loadingInstance.close(); // 关闭加载图标
+        this.selectChangeOrigin = false; // 恢复切换请求源
+        // ----------------------------------------
       } else if (this.value == "Q") {
         // 发起请求 // 加载图标
         let loadingInstance = Loading.service({ lock: true, text: "疯狂加载中...", background: "rgba(0, 0, 0, 0.7)" });
@@ -299,6 +290,7 @@ export default {
   components: {
     List,
     OtherApiList,
+    MiguApiList,
   },
 };
 </script>

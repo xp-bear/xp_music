@@ -42,7 +42,7 @@ export default {
   data() {
     return {
       isPlay: true, //是否播放
-      newId: 0, //新歌曲id
+      // newId: {}, //新歌曲id
       newUrl: "",
       newNmae: "",
       cur: 0,
@@ -52,7 +52,9 @@ export default {
       volume: this.$store.state.volume,
       copymusicUrl: "true", //歌曲url copy
       isLoop: false, //歌曲是否循环
-      singleMusic: "", //单曲
+      newLyric: "",
+      Duration: "", //歌曲时间字符串 "05:17"
+      singername: "", //歌手名称
     };
   },
 
@@ -73,15 +75,6 @@ export default {
         total: this.total,
       };
       this.$store.commit("getMusic", obj);
-
-      // 判断该歌曲有没有资源
-      this.copymusicUrl = this.musicUrl;
-      if (this.copymusicUrl == null) {
-        // this.$mb.alert("当前歌曲暂无资源!", "注意", { confirmButtonText: "确定" });
-        this.copymusicUrl = "pause";
-        this.musicUrl = "pause";
-        return this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: true, duration: 0 });
-      }
     }, 500);
 
     // enterKeyup//监听空格事件
@@ -135,14 +128,12 @@ export default {
     },
     // 上下首歌曲切换
     micChange(counter) {
-      // console.log(this.playsongs);
-      this.$message.closeAll();
       // 手动上下音乐切换
       let num = this.playsongs.findIndex((item) => {
-        return item.id == this.mid;
+        return item.url == this.musicUrl;
       });
-      // console.log(counter);
-      // console.log("当前索引位置: ", num);
+      // console.log("当前歌曲索引:", num);
+
       if (num == 0 && counter == -1) {
         this.$mb.alert("当前已经是第一首歌", "注意", { confirmButtonText: "确定" });
         return;
@@ -151,64 +142,30 @@ export default {
         this.$mb.alert("当前已经是最后一首歌", "注意", { confirmButtonText: "确定" });
         return;
       }
-      this.newId = this.playsongs[num + counter].id;
-
-      // 兼容qq音乐音源处理
-      if (this.playsongs[num + counter].song_id != undefined) {
-        // 再次判断一下 song_id 是否为'C',
-        if (this.playsongs[num + counter].song_id == "C") {
-          this.newUrl = this.playsongs[num + counter].musicImg;
-          this.newNmae = this.playsongs[num + counter].name;
-          this.singleMusic = this.playsongs[num + counter].musicUrl;
-          let lyricArr = this.playsongs[num + counter].lyrics.split("\\n");
-          let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
-          let newLyric = newLyricArr.join("\n");
-          this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic, newLyric);
-        } else {
-          // 发起请求获取音乐url
-          this.$http.get(`https://www.hhlqilongzhu.cn/api/dg_QQmusicflac.php?msg=${this.playsongs[num + counter].name}&type=json&n=${this.playsongs[num + counter].song_id}`).then(
-            (res) => {
-              this.playsongs[num + counter].musicUrl = res.data.data.music_url; // 获取到的音乐url
-              this.playsongs[num + counter].musicImg = res.data.data.cover; // 获取到的音乐封面
-              this.playsongs[num + counter].lyrics = res.data.data.lyric; // 获取到的歌词
-              let lyricArr = this.playsongs[num + counter].lyrics.split("\\n");
-              let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
-              let newLyric = newLyricArr.join("\n");
-
-              // console.log("获取到的音乐url", res.data.data);
-              this.newUrl = res.data.data.cover;
-              this.newNmae = this.playsongs[num + counter].name;
-              this.singleMusic = this.playsongs[num + counter].musicUrl;
-              this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic, newLyric);
-            },
-            (err) => {
-              console.log(err);
-            }
-          );
-        }
-
-        // this.newUrl = this.playsongs[num + counter].musicImg;
-        // this.newNmae = this.playsongs[num + counter].name;
-        // this.singleMusic = this.playsongs[num + counter].musicUrl;
-        // let lyricArr = this.playsongs[num + counter].lyrics.split("\\n");
-        // let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
-        // let newLyric = newLyricArr.join("\n");
-        // this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic, newLyric);
-      } else {
-        //判断某个字段是否在对象里面
-        if (this.playsongs[num + counter].hasOwnProperty("artists")) {
-          this.newUrl = this.playsongs[num + counter].artists[0].picUrl;
-        } else if (this.playsongs[num + counter].hasOwnProperty("al")) {
-          this.newUrl = this.playsongs[num + counter].al.picUrl;
-        } else {
-          this.newUrl = this.playsongs[num + counter].simgUrl;
-        }
-
-        this.newNmae = this.playsongs[num + counter].name;
-        this.singleMusic = this.playsongs[num + counter];
-        // console.log("新id", this.playsongs[num + counter]);
-        this.$emit("newChange", this.newId, this.newUrl, this.newNmae, this.singleMusic);
+      // this.newId = this.playsongs[num + counter];
+      // console.log(this.newId);
+      // console.log(this.playsongs[num + counter]);
+      //   判断某个字段是否在对象里面;
+      if (this.playsongs[num + counter].hasOwnProperty("pic")) {
+        this.newPicUrl = this.playsongs[num + counter].pic;
       }
+      if (this.playsongs[num + counter].hasOwnProperty("url")) {
+        this.newUrl = this.playsongs[num + counter].url;
+      }
+      if (this.playsongs[num + counter].hasOwnProperty("lyric")) {
+        this.newLyric = this.playsongs[num + counter].lyric;
+      }
+      if (this.playsongs[num + counter].hasOwnProperty("name")) {
+        this.newNmae = this.playsongs[num + counter].name;
+      }
+      if (this.playsongs[num + counter].hasOwnProperty("duration")) {
+        this.Duration = this.playsongs[num + counter].duration;
+      }
+      if (this.playsongs[num + counter].hasOwnProperty("artist")) {
+        this.singername = this.playsongs[num + counter].artist;
+      }
+      // console.log(this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration, this.singername);
+      this.$emit("newChange", this.newNmae, this.newPicUrl, this.newUrl, this.newLyric, this.Duration, this.singername);
     },
     // 进度条
     speed(e) {
@@ -231,7 +188,7 @@ export default {
     isloop() {
       this.isLoop = !this.isLoop;
       if (this.isLoop == true) {
-        // console.log(this.cur, this.total);
+        console.log(this.cur, this.total);
         this.$message({ message: "切换为: 单曲循环", type: "warning", duration: 2000 });
       } else {
         this.$message({ message: "切换为: 循环播放", type: "warning", duration: 2000 });

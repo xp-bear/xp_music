@@ -1,77 +1,70 @@
-<!-- 用户信息页面 之前听过的历史歌单 -->
+<!-- 咪咕音乐,搜索完成列表音乐展示 -->
 <template>
   <div class="List">
     <transition name="el-fade-in">
       <el-card v-show="show" class="box-card transition-box">
-        <el-table :data="songs" stripe style="width: 100%; margin-bottom: 10px">
+        <el-table :data="songs" stripe style="width: 100%">
           <el-table-column type="index" label="#" width="80"> </el-table-column>
           <el-table-column width="50">
             <template slot-scope="scope">
-              <img :src="scope.row.musicImg" class="image" @click="bigImg(scope.row.musicImg, scope.row.name)" />
+              <img :src="scope.row.pic" class="image" @click="bigImg(scope.row.pic, scope.row.name)" />
             </template>
           </el-table-column>
           <el-table-column label="标题" width="200">
             <template slot-scope="scope">
-              <div @click="songComment(scope.row.id)" class="at-singer">{{ scope.row.name }}</div>
+              <div class="at-singer">{{ scope.row.name }}</div>
             </template>
           </el-table-column>
-
           <el-table-column label="时长" width="130">
             <template slot-scope="scope">
-              <div>{{ scope.row.duration ? scope.row.duration : 0 | famter }}</div>
+              <div>{{ scope.row.duration }}</div>
             </template>
           </el-table-column>
           <el-table-column label="歌手" width="180">
             <template slot-scope="scope">
-              <div @click="toSingerPage(scope.row.singerName)" class="at-singer">{{ scope.row.singerName }}</div>
+              <div class="at-singer">{{ scope.row.artist }}</div>
             </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
               <div>
                 <!-- <el-tooltip effect="dark" content="播放歌曲" placement="top"> -->
-                <i class="el-icon-video-play" @click="vplay(scope.row.id, scope.row.musicImg, scope.row.name, scope.row.musicUrl, scope.row.lyrics)"></i>
+                <i class="el-icon-video-play" @click="vplay(scope.row.name, scope.row.pic, scope.row.url, scope.row.lyric, scope.row.duration, scope.row.artist, scope.row.type)"></i>
                 <!-- </el-tooltip> -->
 
                 <!-- <el-tooltip effect="dark" content="下载歌曲" placement="top"> -->
-                <i class="el-icon-download" @click="vdown(scope.row.id, scope.row.name, scope.row.musicUrl)"></i>
-                <!-- </el-tooltip> -->
-
-                <!-- <el-tooltip effect="dark" content="播放MV" placement="top"> -->
-                <!-- <i class="el-icon-video-camera-solid" title="播放MV" @click="toMV(scope.row.mid, scope.row.name)"></i> -->
-                <!-- </el-tooltip> -->
-                <!-- <el-tooltip effect="dark" content="删除该条记录" placement="top"> -->
-                <i class="el-icon-delete" title="删除该条记录" @click="toDelete(scope.row.id)"></i>
+                <i class="el-icon-download" @click="vdown(scope.row.url, scope.row.name)"></i>
                 <!-- </el-tooltip> -->
               </div>
             </template>
           </el-table-column>
         </el-table>
         <!-- 加载更多 -->
-        <!-- <el-button type="primary" @click="toLoading" class="loading"> 加载更多 </el-button> -->
+        <el-button type="primary" @click="toLoading" class="loading"> 加载更多 </el-button>
       </el-card>
     </transition>
     <!-- 播放歌曲与歌词对话框 组件 -->
     <el-dialog :visible.sync="dialogTableVisible" :title="title" :fullscreen="true" :destroy-on-close="true" :before-close="onBeforeClose">
       <div class="lan">
-        <PlayMusic :musicUrl="musicUrl" :misicImg="misicImg" :playsongs="songs" :mid="mid" @newChange="newChange" />
+        <MiguPlayMusic :musicUrl="musicUrl" :misicImg="misicImg" :playsongs="songs" :mid="mid" @newChange="newChange" @updateUrl="updateUrl" />
         <Lyric :mid="mid" :lyrics="lyrics" />
       </div>
     </el-dialog>
 
     <!-- 查看图片大图对话框  -->
     <el-dialog :visible.sync="bigImgFlag" :title="title" width="800px">
-      <img :src="misicImg" alt="" class="demo" style="width: 100%" />
+      <img :src="misicImg" class="demo" alt="" style="width: 100%" />
       <el-button type="primary" @click="downImg">下载图片</el-button>
     </el-dialog>
 
     <!-- 播放视频对话框 -->
-    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose">
+    <el-dialog :visible.sync="toMVFlag" :title="title" width="800px" :destroy-on-close="true" :before-close="onBeforeClose" @close="closedDailog">
       <div class="demo">
         <video-player class="video-player vjs-custom-skin" ref="videoPlayer" :playsinline="true" :options="playerOptions"> </video-player>
       </div>
       <el-button type="primary" @click="downMV">下载MV</el-button>
     </el-dialog>
+
     <!-- 歌曲评论对话框  -->
     <el-dialog :visible.sync="toCommentFlag" width="800px" :destroy-on-close="true" class="songComment">
       <Comment :comments="comments"> </Comment>
@@ -80,10 +73,10 @@
 </template>
 
 <script>
-import PlayMusic from "@/components/PlayMusic.vue";
+import MiguPlayMusic from "./MiguPlayMusic.vue";
 import Lyric from "@/components/Lyric.vue";
-import Comment from "@/components/Comment.vue";
 import { MUSIC_API } from "@/config/index.js";
+import Comment from "@/components/Comment.vue";
 export default {
   data() {
     return {
@@ -100,8 +93,6 @@ export default {
       mvId: 1, //mv 的id
       mvUrl: "", //mv 的url地址
       simgUrl: "", //传递的图片url
-      toCommentFlag: false,
-      comments: [],
       playerOptions: {
         //播放速度
         playbackRates: [0.5, 1.0, 1.5, 2.0],
@@ -135,8 +126,11 @@ export default {
           fullscreenToggle: true, //全屏按钮
         },
       }, //视频播放配置
+      toCommentFlag: false, //歌曲评论对话框
+      comments: [],
     };
   },
+  props: ["show", "songs"],
 
   // 歌曲时间过滤器 4分3秒
   filters: {
@@ -152,14 +146,13 @@ export default {
       }
     },
   },
-  mounted() {
-    // setTimeout(() => {
-    //   console.log(" 用户信息列表", this.songs);
-    // }, 1000);
-  },
-  props: ["show", "songs"],
 
   methods: {
+    updateUrl(value) {
+      this.$message.closeAll();
+      console.log(value);
+      this.musicUrl = value;
+    },
     // 关闭对话框之前
     onBeforeClose(done) {
       // console.log("我关闭之前的回调函数");
@@ -169,85 +162,147 @@ export default {
         video.pause();
       }
 
+      this.$message.closeAll();
       done();
     },
+    // 关闭对话框之后
+    closedDailog() {
+      this.$message.closeAll();
+    },
     // 播放歌曲
-    async vplay(id, src, name, musicUrl, lyrics) {
-      // console.log("播放音乐", id, src, name, musicUrl, lyrics);
+    vplay(name, pic, src, lyric, duration, singername, type) {
+      // console.log("播放音乐 qq  ", n);
+
+      // 把 05:17转化成 毫秒数
+      var timeParts = duration.split(":");
+      var minutes = parseInt(timeParts[0], 10);
+      var seconds = parseInt(timeParts[1], 10);
+      // 将小时和分钟转换为毫秒
+      var minutesSenconds = minutes * 60 * 1000 + seconds * 1000;
 
       this.dialogTableVisible = true;
-      if (typeof id == "number") {
-        // 发起请求拿到歌曲id
-        // let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-        // this.musicUrl = res.data.data[0].url;
+      this.musicUrl = src;
+      this.misicImg = pic;
+      this.title = name;
 
-        try {
-          let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+      this.mid = name;
 
-          if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
-            let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-            this.musicUrl = res.data.data[0].url;
-          } else {
-            this.musicUrl = res.data.data.url;
-          }
-        } catch (error) {
-          let res = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-          this.musicUrl = res.data.data[0].url;
-        }
-
-        // 发起请求拿到歌曲歌词
-        let lycdata = await this.$http.get(`${MUSIC_API}lyric?id=${id}`);
-        // console.log(lycdata.data.lrc.lyric);
-        this.misicImg = src;
-        this.title = name;
-        this.mid = id;
-        this.lyrics = lycdata.data.lrc.lyric;
-        // 单个图片的url链接
-        this.simgUrl = src;
+      // 判断一下 lyric 有没有值
+      if (!lyric || lyric.trim() === "") {
+        lyric = "[00:00.00]木有歌词哦";
       } else {
-        this.musicUrl = musicUrl;
-        this.misicImg = src;
-        this.title = name;
-        this.mid = id;
-
-        let lyricArr = lyrics.split("\\n");
+        // 去除歌词中\n为空的情况
+        let lyricArr = lyric.split("\\n");
         let newLyricArr = lyricArr.filter((item) => item.trim() !== "");
         let newLyric = newLyricArr.join("\n");
-        this.lyrics = newLyric;
+        this.lyrics = newLyric || "[00:00.00]木有歌词哦";
+      }
 
-        // 单个图片的url链接
-        this.simgUrl = src;
+      // 单个图片的url链接
+      this.simgUrl = pic;
+
+      // 判断该歌曲有没有资源
+      if (this.musicUrl == "") {
+        // return this.$mb.alert("当前歌曲暂无资源!", "注意", { confirmButtonText: "确定" });
+        // this.musicUrl = "pause";
+        setTimeout(() => {
+          return this.$message({ message: "当前歌曲暂无资源!", type: "error", showClose: true, duration: 0 });
+        }, 300);
+      } else {
+        this.$message.closeAll();
       }
 
       // 提交数据到vuex
-      // let obj = {
-      //   musicUrl: this.musicUrl,
-      //   misicImg: this.misicImg,
-      //   title: this.title,
-      //   mid: this.mid,
-      //   simgUrl: this.simgUrl,
-      //   lyrics: this.lyrics,
-      // };
-      // this.$store.commit("getSong", obj);
+      let obj = {
+        musicUrl: this.musicUrl,
+        musicImg: this.misicImg,
+        name: name,
+        mid: this.mid,
+        simgUrl: this.simgUrl,
+        lyrics: this.lyrics,
+        singerName: singername,
+        duration: minutesSenconds,
+        id: name,
+        song_id: "C", // 歌曲 ID
+        type: type, // 标记数据来源
+      };
+      // console.log("提交到vuex的数据:", obj);
+
+      this.$store.commit("getSong", obj);
     },
-    // 下载歌曲
-    async vdown(id, name, url) {
-      console.log("下载音乐", id, name, url);
-      try {
-        // 尝试从第一个API获取音乐URL
-        let res = await this.$http.get(`https://api.cenguigui.cn/api/netease/music_v1.php?id=${id}&type=json&level=standard`);
+    // --------------------
+    // 下载文件三部曲
+    async downloadFileProcess(fileUrl, fileName) {
+      let blob = await this.getBlob(fileUrl);
+      this.saveFile(blob, fileName);
+    },
+    getBlob(fileUrl) {
+      let that = this;
+      return new Promise((resolve) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", fileUrl, true);
+        //监听进度事件
+        xhr.addEventListener(
+          "progress",
+          function (evt) {
+            if (evt.lengthComputable) {
+              let percentComplete = evt.loaded / evt.total;
+              // percentage是当前下载进度，可根据自己的需求自行处理
+              let percentage = percentComplete * 100;
+              // console.log(percentage);
+              that.download_process = parseFloat(percentage.toFixed(2));
+            }
+          },
+          false
+        );
+        xhr.responseType = "blob";
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          }
+        };
+        xhr.send();
+      });
+    },
+    saveFile(blob, fileName) {
+      // ie的下载
+      if (window.navigator.msSaveOrOpenBlob) {
+        navigator.msSaveBlob(blob, filename);
+      } else {
+        // 非ie的下载
+        const link = document.createElement("a");
+        link.classList.add("download_link");
+        const body = document.querySelector("body");
 
-        if (res.data.data.url == "获取歌曲地址失败，可能是会员到期了") {
-          // 如果第一个API失败，尝试备用API
-          let backupRes = await this.$http.get(`${MUSIC_API}song/url?id=${id}`);
-          this.musicUrl = backupRes.data.data[0].url;
-        } else {
-          this.musicUrl = res.data.data.url;
-        }
-      } catch (error) {
-        this.musicUrl = url;
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+
+        // fix Firefox
+        link.style.display = "none";
+        body.appendChild(link);
+
+        link.click();
+        body.removeChild(link);
+
+        window.URL.revokeObjectURL(link.href);
       }
+    },
+    // 根据a标签下载
+    downloadMusic(url, fileName) {
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.download = fileName;
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
 
+    // 下载歌曲
+    async vdown(url, name) {
+      console.log("下载音乐", name, url);
+      this.musicUrl = url;
       // 节流控制
       if (this.clicktag == 0) {
         this.clicktag = 1;
@@ -282,12 +337,51 @@ export default {
         this.$mb.alert("当前歌曲正在下载中,请勿重复点击!", "注意", { confirmButtonText: "确定" });
       }
     },
+
+    fake_click(obj) {
+      var ev = document.createEvent("MouseEvents");
+      ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+      obj.dispatchEvent(ev);
+    },
+
+    export_raw(name, data) {
+      var urlObject = window.URL || window.webkitURL || window;
+      var export_blob = new Blob([data]);
+      var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+      save_link.href = urlObject.createObjectURL(export_blob);
+      save_link.download = name;
+      this.fake_click(save_link);
+    },
+
+    // 方式2：给一个图片地址，用canvas转base64进行下载，可以前端指定下载名
+    downloadImg2(url, name, suffix) {
+      const image = new Image();
+      image.src = url;
+      image.crossOrigin = "anonymous";
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      image.onload = function () {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        context.drawImage(image, 0, 0, image.width, image.height);
+        const base64 = canvas.toDataURL("image/jpeg");
+        const a = document.createElement("a");
+        a.href = base64;
+        a.download = name + "." + suffix;
+        const mouseEvent = new MouseEvent("click");
+        a.dispatchEvent(mouseEvent);
+      };
+      image.onerror = function () {
+        console.log("图片加载失败");
+      };
+    },
+
     // 根据url下载
     downRow(data, name, suffix) {
       let ajax = new XMLHttpRequest();
       ajax.open("GET", data, true);
       ajax.responseType = "blob";
-      // ajx.withCredentials = true; //如果跨域
+      ajax.withCredentials = true; //如果跨域
       ajax.onload = function (oEvent) {
         let content = ajax.response;
         let a = document.createElement("a");
@@ -302,18 +396,16 @@ export default {
       ajax.send();
     },
     // 子传父 回来的数据
-    newChange(id, src, name, musicUrl, lyrics) {
-      this.vplay(id, src, name, musicUrl, lyrics);
+    newChange(name, pic, src, lyric, duration, singername) {
+      this.vplay(name, pic, src, lyric, duration, singername);
     },
-    // // 加载更多
-    // toLoading() {
-    //   // 触发父组件的事件
-    //   this.$emit("toLoading");
-    // },
+    // 加载更多
+    toLoading() {
+      // 触发父组件的事件
+      this.$emit("toLoading");
+    },
     // 播放MV
     async toMV(id, name) {
-      console.log(id, name);
-
       this.toMVFlag = true;
       this.title = name;
       this.mid = id;
@@ -341,12 +433,15 @@ export default {
     // 图片查看大图
     bigImg(imgSrc, name) {
       this.title = name;
-      this.misicImg = imgSrc;
+      this.misicImg = imgSrc.split("?")[0];
       this.bigImgFlag = true;
+      // console.log(this.misicImg);
     },
     // 下载图片
     downImg() {
-      this.downRow(this.misicImg, this.title, "png");
+      // this.downRow(this.misicImg, this.title, "png");
+      // this.downloadImg2(this.misicImg, this.title, "png");
+      this.downloadMusic(this.misicImg, this.title);
     },
     // 下载mv
     downMV() {
@@ -356,27 +451,17 @@ export default {
     toSingerPage(singerName) {
       this.$router.push({ path: "/singer", query: { singerName: singerName } });
     },
-    //删除该条历史记录
-    toDelete(id) {
-      this.songs.forEach((item, index) => {
-        if (item.id == id) {
-          this.songs.splice(index, 1);
-        }
-      });
-      // 本地存储
-      localStorage.setItem("likeSongs", JSON.stringify(this.songs));
-    },
     //歌曲评论
     async songComment(id) {
       this.toCommentFlag = true;
-      console.log(id); //拿到歌曲id
+      // console.log(id); //拿到歌曲id
       // 发起请求拿到歌曲评论
       let res = await this.$http.get(`${MUSIC_API}comment/hot?id=${id}&type=0`);
       this.comments = res.data.hotComments;
     },
   },
   components: {
-    PlayMusic,
+    MiguPlayMusic,
     Lyric,
     Comment,
   },
@@ -385,9 +470,6 @@ export default {
 
 <style lang="less" scoped>
 .List {
-  /deep/.el-dialog__body {
-    padding: 0;
-  }
   .at-singer {
     cursor: pointer !important;
   }
@@ -440,6 +522,11 @@ export default {
     height: 70px;
     // background-color: pink;
     // margin-bottom: 18px;
+  }
+  .songComment {
+    /deep/.el-dialog__body {
+      padding: 10px 0 0;
+    }
   }
 }
 </style>

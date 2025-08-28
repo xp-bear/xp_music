@@ -170,6 +170,7 @@ export default {
             //更新localstorage的user数据
             user.name = this.name;
             user.imgUrl = this.imgUrl;
+            // 修改本地存储的用户信息
             localStorage.setItem("user", JSON.stringify(user));
 
             // 关闭模态框
